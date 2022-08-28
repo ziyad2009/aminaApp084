@@ -396,8 +396,8 @@ const duration = moment.duration(endShiftTime.diff(startShiftTime));
 //return (`${duration.hours()}  hours:  ${duration.minutes()} minutes: ` );
 return(
     <Box justifyContent={'space-around'} flexDirection='row'  backgroundColor={'amber.200'} w="40%">
-        <Text>{duration.hours()} ساعات </Text>
-        <Text>{duration.minutes()} دقائق </Text>
+        <Text mr={3} fontSize={9}>{duration.hours()} ساعات </Text>
+        <Text ml={3} fontSize={9} >{duration.minutes()} دقائق </Text>
     </Box>
 )
 }   
@@ -703,47 +703,98 @@ return(
                          )}
                     </Stack>
 
+                    {Platform.OS==='android'?
+                        <Box flexDirection={'row'}>
+                            <Stack space={1} w="39%" alignItems="center" marginTop={5} flexDirection='row'>
+                                <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
+                                 fontSize={18} fontWeight="400" mr={8} color={Colors.red}>من</Text>
+                                {timePicker?
+                                    (<DateTimePicker
+                                    value={time}
+                                    mode={'time'}
+                                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                                    is24Hour={false}
+                                    onChange={onTimeSelected}
+                                    //timeZoneOffsetInMinutes={60}
+                                    minuteInterval={60}
+                                    style={styles.datePicker}
+                                    />):
+                                (<Input isDisabled  h={Metrics.HEIGHT*0.0682}  textAlign={'left'} borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time).format("LT")}
+                                    w={{base: "75%",md: "20%"}}  
+                                    InputLeftElement={<Icon as={ !timePicker && (<Feather name="clock"    onPress={()=> setTimePicker(!timePicker) } /> )} 
+                                    size={'lg'} ml="4"   color={Colors.blacktxt}/>} 
+                                    color={Colors.blacktxt}  placeholder="وقت بداد  الخدمه و عدد الاطفال" />
+                                )}
+                            </Stack>
+                            
+                            <Stack space={1} w={Platform.OS==='android'?"39%":"40%"} alignItems="center" marginTop={5}  flexDirection='row'>
+                                <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={18} fontWeight="400" mr={5} ml='10' >الى</Text>
+                                    {timePicker2?
+                                (<DateTimePicker
+                                value={time2}
+                                mode={'time'}
+                                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                                is24Hour={false}
+                                onChange={onTimeSelected2}
+                                //timeZoneOffsetInMinutes={60}
 
-                    <Box flexDirection={'row'}>
-                        <Stack space={1} w="39%" alignItems="center" marginTop={5} flexDirection='row'>
-                            <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
-                            fontSize={18} fontWeight="400" mr={8} color={Colors.red}>من</Text>
-                    {timePicker?
-                     (<DateTimePicker
-                        value={time}
-                        mode={'time'}
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        is24Hour={false}
-                        onChange={onTimeSelected}
-                        //timeZoneOffsetInMinutes={60}
-                        minuteInterval={60}
-                        style={styles.datePicker}
-                    />):(<Input isDisabled  h={Metrics.HEIGHT*0.0682}  textAlign={'left'} borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time).format("LT")}
-                    w={{base: "75%",md: "20%"}}  
-                    InputLeftElement={<Icon as={ !timePicker && (<Feather name="clock"    onPress={()=> setTimePicker(!timePicker) } /> )} 
-                    size={'lg'} ml="4"   color={Colors.blacktxt}/>} 
-                    color={Colors.blacktxt}  placeholder="وقت بداد  الخدمه و عدد الاطفال" />
-                    )}
-                    </Stack>
+                                style={styles.datePicker}
+                                />):
+                                (<Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'left'}borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time2).format("LT")}
+                                w={{ base: "75%",md: "20%"}}  
+                                InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setTimePicker2(!timePicker2)}/>} color={Colors.blacktxt} size={'lg'} ml="4" />} 
+                                color={Colors.blacktxt}  placeholder="وقت انهاد الخدمه" />)}
+                            </Stack>
+                        </Box>
+                        :   
+                        <Box flexDirection={'column'} justifyContent='center' alignItems={'center'} >
+                            <HStack space={1} w="100%" alignItems='flex-start' marginTop={5} flexDirection='row'>
+                                <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
+                                 fontSize={18} fontWeight="400" mr={4} color={Colors.red}
+                                  w={"10%"}>من</Text>
+                                {timePicker?
+                                    (<DateTimePicker
+                                    value={time}
+                                    mode={'time'}
+                                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                                    is24Hour={false}
+                                    onChange={onTimeSelected}
+                                    //timeZoneOffsetInMinutes={60}
+                                    minuteInterval={60}
+                                    style={styles.datePicker}
+                                    />):
+                                (<Input isDisabled  h={Metrics.HEIGHT*0.0682}  textAlign={'left'} borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time).format("LT")}
+                                    w={{base: "75%",md: "20%"}}  
+                                    InputLeftElement={<Icon as={ !timePicker && (<Feather name="clock"    onPress={()=> setTimePicker(!timePicker) } /> )} 
+                                    size={'lg'} ml="4"   color={Colors.blacktxt}/>} 
+                                    color={Colors.blacktxt}  placeholder="وقت بداد  الخدمه و عدد الاطفال" />
+                                )}
+                            </HStack>
+                            
+                            <Stack space={1} w={"100%"} alignItems="flex-start" marginTop={5}  flexDirection='row'>
+                                <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}fontSize={18} 
+                                    fontWeight="400" mr={4} color={Colors.red}
+                                    w={"10%"} >الى</Text>
+                                    {timePicker2?
+                                (<DateTimePicker
+                                value={time2}
+                                mode={'time'}
+                                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                                is24Hour={false}
+                                onChange={onTimeSelected2}
+                                //timeZoneOffsetInMinutes={60}
 
-                    <Stack space={1} w="39%" alignItems="center" marginTop={5}  flexDirection='row'>
-                    <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={18} fontWeight="400" mr={5} ml='10' >الى</Text>
-                        {timePicker2?
-                     (<DateTimePicker
-                        value={time2}
-                        mode={'time'}
-                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                        is24Hour={false}
-                        onChange={onTimeSelected2}
-                        //timeZoneOffsetInMinutes={60}
-
-                        style={styles.datePicker}
-                    />):(<Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'left'}borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time2).format("LT")}
-                         w={{ base: "75%",md: "20%"}}  
-                         InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setTimePicker2(!timePicker2)}/>} color={Colors.blacktxt} size={'lg'} ml="4" />} 
-                         color={Colors.blacktxt}  placeholder="وقت انهاد الخدمه" />)}
-                    </Stack>
-                    </Box>
+                                style={styles.datePicker}
+                                />):
+                                (<Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'left'}borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time2).format("LT")}
+                                w={{ base: "75%",md: "20%"}}  
+                                InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setTimePicker2(!timePicker2)}/>} color={Colors.blacktxt} size={'lg'} ml="4" />} 
+                                color={Colors.blacktxt}  placeholder="وقت انهاد الخدمه" />)}
+                            </Stack>
+                        </Box>
+                    
+                    }
+                    
 
                 </View>
           
@@ -755,7 +806,7 @@ return(
             <View style={{flexDirection:'row' ,justifyContent:'space-around' ,marginBottom:10,alignContent:'stretch'}}>
                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} color="#2E2E2E">
                         مدة الحجز الافتراضيه</Text>
-                       <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} color={Colors.textZahry}>
+                       <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} color={Colors.textZahry} letterSpacing={1.5} >
                         {calclutDiff()}</Text>
             </View>
                 <View style={{width:Metrics.WIDTH*0.893}}>

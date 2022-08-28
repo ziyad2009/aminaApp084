@@ -251,7 +251,7 @@ return(
 
       </Box>:
       <FlatList data={babseters} renderItem={({item ,index}) => (<Box key={index} borderWidth="1"  bgColor={Colors.white} borderColor="#00ABB9" borderRadius='md'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.243}>
-              <HStack alignItems={'center'} justifyContent='space-around' key={item._id}>
+              <HStack alignItems={'center'} justifyContent='space-around' >
                 <Image  source={{ uri: `${URL}/users/${item.owner}/avatar`}} resizeMode='stretch' 
                 style={{width: Metrics.WIDTH*0.181, height: Metrics.HEIGHT*0.1270,marginLeft:5,marginRight:20,borderBottomLeftRadius:10}} />
                 <Spacer />
@@ -314,7 +314,7 @@ return(
                   <Image source={ifExists(item._id)? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
                 
                 </TouchableOpacity>
-                <AntDesign name='user' size={33} color='red' onPress={()=> getDate()} />
+               
 
                 
                 

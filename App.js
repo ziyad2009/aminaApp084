@@ -8,7 +8,7 @@
 import 'react-native-gesture-handler';
 import React,{useState} from 'react';
 import { Platform, NativeModules } from 'react-native'
-
+import RNRestart from "react-native-restart";
 import {
   SafeAreaView,
   ScrollView,
@@ -22,14 +22,14 @@ import {NativeBaseProvider} from 'native-base'
 import {
   Colors,Fonts,Metrics
 } from './src/assets/Themes/';
-
+import {WithSplashScreen} from './src/Home/splashScreen' 
 import IntroScreen from './src/introscreen';
 import Singin from './src/login';
  import UserProvider  from './src/services/UserContext'
 import Mapscreen  from './src/map';
 import Navigation from './src/routes/AuthRouter';
 import {I18nManager} from 'react-native'
-import RNRestart from 'react-native-restart';
+ 
 
 
 const App =() => {
@@ -59,6 +59,7 @@ const App =() => {
  
   if (!I18nManager.isRTL) {
       I18nManager.forceRTL(true);
+      RNRestart.Restart();
   }
   const deviceLanguage =
       Platform.OS === 'ios'
@@ -66,7 +67,7 @@ const App =() => {
           NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
         : NativeModules.I18nManager.localeIdentifier;
 
-console.log("test languge",deviceLanguage); //en_US
+console.log("Divice languge",deviceLanguage); //en_US
   
   return(
     <NativeBaseProvider config={config} >

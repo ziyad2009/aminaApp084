@@ -37,7 +37,7 @@ static void InitializeFlipper(UIApplication *application) {
                                             initialProperties:nil];
 
   if (@available(iOS 13.0, *)) {
-      rootView.backgroundColor = [UIColor systemBackgroundColor];
+      rootView.backgroundColor = [UIColor colorWithRed:0.00000 green:0.67059 blue:0.72549 alpha:1.00000];
   } else {
       rootView.backgroundColor = [UIColor whiteColor];
   }

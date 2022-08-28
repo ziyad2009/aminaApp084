@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 220,
+    width: Metrics.WIDTH* 0.817,
     height: Metrics.HEIGHT*0.1921,
     display: 'flex',
     

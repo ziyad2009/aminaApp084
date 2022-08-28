@@ -57,6 +57,8 @@
 		4A6EFB5132AE4DF4B9354AA6 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = ../src/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		4ABD3492DAE64B67AF6669B6 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = ../src/assets/fonts/Octicons.ttf; sourceTree = "<group>"; };
 		4ADDDAB4881E443DB24D6BC0 /* Cairo-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-ExtraBold.ttf"; path = "../src/assets/fonts/Cairo-ExtraBold.ttf"; sourceTree = "<group>"; };
+		5451ECA028BA8D8000F1B184 /* splash2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash2.png; path = ../src/assets/images/splash2.png; sourceTree = "<group>"; };
+		54CAF6C728BABD0A00810B6A /* Aminah.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Aminah.entitlements; path = Aminah/Aminah.entitlements; sourceTree = "<group>"; };
 		5D2996F1507C4F0CA58FFE51 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = ../src/assets/fonts/Fontisto.ttf; sourceTree = "<group>"; };
 		6BCA8667142E4B03ACEEB60D /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = ../src/assets/fonts/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		6ECA5A984FC0411C906FD221 /* Cairo-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-Medium.ttf"; path = "../src/assets/fonts/Cairo-Medium.ttf"; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 		13B07FAE1A68108700A75B9A /* Aminah */ = {
 			isa = PBXGroup;
 			children = (
+				54CAF6C728BABD0A00810B6A /* Aminah.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -133,6 +136,7 @@
 		194A394CDB3047BFBDCA7054 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5451ECA028BA8D8000F1B184 /* splash2.png */,
 				C8B4C70B8ADA4165A9A8F692 /* Cairo-Black.ttf */,
 				EF7F8024BAB04C5D99F7ACD3 /* Cairo-Bold.ttf */,
 				4ADDDAB4881E443DB24D6BC0 /* Cairo-ExtraBold.ttf */,
@@ -559,7 +563,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Aminah/Aminah.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8HKZ8K3U59;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Aminah/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -585,7 +591,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Aminah/Aminah.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8HKZ8K3U59;
 				INFOPLIST_FILE = Aminah/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -250,8 +250,8 @@ return(
     <View  style={{backgroundColor:Colors.AminabackgroundColor,marginTop:0,flex:1}} >
       <StatusBar barStyle={'dark-content'} backgroundColor={Colors.hederup} />
         <View style={{alignItems:'flex-start' ,marginLeft:10}}>
-        <Text style={{paddingTop:20,fontWeight:"700",fontFamily:Fonts.type.bold,fontSize:22,marginBottom:10,marginLeft:5}}>اختر الخدمة</Text>
-        <Text style={{fontFamily:Fonts.type.light,fontSize:18,marginBottom:10}}>الرجاء اختيار نوع الخدمه والبدء بانشاء طلبك</Text>
+        <Text style={{paddingTop:20,fontWeight:Platform.OS==='android'?"300":"700",fontFamily:Platform.OS==='android'? Fonts.type.bold:Fonts.type.base,fontSize:22,marginLeft:5,marginBottom:2}} >اختر الخدمة</Text>
+        <Text style={{fontFamily:Platform.OS==='android'? Fonts.type.light:Fonts.type.light,fontSize:18,marginBottom:10}}>الرجاء اختيار نوع الخدمه والبدء بانشاء طلبك</Text>
         </View>
         
          
@@ -274,7 +274,7 @@ return(
                               <Text style={{fontSize:18,textAlign:'center', fontFamily:Fonts.type.bold,color:"#FCEBD2",textDecorationLine:'underline'}}>
                               {serv.maineservice}
                               </Text>
-                              <Text style={{fontSize:14,letterSpacing:.5,fontWeight:Platform.OS==='ios'?"500":null, fontFamily:Fonts.type.aminafonts,color:"#FCEBD2",  textAlign:'center',lineHeight:18,marginTop:5}}>
+                              <Text style={{fontSize:14,letterSpacing:.5,fontWeight:Platform.OS==='ios'?"500":null, fontFamily:Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base ,color:Colors.Milky,  textAlign:'center',lineHeight:18,marginTop:5}}>
                               {serv.descripton}
                               </Text></View>}
                     </TouchableOpacity>
@@ -282,14 +282,14 @@ return(
             )
         })
         }
-        <Box>
+        {/* <Box>
           <Button onPress={()=> props.navigation.navigate('Ewallet') }>payment</Button>
-        </Box>
+        </Box> */}
 
         </View>
         <View style={{alignItems:'flex-start' ,marginLeft:10}}>
-        <Text style={{paddingTop:20,fontWeight:"700",fontFamily:Fonts.type.bold,fontSize:22,marginLeft:5,marginBottom:2}}>الافضل لك </Text>
-        <Text style={{fontFamily:Fonts.type.aminafonts,fontWeight:'400',fontSize:18,marginBottom:4}}>نرشح لك افضل الحاضنات الاقرب لمنزل</Text>
+        <Text style={{paddingTop:20,fontWeight:Platform.OS==='android'?"300":"700",fontFamily:Platform.OS==='android'? Fonts.type.bold:Fonts.type.base,fontSize:22,marginLeft:5,marginBottom:2}}>الافضل لك </Text>
+        <Text style={{fontFamily:Platform.OS==='android'? Fonts.type.light:Fonts.type.light,fontWeight:'300',fontSize:18,marginBottom:4}}>نرشح لك افضل الحاضنات الاقرب لمنزل</Text>
         </View>
         {loading2? 
           <Center w="100%" >

@@ -66,7 +66,7 @@ const getNotifaction= async()=>{
           {!loading?
               <Spinner mt={Platform.OS==='android'?40:88} size={'lg'} color={Colors.TexTPink} />:
 
-              <Stack mt={2} w="90%" >
+              <Stack mt={2} w="90%" alignItems={'flex-start'} >
                 <Text fontFamily={Fonts.type.aminafonts} fontSize={22}>التنبيهات</Text>
                 {notifactions.map((item,index)=>{
                   return(

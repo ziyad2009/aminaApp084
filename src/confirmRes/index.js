@@ -12,7 +12,8 @@ import api from '../services/api';
 import {URL_ws,URL} from '../services/links';
 import {SocketIOClient,io} from "socket.io-client";
 import { sendNotifcation } from '../services/fucttions';
-import { random } from 'lodash';
+import CustomButton from '../services/buttons/buttton';
+ 
 
   
 let interval = null;
@@ -227,6 +228,15 @@ const handelREQ= async(id)=>{
     }
     sendNotifcation(data)
    }
+   const  children = ({ remainingTime }) => {
+    // console.log("remain---",remainingTime)
+     const hours = Math.floor(remainingTime / 3600)
+     const minutes = Math.floor((remainingTime ) / 60)
+    // const minutes = Math.floor((remainingTime ))
+    // const seconds = remainingTime % 60
+   
+     return <Text fontSize={18} >{minutes}دقيقه</Text>
+   }
    
     return(
 
@@ -295,18 +305,26 @@ const handelREQ= async(id)=>{
                 <Box mt={1}>
                 <CountdownCircleTimer
                     isPlaying
-                    duration={180}
+                    duration={900}
                     colors={[Colors.AminaButtonNew, '#F7B801', '#A30000', '#A30000']}
-                    colorsTime={[159, 100, 50, 10 ]}
+                    colorsTime={[500, 300, 100, 50]}
                     size={80}
                     strokeWidth={8} >
-                    {({ remainingTime }) => <Text>{remainingTime}</Text>}
+                        {children}
+                    {/* {({ remainingTime }) => <Text>{remainingTime}</Text>} */}
                 </CountdownCircleTimer>
                 </Box> 
                 </Center>:
                 <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' mt={5} rounded='lg'>
-                     <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-                        onPress={() => {confirmRequest() }}> احجز</Button>
+                     {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
+                        onPress={() => {confirmRequest() }}> احجز</Button> */}
+                         <CustomButton
+                            buttonColor={Colors.AminaButtonNew}
+                            title="احجز"
+                            buttonStyle={{width: '100%', alignSelf: 'center'}}
+                            textStyle={{fontSize: 20}}
+                            onPress={() => confirmRequest()}
+                        />
                     </Box>
                     
                     
@@ -317,9 +335,17 @@ const handelREQ= async(id)=>{
                     </Box> */}
             {OK&&<Center>
                 <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' mt={5} rounded='lg'>
-                        <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-                            onPress={() => {canselRequest() }}> الغاء الطلب</Button>
+                        {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
+                            onPress={() => {canselRequest() }}> الغاء الطلب</Button> */}
+                            <CustomButton
+                            buttonColor={Colors.AminaButtonNew}
+                            title=" الغاء الطلب"
+                            buttonStyle={{width: '100%', alignSelf: 'center'}}
+                            textStyle={{fontSize: 20}}
+                            onPress={() => canselRequest()}
+                        />
                 </Box>
+                
             </Center>}
             
             

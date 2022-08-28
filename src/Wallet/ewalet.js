@@ -31,23 +31,24 @@ const Ewallet=()=>{
     //     "card_security_code":350,
     //     "customer_ip":"92.178.3.10"
     //   }
-      let payload = {
+      
+    let payload = {
       "service_command": "TOKENIZATION",
       "access_code": "NiIpEzKzWmEZKJUbBbZs",
       "merchant_identifier":"d491f52d",
-      "merchant_reference": "10xxv40960005",
-      "amount":"1000",
+      "merchant_reference": "t1060005",
+      "amount":1000,
       "currency":"SAR",
       "language": "ar",
-      "signature": '31560bdb616b959b4935c0ff691c752369a2e57cb287cb75d54bd86c10c675fe',
+      "signature": '628e5d3cd83c85e5c7ac7a0111d28cd5a1b4e5fd8d3adc494bbb4f1da50e6709',
        "phone_number":"00966543437660",
       "customer_email":"ziayd2009@gmail.com",
       "payment_option":"MADA",
-      "card_holder_name":"ziayd mansoer",
-      
-      "card_number": "5297412542005689",
-      "expiry_date":'05/25',
-      "card_security_code":"350",
+      "card_holder_name":"ZEYAD ALGHNE",
+      "card_number": 4847832940815637,
+      "expiry_date":'11/22',
+      "card_security_code":727,
+      "remember_me":"NO",
       "customer_ip":"92.178.3.10"
     }
 
@@ -55,7 +56,11 @@ const Ewallet=()=>{
       // url: `https://sbcheckout.PayFort.com/FortAPI/paymentPage?service_command=${payload.command}&access_code=${payload.access_code}&merchant_identifier=${payload.merchant_identifier}&merchant_reference=${payload.merchant_reference}&amount=${payload.amount}&currency:=${payload.currency}&language=${payload.language}&signature=${payload.signature}&customer_email=${payload.customer_email}&payment_option=${payload.payment_option}&expiry_date=${payload.expiry_date}&card_number=${payload.card_number}&order_description=${payload.order_description}&card_security_code=${payload.card_security_code}&remember_me=${payload.remember_me}&card_holder_name=${payload.card_holder_name}`,
         var config = {
           method: 'POST',
-          url: `https://sbcheckout.PayFort.com/FortAPI/paymentPage?service_command=${payload.service_command}&access_code=${payload.access_code}&merchant_identifier=${payload.merchant_identifier}&merchant_reference=${payload.merchant_reference}&currency=${payload.currency}&language=${payload.language}&signature=${payload.signature}&amount=${payload.amount}&customer_email=${payload.customer_email}&phone_number=${payload.phone_number}&payment_option=${payload.payment_option}&expiry_date=${payload.expiry_date}&card_number=${payload.card_number}&card_security_code=${payload.card_security_code}&card_holder_name=${payload.card_holder_name}`,
+          url: `https://sbcheckout.PayFort.com/FortAPI/paymentPage?service_command=${payload.service_command}&access_code=${payload.access_code}
+                &merchant_identifier=${payload.merchant_identifier}&merchant_reference=${payload.merchant_reference}&remember_me=${payload.remember_me}&
+                currency=${payload.currency}&language=${payload.language}&signature=${payload.signature}&amout=${payload.amount}&
+                amount=${payload.amount}&customer_email=${payload.customer_email}&phone_number=${payload.phone_number}&payment_option=${payload.payment_option}&
+                expiry_date=${payload.expiry_date}&card_number=${payload.card_number}&card_security_code=${payload.card_security_code}&card_holder_name=${payload.card_holder_name}`,
           headers: { "Content-type": "application/json" }
           };
           const response=await axios(config).then((res)=>{
