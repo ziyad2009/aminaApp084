@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {View ,Text,Image,StyleSheet,Platform,TouchableHighlight} from 'react-native'
-import {Box,VStack,Badge} from 'native-base'
+import {Box,VStack,Badge, HStack} from 'native-base'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -92,16 +92,32 @@ return(
 const HeaderMenuButton =(nav)=> {
   const navigation = React.useContext(NavigationContext);
 return(
-  <View style={{ marginRight:1,flexDirection:Platform.OS==='android'?"row":"row-reverse",alignContent:'baseline'}}>
+  <Box >
       {/* <Image source={Images.MainLogo3} resizeMode='stretch' style={{alignItems:'center',height:Metrics.HEIGHT*0.0431,width:Metrics.WIDTH*0.2578,marginRight:10}}/> */}
       {/* <Ionicons name="menu" size={22} color={"#F5F5F5"} onPress={  ()=>navigation.navigate('BottomScreen')} /> */}
+       
+      {Platform.OS==='android'?
+      <HStack>
         <BottomScreen data={navigation}/>
+       <Logo width={Metrics.HEIGHT*0.1321} height={Metrics.HEIGHT*0.044} />
+
+      </HStack>
+       :
+       <HStack>
+         <Logo width={Metrics.HEIGHT*0.1321} height={Metrics.HEIGHT*0.044} />
+       <BottomScreen data={navigation}/>
+       </HStack>
+      
+       }
+     
+      
+     
     
-      <Logo width={Metrics.HEIGHT*0.1321} height={Metrics.HEIGHT*0.044} />
+      {/* <Logo width={Metrics.HEIGHT*0.1321} height={Metrics.HEIGHT*0.044} />
+      <Ionicons name="menu" size={40} color={"#F5F5F5"} onPress={ ()=>navigation.navigate('SearchScreen')} /> */}
+
     
-    
-    
-  </View>
+  </Box>
    
 )
 //()=>nav.navigate.push('Authbycode'
@@ -465,8 +481,10 @@ const StackNav = () => {
         headerTransparent: true,
          headerStyle:{
            backgroundColor:Colors.hederup,
+
           },
           headerBackTitle: "تنبيه بقرب الحاضنه",
+         
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
@@ -493,6 +511,7 @@ const StackNav = () => {
           fontFamily:Fonts.type.medium,
           },
         headerLargeTitleShadowVisible:true,
+        
         headerTintColor:"#F5F5F5",
         headerRight:()=>{
           return(

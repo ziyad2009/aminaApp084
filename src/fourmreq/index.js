@@ -340,6 +340,9 @@ const getasubservice=async()=>{
  const confirmReservisionTime=()=>{
     const startShiftTime = moment(time, 'DD-MM-YYYY hh:mm:ss A');
     const endShiftTime = moment(time2, 'DD-MM-YYYY hh:mm:ss A');
+    if (startShiftTime.isAfter(endShiftTime)){
+        endShiftTime.add(1, 'days');
+      }
     
     const duration = moment.duration(endShiftTime.diff(startShiftTime));
     
@@ -388,7 +391,11 @@ const calclutDiff=()=>{
 const startShiftTime = moment(time, 'hh:mm:ss A');
 const endShiftTime = moment(time2, 'hh:mm:ss A');
 
-const duration = moment.duration(endShiftTime.diff(startShiftTime));
+if (startShiftTime.isAfter(endShiftTime)){
+    endShiftTime.add(1, 'days');
+  }
+
+const duration = moment.duration(endShiftTime.diff(startShiftTime)) ;
 
 // console.log('as hours: ' + duration.asHours(), 'as minutes: ' + duration.asMinutes());
 // console.log('hours: ' + duration.hours(), 'minutes: ' + duration.minutes());
@@ -396,7 +403,7 @@ const duration = moment.duration(endShiftTime.diff(startShiftTime));
 //return (`${duration.hours()}  hours:  ${duration.minutes()} minutes: ` );
 return(
     <Box justifyContent={'space-around'} flexDirection='row'  backgroundColor={'amber.200'} w="40%">
-        <Text mr={3} fontSize={9}>{duration.hours()} ساعات </Text>
+        <Text mr={3} fontSize={9}>{parseInt(duration.asHours())} ساعات </Text>
         <Text ml={3} fontSize={9} >{duration.minutes()} دقائق </Text>
     </Box>
 )

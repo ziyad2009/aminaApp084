@@ -1,19 +1,17 @@
 import React, { useState,useEffect ,useCallback,useContext,useRef} from 'react';
-import {Alert, View,Image,Platform,KeyboardAvoidingView} from 'react-native'
+import {TouchableOpacity, View,Image,Platform,KeyboardAvoidingView,AppState,ActivityIndicator, Alert} from 'react-native'
 import {Box,Avatar,HStack,VStack,Spacer,Center,Text,Button, Radio,Modal,Stack} from 'native-base'
 import CircularProgress from 'react-native-circular-progress-indicator';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
-import{Metrics,Colors,Fonts} from '../assets/Themes/'
+import{Metrics,Colors,Fonts,Images} from '../assets/Themes/'
  import AntDesign from'react-native-vector-icons/AntDesign'
 import Feather from'react-native-vector-icons/Feather'
 import moment from 'moment'
 import{URL,URL_ws, URL_ws_chat} from '../services/links'
 import { GiftedChat } from 'react-native-gifted-chat'
-//import io from "socket.io-client";
 import  {UserContext} from '../services/UserContext';
-
- import setItem from '../services/storage/'
- import api from '../services/api'
+import setItem from '../services/storage/'
+import api from '../services/api'
 import { sendNotifcation } from '../services/fucttions';
 import OutlaintButton from '../services/buttons/buttonsOutlain';
 import CustomButton from '../services/buttons/buttton';
@@ -24,22 +22,29 @@ const WorkScreen=(props)=>{
   
     const[Star,setStart]=useState(null)
     const[End,setEnd]=useState(null)
-     const [loadtime,setloadtime]=useState(false)
+    const [loadtime,setloadtime]=useState(false)
     const[time1,setTime1]=useState(null)
     const [time2,settime2]=useState(null)
+   
     const[babysetter,setbabyseters]=useState([])
+
     const [totalmin,setTottalmint]=useState(0)
     const [intialTime,setintialTime]=useState(0)
     const startTime = useRef(new Date());
     const endTime = useRef(new Date());
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [messages, setMessages] = useState([]);
 
+    const [messages, setMessages] = useState([]);
     const[greating,setGreating]=useState('')
-    const [messageToSend, setMessageToSend] = useState("");
     const [recvMessages, setRecvMessages] = useState([]);
+    const[loadmsgChat,setloadmsgChat]=useState(false)
     const[loadmsg,setLoadmessag]=useState(false)
     
+    const[livechat,setlivechat]=useState(false)
+    const appState = useRef(AppState.currentState);
+    const [appStateVisible, setAppStateVisible] = useState(appState.current);
+    const[hasUnsavedChanges,sethasUnsavedChanges]=useState(false)
+
     const [hoursopt,setHoursopt]=useState("one")
     const[showModal,setShowModal]=useState(false)
     const [totallprice,settotallprice ]=useState(0)
@@ -53,40 +58,87 @@ const WorkScreen=(props)=>{
     // SOKITIO from contextt   to connection
     socket.current =SOKITIO;
     
-    // const [joined, setJoined] = useState(false);
-    // const handleInviteAccepted = useCallback(() => {
-    // setJoined(true);
-    // }, []);
-
-    // const handleJoinChat = useCallback(() => {
-    // socket.emit("SEND_JOIN_REQUEST");
-    // }, []);
-   
+    // useEffect( ()=>{
+    //   const subscription = AppState.addEventListener("change", nextAppState => {
+    //     if (
+    //       appState.current.match(/inactive|background/) &&
+    //       nextAppState === "active"
+    //     ) {
+        
+    //       console.log("App has come to the foreground!");
+    //     }
+  
+    //     appState.current = nextAppState;
+    //     setAppStateVisible(appState.current);
+    //     // clearInterval(realtime)
+    //     // console.log("vale",loadtime)
+    //     // updatemessageschat()
+    //     console.log("leeeeeee")
     
+    //     console.log("AppState", appState.current);
+    //   });
+  
+    //   return () => {
+    //     subscription.remove();
+    //   };
+    // },[])
 
+    useEffect(
+      () => props.navigation.addListener('beforeRemove', (e) => {
+          if (!hasUnsavedChanges) {
+            // If we don't have unsaved changes, then we don't need to do anything
+            console.log("not hony back")
+             
+            setloadmsgChat(true)
+            return;
+          }
+  
+          // Prevent default behavior of leaving the screen
+          e.preventDefault();
+  
+          // Prompt the user before leaving the screen
+          setloadmsgChat(true)
+          // Alert.alert(
+          //   'Discard changes?',
+          //   'You have unsaved changes. Are you sure to discard them and leave the screen?',
+          //   [
+          //     { text: "Don't leave", style: 'cancel', onPress: () => {} },
+          //     {
+          //       text: 'Discard',
+          //       style: 'destructive',
+          //       // If the user confirmed, then we dispatch the action we blocked earlier
+          //       // This will continue the action that had triggered the removal of the screen
+          //       onPress: () => console.log("not hony"),
+          //     },
+          //   ]
+          // );
+        }),
+      [props.navigation, hasUnsavedChanges]
+    );
 
 useEffect( async()=>{
-  const user = await setItem.getItem('BS:User');
-  const motherData=await JSON.parse(user)
-  const motherID=motherData._id
-  setuserID(motherID)
-  setroom(`babayAmina${props.route.params.data1._id}`)
- 
-    
+    const user = await setItem.getItem('BS:User');
+    const motherData=await JSON.parse(user)
+    const motherID=motherData._id
+    setuserID(motherID)
     setbabyseters(props.route.params.data1)
-
     setroom(`babayAmina${props.route.params.data1._id}`)
-   
-
     var then = moment(babysetter.end).format("HH:mm:ss");
     var ss= moment(babysetter.end).diff( moment(), 'minute')
     console.log("new deffrent time ",ss)
     console.log("new deffrent time ",then)
     setTottalmint(0)
-    
+    chikchatRoomMsg(`babayAmina${props.route.params.data1._id}`)
+    const dataroom={val:'online',room:`babayAmina${props.route.params.data1._id}`.trim().toLowerCase() }
+    console.log("start emit to",dataroom)
+    socket.current.emit("usersStatus",dataroom)
    
 
 },[])
+
+useEffect(()=>{
+  updatemessageschat()
+},[recvMessages])
 
 useEffect(()=>{
     let onColoc=null
@@ -111,8 +163,8 @@ useEffect(()=>{
   var then = moment(babysetter.end).format("HH:mm:ss");
   var ss= moment(babysetter.end).diff( moment(), 'minute')
 
-  console.log("new deffrent timer == ",ss)
-  console.log("new deffrent timer == ",then)
+  // console.log("new deffrent timer == ",ss)
+  // console.log("new deffrent timer == ",then)
   setTottalmint(ss)
  },2000)
  return () => {
@@ -125,11 +177,17 @@ useEffect(()=>{
  
 
 useEffect(async() => {
-  props.navigation.addListener('beforeRemove', (e) => {
-    console.log("leeeeeee")})
-     clearInterval(realtime)
-     console.log("vale",loadtime)
-    uploadmessage()
+  props.navigation.addListener('blur', (e) => {
+    const dataroom={val:'offline',room:`babayAmina${props.route.params.data1._id}`.trim().toLowerCase() }
+    console.log("start emit to",dataroom)
+    socket.current.emit("usersStatus",dataroom)
+   
+    console.log("leeeeeee",e.data)
+
+  })
+
+
+     
   // useEffect(  () => {
   //   const unsubscribe = props.navigation.addListener('focus',async () => {
   //       console.log("add event to extand ")
@@ -143,41 +201,47 @@ useEffect(async() => {
   const motherData=JSON.parse(user)
   const motherID=motherData._id
   
-  const extruser=babysetter
   const usernameTest =props.route.params.motherinfo
-    const username=usernameTest
+  const username=usernameTest
+ 
+    
 
     if(loadmsg){
-      console.log('start android ',username)
-      console.log('start chating wethe ',extruser._id)
-     
-  
+      // console.log('start android ',username)
+      // console.log('start chating wethe ',extruser._id)
       const id=motherID
       const  room=`babayAmina${props.route.params.data1._id}`
       const avatar= 'https://placeimg.com/140/140/any'
-      
-   
-      console.log('start  Live chating ')
-      
+      console.log('CHAT ROOM DATa++',room,"user==",id)
+     
       socket.current.emit('join', { id,username, room }, (error) => {
-      
-    
-        if (socket.current.lastRoom) {
+      if (socket.current.lastRoom) {
           console.log('++++userr in same room +++')
-          // socket.leave(socket.lastRoom);
-          // socket.lastRoom = null;
       }
         
         if (error) {
            console.log('err soket ',error)
+           setlivechat(false)
         }
     } )
+
       socket.current.on("roomData", data => {
-       //sktId= socket.current.id
-      console.log("ROom On",data)
-     // console.log('suser id  ',sktId)
-          setloadtime(true)
+        //sktId= socket.current.id
+        console.log("ROom On",data)
+        if(data.users.length > 1){
+          setlivechat(true)
+          console.log("userr exist ROom On",data.users.length)
+        }else{
+           console.log('ROom data not load ',)
+          setlivechat(false)
+          console.log("ROom On",data.users.length)
+
+        }
+       
         })
+
+  
+    
   
     socket.current.on("welcome", txtmsg => {
       console.log("WELCOMe On",txtmsg)
@@ -186,88 +250,162 @@ useEffect(async() => {
   
     socket.current.on("message", message => {
      console.log("message On",message)
-    setRecvMessages(prevState => GiftedChat.append(prevState,  message));
+     setRecvMessages(prevState => GiftedChat.append(prevState,  message));
     })
-  
-    socket.current.on('disconnect', () =>{
+    
+    socket.current.on("statuseuser", data => {
+      console.log("online users  On ",data)
+      if(data.statuse){
+        setlivechat(true)
+      }else{
+        setlivechat(false)
+      }
+     
+    }); 
+
+    socket.current.on('disconnect', (data) =>{
       console.log(socket.current.id + ' disconnected!');
-      console.log("out from chat ");
-      //Alert.alert('تم تسجيل خروجك  من الشات')
+       
     });
     }
-   
     
-  
-  if(!loadmsg){
-    console.log('start  load messages chating ')
-    loaddPrevmssage()
-    setLoadmessag(true)
-  }
-  return () => { loadmsg = false };
+    if(!loadmsg){
+      console.log('start  load messages chating ')
+      //loaddPrevmssage()
+      setLoadmessag(true)
+    }
+     return () => { loadmsg = false };
   
 }, [loadmsg,room,userrId]);
 
 
+const chikchatRoomMsg=async(roomID)=>{ 
+  
+  const user = await setItem.getItem('BS:User');
+  const token = await setItem.getItem('BS:Token');
+  const motherData=JSON.parse(user)
+  const motherID=motherData._id
+  const  USERROOM=roomID
+  if(USERROOM===''){
+    console.log("check messag false",props.route.params.data1._id)
+    return;
+  }
+  api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+  await api.post(`${URL}/chatmessagessload`,{
+     userid:motherID,
+     room:USERROOM
+    }).then((res)=>{
+      if(res.data.length < 1){
+        console.log("start cheack chat message ",res.data.length )
+        cratMessagRoom()
+      }
+      loaddPrevmssage()
+      console.log("result chat message ",res.data )
+    
+  }).finally(( )=>{
+    setLoadmessag(true)
+   
+  }).catch((err)=>console.log('erorr:',err))
+  
+ }
 
    const loaddPrevmssage=async()=>{ 
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
     const motherData=JSON.parse(user)
     const motherID=motherData._id
+    const ROOMID=`babayAmina${props.route.params.data1._id}`
+    if(ROOMID.length<1){
+      console.log("canot load Messag")
+      return;
+    }
     api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
     await api.post(`${URL}/chatmessagessload`,{
        userid:motherID,
-       room:room
+       room:ROOMID
       }).then((res)=>{
      
     // alll condtion expete filte
-     console.log("start load chat message ",res.data)
-     setLoadmessag(true)
+     console.log("start load  previous  chat message ",res.data)
      setRecvMessages(res.data.messages)
+     
+    }).finally(( )=>{
+      setLoadmessag(true)
      
     }).catch((err)=>console.log('erorr:',err))
     
    }
 
 
-   const uploadmessage=async()=>{
+   const cratMessagRoom=async()=>{
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
     const motherData=JSON.parse(user)
     const motherID=motherData._id
-    api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
-    await api.post(`${URL}/chatmessage`,{
+    const ROOMID=`babayAmina${props.route.params.data1._id}`
+    console.log("start load msg",recvMessages.length)
+     
+     
+      api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+      await api.post(`${URL}/chatmessage`,{
       messages:recvMessages,
       userid:motherID,
-      chatname:room
+      chatname:ROOMID
     
     }).then((res)=>{
-     
-    // alll condtion expete filte
-     console.log("all meeage from chat ",res.data)
+      console.log("Creat Msg Room ",res.data)
     //  setLoadmessag(true)
     //  setRecvMessages(res.data.messages)
      
-    }).catch((err)=>console.log('erorr:',err))
+    }).catch((err)=>console.log('erorr:',err)
+    )
+  }
+
+  const updatemessageschat=async()=>{
     
-   }
+    const user = await setItem.getItem('BS:User');
+    const token = await setItem.getItem('BS:Token');
+    const motherData=JSON.parse(user)
+    const motherID=motherData._id
+    const ROOMID=`babayAmina${props.route.params.data1._id}`
+    console.log("start UPDATE  msg",recvMessages.length)
+    
+    if(recvMessages.length >= 1){
+      api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+      await api.patch(`${URL}/chatmessages`,{
+      messages:recvMessages,
+      userid:motherID,
+      room:ROOMID
+      
+    }).then((res)=>{
+      console.log("all meeage from chat UPDATE",room)
+    //  setLoadmessag(true)
+    //  setRecvMessages(res.data.messages)
+     
+    }).catch((err)=>console.log('erorr:',err)
+    )}
+  }
 
 
   const onSend = messages => {
-    console.log("message send by app",messages);
+   console.log("message send by app",messages);
+   if(!livechat){
+    Alert.alert('تنبيه',' الحاضنه غير قادر علي استقبال الرسائل ')
+    return
+   }
     socket.current.emit("sendMessage",  messages[0].text );
     setRecvMessages(prevState => GiftedChat.append(prevState, messages));
-
+    
   };
  
 
    const ENDDEXP=()=>{
       var then = moment(babysetter.end).format("HH:mm:ss");
       var ss= moment(babysetter.end).diff( moment(), 'minute')
-      console.log("Totla time",ss)
+      //console.log("Totla time",ss)
       // console.log("data info",babysetter.end ,"- ",babysetter.start)
       // console.log("endd",then)
-    setElapsedTime(ss)
+        setElapsedTime(ss)
    }
 
 
@@ -405,7 +543,7 @@ useEffect(async() => {
     return <Text>{minutes}</Text>
   }
    
-     
+  
 return(
     <View style={{backgroundColor:"#00ABB9" ,flex:1 }}>
        
@@ -472,20 +610,23 @@ return(
                          <CustomButton
                           buttonColor={Colors.AminaButtonNew}
                           title="تمديد"
-                          buttonStyle={{width: '90%', alignSelf: 'center'}}
+                          buttonStyle={{width: '77%', alignSelf: 'center'}}
                           textStyle={{fontSize: 15}}
                           onPress={() =>  setShowModal(true)  }
                             />
 
 
             </Box>
-                 {/* <Feather name='user' color={Colors.bloodOrange} size={33} onPress={()=> uploadmessage()} /> */}
+                 {/* <Feather name= {livechat?'user':"activity"} color={Colors.bloodOrange} size={33} onPress={()=> console.log(livechat)} /> */}
+                <TouchableOpacity onPress={()=>console.log(props.route.params.data1._id)}> 
+                  <Image source={livechat?Images.online:Images.offline} resizeMode='cover' style={{height:33,width:33 ,marginTop:15}}  />
+                </TouchableOpacity>
             <Box alignItems={'center'} w={Metrics.WIDTH*0.401} ml='3' mr='4' mt={1}  >
                          
                             <OutlaintButton
                           buttonColor={Colors.white}
                           title="انهاء وتقييم"
-                          buttonStyle={{width: '90%', alignSelf: 'center'}}
+                          buttonStyle={{width: '77%', alignSelf: 'center'}}
                           titleColor={Colors.blacktxt}
                           textStyle={{fontSize: 15}}
                           onPress={() => serviceCompleate(babysetter._id)  }
@@ -498,7 +639,13 @@ return(
     
     <Box h={ Platform.OS==="android"?"57%" : "62%" } backgroundColor={Colors.white} borderTopRadius={20} padding={1} >
       <GiftedChat
+       renderLoading={() =>  <ActivityIndicator size="large" color="#0000ff" />}
        messages={recvMessages}
+       isTyping={true}
+       
+       alwaysShowSend ={true}      
+        
+       isLoadingEarlier={loadmsgChat?true:false}
        onSend={messages => onSend(messages)}
        user={{
          _id:userrId,

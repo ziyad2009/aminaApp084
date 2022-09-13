@@ -3,7 +3,7 @@ import  React,{ useEffect, useState ,useRef} from 'react';
 import { Spacer, VStack ,HStack,Avatar,Box,Text,Center,Button,Modal, Stack,Fab} from 'native-base';
 
 import {View,StyleSheet, Platform, Alert} from 'react-native'
-import MapView,{Marker} from 'react-native-maps';
+import MapView,{Marker ,PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Feather from 'react-native-vector-icons/Feather'
  
@@ -85,7 +85,7 @@ const GOOGLE_MAPS_APIKEY = "AIzaSyBtKLEuD_50bKofX67ZV2hfLWvjPaY3aac";
         // latitudeDelta:latitudeDelta,
         // longitudeDelta: latitudeDelta,
       };
-      mapRef.current?.animateToRegion(userRegion, {
+      Platform.OS==='android'?mapRef.current?.animateToRegion(userRegion, {
         edgePadding: {
           top: 100,
           right: 20,
@@ -93,7 +93,9 @@ const GOOGLE_MAPS_APIKEY = "AIzaSyBtKLEuD_50bKofX67ZV2hfLWvjPaY3aac";
           left: 20,
         },
         animated: true,
-      });
+      }):
+      mapRef.current?.animateToRegion(userRegion)
+      
 
     },[])
 
@@ -163,7 +165,8 @@ return(
      
      <MapView
           style={styles.map}
-          ref={mapRef}
+          //ref={mapRef}
+          provider={PROVIDER_GOOGLE} 
           pointerEvents={false}
           initialRegion={{
             latitude: coordinates[0].latitude,

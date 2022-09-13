@@ -40,5 +40,14 @@ const styles = StyleSheet.create({
         color:Colors.AmonaButtontext,
         fontSize:20
       },
+      inputBasic: {
+        marginVertical: 8,
+        fontSize: 18,
+        borderWidth: 1,
+        borderColor: '#cdcdcd',
+        paddingHorizontal: 12,
+        height: 54,
+        width:Metrics.WIDTH*0.9382
+      },
 })
 export default styles;

@@ -232,7 +232,7 @@ const Profile=(props)=>{
       name:chiled,
       age:age,
       gender:gender,
-      disease:selectDies
+      diseasses:selectDies
   }).then((res)=>{
     return res.data
   }).catch((err)=>{
@@ -363,8 +363,8 @@ return(
          
         
         <View style={{
-             marginTop:Platform.OS==='android'?1:10,justifyContent:'center',alignItems:'center',
-            position:Platform.OS==='android'?null:'absolute',bottom:Platform.OS==='android'?1:1}}>
+             marginTop:Platform.OS==='android'?1:1,justifyContent:'center',alignItems:'center',
+            position:Platform.OS==='android'?null:'absolute',bottom:Platform.OS==='android'?4:50}}>
            { loding ?
                     <View style={{ width:Metrics.WIDTH*0.943 }}>
                     {/* <Button bgColor={Colors.amin1Button1} size={'lg'} onPress={() => 

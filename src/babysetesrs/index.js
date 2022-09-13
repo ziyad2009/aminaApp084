@@ -16,22 +16,20 @@ import CustomButton from '../services/buttons/buttton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Babysetesrs=(props)=>{
-const [newData,setNewdata]=useState([])
+ 
 const[babseters,setbabyseters]=useState([])
 const[loading,setLoading]=useState(true)
 const[loadStorage,setloadStorage]=useState(false)
-const[like,setlike]=useState(null)
-const[reservData,setReserData]=useState([])
+ 
 const [favoriteList, setFavoriteList] = useState([]);
 
 
-useEffect(async()=>{
+useEffect( ()=>{
 
-  //console.log("Pre data babysetter",JSON.parse(props.route.params.setterdata) )
+  console.log("Pre ====Data ==== Babysetter==========" )
   getDate()
    
- 
-},[])
+},[loadStorage ])
 
 useEffect( async ()=>{
   //  props.navigation.addListener('beforeRemove',async (e) => {
@@ -59,6 +57,12 @@ const savedataTofav= async(item)=> {
   console.log("Get fav from storage",favSetter)
   const succses = setItem.setItem("on:like",favSetter)
   if(succses){
+    const newFav=setItem.getItem("on:like").then((res)=>{
+      console.log("test from storage data",res)
+      setFavoriteList(res)
+      setloadStorage(!loadStorage)
+    })
+   
     console.log("items add to  storage ",favSetter)
   }
 
@@ -67,13 +71,15 @@ const savedataTofav= async(item)=> {
 const onRemoveFavorite = async(itemId) => {
   console.log("start remove ",itemId)
  delete favoriteList[itemId]
+ console.log("test == remove ",favoriteList)
  const succses= await setItem.setItem("on:like",favoriteList)
-  
+ 
  if(succses){
-  console.log("start remove ",itemId)
+  console.log("start remove by ID ",itemId)
+ 
   // setFavoriteList(favoriteList)
  }
-
+ setloadStorage(!loadStorage)
 };
 
  
@@ -81,6 +87,7 @@ const onRemoveFavorite = async(itemId) => {
 const getDate=async()=>{
   const favSetter=await setItem.getItem("on:like") ||{}
   setFavoriteList(favSetter)
+  ifExists()
   console.log("from storage favSetter",favSetter)
   // AsyncStorage.getItem('on:like', (err, result) => {
   //   console.log("result of fav album",JSON.parse(result));
@@ -97,8 +104,10 @@ const getDate=async()=>{
 
 
 
-  const ifExists = itemID => {
-     
+  const ifExists =  (itemID) => {
+   // const newFav= await setItem.getItem("on:like") ||{}
+    //console.log("exist data ",JSON.stringify(newFav))
+    console.log("exist data ",favoriteList)
     
     if (favoriteList[itemID]) {
       console.log("exist data is true")
@@ -209,42 +218,10 @@ console.log("tets DATA",data)
     
   }
 
-  const likeClike=async(item,indx)=>{
+  
    
-    //  const favariotSettter=await setItem.getItem("on:like") 
-    //   //console.log("id22",favariotSettter)
-      
-    //   if(favariotSettter===null){
-       
-    //     const likedata= await setItem.setItem("on:like",item)
-    //     console.log("add to fav");
-    //      return ;
-    //   } 
-      
-    //   if(favariotSettter._id === item._id){
-    //     console.log(Object.keys(favariotSettter));
-    //    Alert.alert("تنيبيه","الحاضنه مضافه بالمفظلخ مسبقا")
-    //    return;  
-    //   }else{
-    //     const likedata= await setItem.setItem("on:like",item)
-    //   }
-    //   console.log("test setter ddata",settrFav)
-    //   if(!settrFav){
-    //     settrFav=item  
-    //   }
-    //   const savefavSetter=await setItem.setItem("on:like",settrFav) 
-
-    //  setlike(indx)
-    //  console.log("id",settrFav)
-  }
-  const readlike=async(item)=>{
-    const favariotSettter=await setItem.getItem("on:like") 
-   
-    console.log("Data like stor",favariotSettter)
-  }
-
 return(
-<Box bgColor={Colors.white} mt={Platform.OS==='android'?66:100} flex={1}>
+<Box backgroundColor={Colors.red}  mt={Platform.OS==='android'?66:94} flex={1}>
        
       {loading?<Box>
         <Spinner size={'lg'} color={Colors.bloodOrange}/>
@@ -303,19 +280,12 @@ return(
                 </VStack>
                 
                 <Spacer />
-                {/* <TouchableOpacity onPress={()=>likeClike(item,index)}>
-                  <Image source={ index===like? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
-                </TouchableOpacity>
-               < TouchableOpacity onPress={()=>readlike(item)}>
-                  <Image source={ index===like? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
-                </TouchableOpacity> */}
-
+               
                 <TouchableOpacity   onPress={()=>ifExists(item._id)?onRemoveFavorite(item._id): savedataTofav(item) }>
                   <Image source={ifExists(item._id)? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
                 
                 </TouchableOpacity>
-               
-
+                
                 
                 
               </HStack>
@@ -334,24 +304,6 @@ return(
                       fontFamily:Platform.OS==='android'?Fonts.type.light:Fonts.type.base,}}>
                     احجز الان </Text>
                  </TouchableOpacity>
-              {/* < CustomButton
-                    buttonColor="#F38193"
-                    title="احجز الان"
-                    margnBtn={1}
-                    buttonStyle={{width: '100%', alignSelf: 'center', position:'absolute',bottom:0}}
-                    textStyle={{fontSize: 20}}
-                    onPress={() => ConfimSetterData(item)}
-                  />   */}
-              {/* <CustomButton
-                    buttonColor="#536DFE"
-                    title="remoove"
-                    buttonStyle={{width: '90%', alignSelf: 'center'}}
-                    textStyle={{fontSize: 20}}
-                    onPress={() =>  setItem.removeItem("on:like")}
-                  /> */}
-                 
-                  {/* <Button  size={'md'} w={Metrics.WIDTH*0.944} bgColor={"#F38193"} onPress={()=> ConfimSetterData(item)}>احجز الان</Button> */}
-                        {/* <Button  size={'md'} w={Metrics.WIDTH*0.944} bgColor={"#F38193"} onPress={()=> untet()}>احجز33 الان</Button> */}
               
             </Box>)
             

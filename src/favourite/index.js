@@ -10,6 +10,8 @@ import styles from './styles';
 //      import images from '../assets/Themes/Images';
 import {URL_ws,URL} from '../services/links';
 import _ from 'lodash'
+
+
 const Favourite=(props)=>{
 
  
@@ -20,13 +22,7 @@ const[like,setlike]=useState(null)
 const [ favoriteList, setFavoriteList] = useState([]);
 
 useEffect(async()=>{
-//   const unsubscribe = props.navigation.addListener('focus',async (e) => {
-//     console.log("add items")
-//     await setItem.setItem("on:like",favoriteList).then(()=>{
-//      console.log("asynstorage upddate=>add")
-//    }) 
-  
-// })
+  const unsubscribe = props.navigation.addListener('focus',async (e) => {
     const favariotSettter=await setItem.getItem("on:like") || {}
     if(!favariotSettter){
      setLoading(true)
@@ -35,7 +31,12 @@ useEffect(async()=>{
     }
     
    console.log("Data for favariotSettter",Object.keys( favariotSettter).length)
-  // return unsubscribe;
+
+   
+  
+})
+   
+  return unsubscribe;
   },[loading])
 
 const onFavorite = async(favdata) => {
@@ -64,7 +65,7 @@ return(
         <Box alignItems={'center'} mt="4" backgroundColor={Colors.white}>
             {_.map(favoriteList,(item,id) =>{
                 return(
-                  <Box bordesrWidth="1"  bgColor={Colors.white} borderColor="#00ABB9" borderRadius='md'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.220}>
+                  <Box  key={id} bordesrWidth="1"   bgColor={Colors.white} borderColor="#00ABB9" borderRadius='md'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.220}>
                   <HStack space={3} justifyContent='space-around' key={item._id}>
                     <Image  source={{ uri: `${URL}/users/${item.owner}/avatar`}} resizeMode='stretch' 
                     style={{width: Metrics.WIDTH*0.281, height: Metrics.HEIGHT*0.170,marginLeft:5,marginRight:20,borderBottomLeftRadius:10}} />
@@ -141,7 +142,7 @@ return(
         </Box>:
             <Box alignItems={'center'}  mt={40} ml='3' mr={3}>
                 <Heading>
-                    <Text fontFamily={Fonts.type.base} fontSize={22} color={Colors.blacktxt} textAlign='center'>عفوا لاتوجد لديك اضافات في المفضله</Text>
+                    <Text fontFamily={Fonts.type.lightmore} fontSize={22} color={Colors.veryLightGray} textAlign='center'>عفوا لاتوجد لديك اضافات   في المفضله !</Text>
                     
                 </Heading>
             </Box> 

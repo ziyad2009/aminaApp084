@@ -21,10 +21,8 @@ const Singin=(props)=>{
     const [showMessage, setShowMessage] = useState(false);
     const[phoneNo,setphoneNo]=useState("")
     const[erorrmesage,seterorrmesage]=useState(false)
+    const {loading,loginbyphone,user,statuscode,regUser,home} = useContext(UserContext);
     
-  const {loading,loginbyphone,user,statuscode,regUser,home} = useContext(UserContext);
-    //navigation.navigate('AuthScreen', {'role' : role});
-      //console.log("test childe byphone",props.navigation)
     
     useEffect(async()=>{
       
@@ -54,10 +52,10 @@ const Singin=(props)=>{
      const loginByPhone=( )=>{
       //console.log("from login Start login by phone",phoneInput.current.state.number )
       loginbyphone(`966${phoneInput.current.state.number}`).then((res)=>{
-        console.log("test RES",res)
+        console.log("Respon frrom login phone",res)
       })
       //test statuse code 
-      console.log("ST code" ,statuscode)
+      //console.log("ST code" ,statuscode)
       setphoneNo(`966${phoneInput.current.state.number}`)
       GoScreen()
      }

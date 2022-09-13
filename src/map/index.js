@@ -46,10 +46,11 @@ const Mapscreen = ({ route ,navigation}) => {
         const userRegion = {
           latitude: user_latitude,
           longitude: user_longitude,
-          latitudeDelta:latitudeDelta,
-          longitudeDelta: latitudeDelta,
+          latitudeDelta:Platform.OS==='android'? latitudeDelta:1,
+          longitudeDelta:Platform.OS==='android'?  latitudeDelta:1,
+          
         };
-        mapRef.current?.animateToRegion(userRegion);
+        mapRef.current?.animateToRegion(userRegion,2000);
 
       },[isLoading])
         
@@ -241,18 +242,23 @@ const Mapscreen = ({ route ,navigation}) => {
     <View style={styles.container}>
     
        <MapView
-            ref={mapRef}
+           ref={mapRef}
            style={styles.map}
+           provider={PROVIDER_GOOGLE} 
            initialRegion={{
             latitude: user_latitude,
             longitude: user_longitude,
             latitudeDelta: latitudeDelta,
             longitudeDelta: longitudeDelta,
          }}
-        
+         getMarkersFrames='true'
          
          onRegionChange={(e)=> getMylocation(e)}
-        //  showsMyLocationButton
+           showsMyLocationButton={true}
+           followsUserLocation={true}
+           zoomEnabled={true}
+            showsUserLocation={true}
+             
         //  zoomEnabled={true}
         //  scrollEnabled={true}
         //  showsScale={true}
@@ -263,8 +269,8 @@ const Mapscreen = ({ route ,navigation}) => {
             longitude: user_longitude,
             error: position_error,
           }}
-        title='Flatiron School Atlanta'
-        description='This is where the magic happens!'
+        title='The selected location'
+        description='الموقع الذي سوف يتم اعتماده'
      >
      </Marker >
    

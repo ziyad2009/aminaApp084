@@ -6,9 +6,10 @@
  * @flow strict-local
  */
 import 'react-native-gesture-handler';
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { Platform, NativeModules } from 'react-native'
 import RNRestart from "react-native-restart";
+import SplashScreen from 'react-native-splash-screen';
 import {
   SafeAreaView,
   ScrollView,
@@ -43,6 +44,9 @@ const App =() => {
     'linear-gradient': require("react-native-linear-gradient").default,
     },};
 
+    useEffect(() => {
+          SplashScreen.hide();
+     }, []);
   //     const changeAppLang= async(lang)=>   {
 
   //     if(lang == 'Ar') {

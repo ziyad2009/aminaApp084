@@ -1,6 +1,6 @@
 
 import React,{useEffect,useState} from 'react';
-import {View,Image, TouchableOpacity,Platform} from 'react-native'
+import {View,Image, ScrollView,Platform} from 'react-native'
 import { Box,Heading,Avatar,Text, VStack, HStack,TextArea, Spinner, Spacer,Button} from 'native-base';
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Feather from 'react-native-vector-icons/Feather'
@@ -67,7 +67,8 @@ const confirmReservisionTime =()=>{
 
 
 return(
-    <Box flex={1} backgroundColor={Colors.white} mt={Platform.OS==='android'?55:100} >
+  <ScrollView>
+    <Box flex={1} backgroundColor={Colors.white} mt={Platform.OS==='android'?55:94} >
         <VStack alignItems={'center'}   space={1} >
        <Image  source={{ uri: `${URL}/users/${babseters.settterowner}/avatar`}} resizeMode='stretch' 
                 style={{width: 100, height:100,marginLeft:5,marginRight:20,borderRadius:60}} />
@@ -178,6 +179,7 @@ return(
           
          
     </Box>
+    </ScrollView>
 )
 
 }

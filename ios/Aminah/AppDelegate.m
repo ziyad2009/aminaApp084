@@ -3,7 +3,8 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-
+#import <GoogleMaps/GoogleMaps.h>
+#import <react-native-splash-screen/RNSplashScreen.h>
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
@@ -27,6 +28,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyA2pSYX2J6rUcHE2d2W-YD4tpBeciHbDhw"]; // add this line using the api key obtained from Google Console
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
@@ -37,7 +39,7 @@ static void InitializeFlipper(UIApplication *application) {
                                             initialProperties:nil];
 
   if (@available(iOS 13.0, *)) {
-      rootView.backgroundColor = [UIColor colorWithRed:0.00000 green:0.67059 blue:0.72549 alpha:1.00000];
+      rootView.backgroundColor = [UIColor systemBackgroundColor];
   } else {
       rootView.backgroundColor = [UIColor whiteColor];
   }
@@ -46,7 +48,8 @@ static void InitializeFlipper(UIApplication *application) {
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
-  [self.window makeKeyAndVisible];
+  [self.window makeKeyAndVisible];  
+  [RNSplashScreen show];
   return YES;
 }
 

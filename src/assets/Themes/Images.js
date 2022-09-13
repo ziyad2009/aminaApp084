@@ -13,7 +13,8 @@ const images = {
   awsma: require("../images/awsma.png"),
   madacard: require("../images/madacard.jpeg"),
   notifaction: require("../images/notifaction.png"),
-  
+  offline: require("../images/switch-off.png"),
+  online: require("../images/switch-on.png"),
  
  
 };

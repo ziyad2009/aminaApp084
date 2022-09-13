@@ -7057,12 +7057,17 @@ react-native-maps-directions@^1.9.0:
     lodash.isequal "^4.5.0"
     prop-types "^15.6.0"
 
-react-native-maps@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.2.0.tgz#04374a701b85d264eb50f33a2464d01a7c0b310a"
-  integrity sha512-n6QtGLznQ+1psY09st/qD1WluyQx9qIz3S0l9w/UA/ZMYhNWJiQpqrXzNpgJW1N+4uy2umjEpIYYHnhdzIFSKg==
+react-native-maps@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.3.1.tgz#9309348c3a8b0158bb9a96a7667a734296fce680"
+  integrity sha512-qvsDr1Nzp36FQ06cWkOGvJyu5/7Cz2NMKimOGGmgphvCWmh/k3JwUFkID44OS/l7qSBsCJsZsI6MpkRX87QBuQ==
   dependencies:
     "@types/geojson" "^7946.0.8"
+
+react-native-mask-input@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-mask-input/-/react-native-mask-input-1.2.1.tgz#2f01683844ded3693d0d845bd1beeb2b8367f2e2"
+  integrity sha512-OsVKhdJjljWIt373CPmsyTAjynlMpQKPkz3UQJ0Y48ZTVQa8zyejb9nmwoe15Zvi0uC49RxggDRACgkUxOjt3w==
 
 react-native-parsed-text@0.0.22:
   version "0.0.22"
@@ -7177,6 +7182,11 @@ react-native-sms-verifycode@^2.4.3:
   integrity sha512-S518092BqydeX1IL7OoDuGo7MnDjKhvmunge7Ggmo2I7agBnT4RN2NOsJw9HKDqB2o8w1uoVseumY4J/ie5Jzg==
   dependencies:
     prop-types "^15.6.2"
+
+react-native-splash-screen@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz#3af71ed17afe50fee69590a45aec399d071ead02"
+  integrity sha512-rGjt6HkoSXxMqH4SQUJ1gnPQlPJV8+J47+4yhgTIan4bVvAwJhEeJH7wWt9hXSdH4+VfwTS0GTaflj1Tw83IhA==
 
 react-native-svg-transformer@^1.0.0:
   version "1.0.0"

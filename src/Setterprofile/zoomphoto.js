@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react';
-import {View,Image, TouchableOpacity,Platform,Modal} from 'react-native'
+import {View,Image, TouchableOpacity,Text,Platform,Modal,Pressable,StyleSheet} from 'react-native'
 import {Box}from 'native-base'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -8,6 +8,7 @@ import { URL_ws,URL } from '../services/links';
 
 const Zoomphoto=(props )=>{
     const[visible,setvisble]=useState(true)
+    const [typeDevice,setTypeDevice]=useState(false)
     console.log("ALL LLL",props.route.params.setterdata)
     const images = [{
         // Simplest usage.
@@ -29,7 +30,10 @@ const Zoomphoto=(props )=>{
         }
     }]
     const showModel=()=>{
-       
+       if(Platform.OS==='ios'){
+        console.log("ios")
+       }
+       console.log("ios")
         setvisble(false)
         props.navigation.goBack()
     }
@@ -37,16 +41,71 @@ return(
     <View style={{flex:1,backgroundColor:"black",alignItems:'center',marginTop:58 }}>
         
         
-            <Modal visible={visible} transparent={true}>
-            
+            <Modal 
+            visible={visible} 
+            transparent={true}
+            animationType="slide"
+            onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                setvisble(false)
+                props.navigation.goBack()
+              }}
+              >
+             
                 <ImageViewer
-                 
-                renderHeader={()=><AntDesign name='close' size={30} color={Colors.white} style={{marginTop:20,marginRight:12}} onPress={()=>showModel() } />}
+                 enableImageZoom={true}
+                renderHeader={()=><AntDesign name='close' size={30} color={Colors.white} style={{marginTop:Platform.OS==='android'? 20:88,marginRight:12}} onPress={()=>showModel() } />}
                 imageUrls={images}/>
             </Modal>
+            
         
     </View>
 )
 
 }
-export default  Zoomphoto;
+
+const styles = StyleSheet.create({
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
+    button: {
+        marginTop:100,
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2
+    },
+    buttonOpen: {
+      backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+      backgroundColor: "#2196F3",
+    },
+    textStyle: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center"
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center"
+    }
+  });
+  export default  Zoomphoto;

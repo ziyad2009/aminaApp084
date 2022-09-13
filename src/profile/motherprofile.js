@@ -162,7 +162,7 @@ const Motherprofilw=(props)=>{
             setShowModal(!ShowModal)
             const token = await setItem.getItem('BS:Token');
             const newData={id:Number(Math.floor(Math.random() * 1000)), chiled,age,gender,selectDies}
-            console.log("tets ch",newData)
+            console.log("tets disess ",selectDies)
             console.log("TEST TOKEN",token)
             //update state in  app
             //setChiledLest (oldarray=>[...oldarray,newData]) 
@@ -173,7 +173,7 @@ const Motherprofilw=(props)=>{
             name:chiled,
             age:age,
             gender:gender,
-            disease:selectDies
+            diseasses:selectDies
         }).then((res)=>{
             return res.data
         }).finally(()=> allchiled() )
@@ -427,6 +427,7 @@ const Motherprofilw=(props)=>{
             </Stack>
             
              </Modal.Body>
+            
              <Modal.Footer alignItems={'center'}>
                 {chieldList.length>=1? <HStack   flexDirection={'row'} flexWrap='wrap'  alignItems={'flex-end'}   >
                    {chieldList.map((chld)=>{ 
