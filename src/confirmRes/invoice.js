@@ -153,7 +153,7 @@ const handelREQ= async(id)=>{
             <Box borderColor={'#00ABB9'} borderWidth='1' h={'1%'} />
             <HStack mt='4'>
             <Text style={styles.leftText}>اجمالي التكلفه </Text>
-             <Text style={styles.rightTex}> {babseters.totalprice}</Text>
+             <Text style={styles.rightTex}> {(Number(0.15)* Number(babseters.totalprice)) + babseters.totalprice} </Text>
 
             </HStack>
             <HStack>

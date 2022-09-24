@@ -136,9 +136,9 @@ useEffect( async()=>{
 
 },[])
 
-useEffect(()=>{
-  updatemessageschat()
-},[recvMessages])
+// useEffect(()=>{
+//  // updatemessageschat()
+// },[recvMessages])
 
 useEffect(()=>{
     let onColoc=null
@@ -250,7 +250,10 @@ useEffect(async() => {
   
     socket.current.on("message", message => {
      console.log("message On",message)
+    
      setRecvMessages(prevState => GiftedChat.append(prevState,  message));
+     // updatemessageschat2(recvMessages)
+     
     })
     
     socket.current.on("statuseuser", data => {
@@ -279,12 +282,14 @@ useEffect(async() => {
 }, [loadmsg,room,userrId]);
 
 
+
+  //chat backend
 const chikchatRoomMsg=async(roomID)=>{ 
   
   const user = await setItem.getItem('BS:User');
   const token = await setItem.getItem('BS:Token');
-  const motherData=JSON.parse(user)
-  const motherID=motherData._id
+  // const motherData=JSON.parse(user)
+  // const motherID=motherData._id
   const  USERROOM=roomID
   if(USERROOM===''){
     console.log("check messag false",props.route.params.data1._id)
@@ -292,72 +297,82 @@ const chikchatRoomMsg=async(roomID)=>{
   }
   api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
   await api.post(`${URL}/chatmessagessload`,{
-     userid:motherID,
+     //userid:motherID,
      room:USERROOM
     }).then((res)=>{
       if(res.data.length < 1){
-        console.log("start cheack chat message ",res.data.length )
+        console.log("create chat message",res.data.length )
         cratMessagRoom()
+      }else{
+        console.log("result chat message ",res.data )
+        loaddPrevmssage()
+
       }
-      loaddPrevmssage()
-      console.log("result chat message ",res.data )
-    
-  }).finally(( )=>{
-    setLoadmessag(true)
-   
-  }).catch((err)=>console.log('erorr:',err))
+    }).finally(( )=>{
+      setLoadmessag(true)
+    }).catch((err)=>console.log('erorr:',err))
   
  }
 
    const loaddPrevmssage=async()=>{ 
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
-    const motherData=JSON.parse(user)
-    const motherID=motherData._id
+    // const motherData=JSON.parse(user)
+    // const motherID=motherData._id
     const ROOMID=`babayAmina${props.route.params.data1._id}`
     if(ROOMID.length<1){
-      console.log("canot load Messag")
+      console.log("canot load Messag room is not redy")
       return;
     }
     api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
     await api.post(`${URL}/chatmessagessload`,{
-       userid:motherID,
+       //userid:motherID,
        room:ROOMID
       }).then((res)=>{
      
     // alll condtion expete filte
-     console.log("start load  previous  chat message ",res.data)
-     setRecvMessages(res.data.messages)
+     console.log("start load  Previous  chat message ")
+    const messsagess= res.data.messages.sort((a, b) => b.createdAt  - a.createdAt  )
+   
+    res.data.messages.map((msg)=>{
+      console.log("MSGS ",msg)
+      setRecvMessages(prevState => GiftedChat.append(prevState, msg));
+    })
+   // setRecvMessages(res.data.messages)
+     //setRecvMessages(prevState => GiftedChat.append(prevState, ...res.data.messages));
      
     }).finally(( )=>{
-      setLoadmessag(true)
+     // setLoadmessag(true)
+     setloadmsgChat(false)
      
-    }).catch((err)=>console.log('erorr:',err))
+    }).catch((err)=>console.log('Erorr==:== Load message',err))
     
    }
 
-
+ 
    const cratMessagRoom=async()=>{
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
-    const motherData=JSON.parse(user)
-    const motherID=motherData._id
+    // const motherData=JSON.parse(user)
+    // const motherID=motherData._id
     const ROOMID=`babayAmina${props.route.params.data1._id}`
     console.log("start load msg",recvMessages.length)
      
      
       api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
       await api.post(`${URL}/chatmessage`,{
-      messages:recvMessages,
-      userid:motherID,
+      //messages:[],
+      //userid:motherID,
       chatname:ROOMID
     
     }).then((res)=>{
-      console.log("Creat Msg Room ",res.data)
-    //  setLoadmessag(true)
-    //  setRecvMessages(res.data.messages)
      
-    }).catch((err)=>console.log('erorr:',err)
+      if(res.data.length >= 1){
+        console.log("Creat Msg Room ",res.data)
+      }else{
+        console.log("Creat Msg Room  not redy")
+      }
+   }).catch((err)=>console.log('erorr:',err)
     )
   }
 
@@ -368,7 +383,7 @@ const chikchatRoomMsg=async(roomID)=>{
     const motherData=JSON.parse(user)
     const motherID=motherData._id
     const ROOMID=`babayAmina${props.route.params.data1._id}`
-    console.log("start UPDATE  msg",recvMessages.length)
+    console.log("start UPDATE  msg 1++",recvMessages.length)
     
     if(recvMessages.length >= 1){
       api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
@@ -387,16 +402,67 @@ const chikchatRoomMsg=async(roomID)=>{
   }
 
 
-  const onSend = messages => {
-   console.log("message send by app",messages);
-   if(!livechat){
-    Alert.alert('تنبيه',' الحاضنه غير قادر علي استقبال الرسائل ')
-    return
-   }
-    socket.current.emit("sendMessage",  messages[0].text );
-    setRecvMessages(prevState => GiftedChat.append(prevState, messages));
+  const updatemessageschat2=async(msg)=>{
     
-  };
+    const user = await setItem.getItem('BS:User');
+    const token = await setItem.getItem('BS:Token');
+    // const motherData=JSON.parse(user)
+    // const motherID=motherData._id
+    const ROOMID=`babayAmina${props.route.params.data1._id}`
+    console.log("start UPDATE  msg 2+++",recvMessages.length)
+    
+    
+      api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+      await api.patch(`${URL}/updatemesssageall`,{
+     // userid:motherID,
+      room:ROOMID,
+      singlemesssage:msg
+    }).then((res)=>{
+      console.log("result single  chat messsage UPDATE",res.data)     
+    }).catch((err)=>console.log('erorr:',err)
+    )
+  }
+
+
+  // const onSend = async messages => {
+  // //  console.log("message send by app",messages);
+  // //  if(!livechat){
+  // //   Alert.alert('تنبيه',' الحاضنه غير قادر علي استقبال الرسائل ')
+  // //   return
+  // //  }
+
+  // const token = await setItem.getItem('BS:Token');
+  // const massegdata={
+  //   tokens:JSON.parse(token),
+  //   ROOMID:`babayAmina${props.route.params.data1._id}`,
+  //   message:messages[0].text
+   
+  // }
+    
+  //   console.log("send by app",messages)
+  //   socket.current.emit("sendMessage", massegdata);
+  //   setRecvMessages(prevState => GiftedChat.append(prevState, messages));
+    
+    
+  // };
+
+  const onSend = async messages => {
+    //  console.log("message send by app",messages);
+    //  if(!livechat){
+    //   Alert.alert('تنبيه',' الحاضنه غير قادر علي استقبال الرسائل ')
+    //   return
+    //  }
+  
+    const token = await setItem.getItem('BS:Token');
+    
+      const tokens=JSON.parse(token)
+      const ROOMID=`babayAmina${props.route.params.data1._id}`
+      console.log(tokens)
+      socket.current.emit("sendMessage",  messages[0].text);
+      setRecvMessages(prevState => GiftedChat.append(prevState, messages));
+      
+      
+    };
  
 
    const ENDDEXP=()=>{
@@ -559,6 +625,7 @@ return(
                 <Box ml={2} alignItems='flex-start'>
                     <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={16} fontWeight='bold'  mt="3">{babysetter.settername}</Text>
                     <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={14} fontWeight='300'>{babysetter.serviestype}</Text>
+                    <Text fontSize={9} color={Colors.txtgrey} >{livechat?'متصلة':'غير متصلة'}</Text>
                 </Box>
             </HStack>
             <Spacer />
@@ -617,10 +684,8 @@ return(
 
 
             </Box>
-                 {/* <Feather name= {livechat?'user':"activity"} color={Colors.bloodOrange} size={33} onPress={()=> console.log(livechat)} /> */}
-                <TouchableOpacity onPress={()=>console.log(props.route.params.data1._id)}> 
-                  <Image source={livechat?Images.online:Images.offline} resizeMode='cover' style={{height:33,width:33 ,marginTop:15}}  />
-                </TouchableOpacity>
+                 <Feather name= {livechat?'user':"activity"} color={Colors.bloodOrange} size={33} onPress={()=> console.log(recvMessages.length)} />
+                 
             <Box alignItems={'center'} w={Metrics.WIDTH*0.401} ml='3' mr='4' mt={1}  >
                          
                             <OutlaintButton
@@ -641,8 +706,9 @@ return(
       <GiftedChat
        renderLoading={() =>  <ActivityIndicator size="large" color="#0000ff" />}
        messages={recvMessages}
+        //messages={recvMessages.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))}
        isTyping={true}
-       
+       inverted={true}
        alwaysShowSend ={true}      
         
        isLoadingEarlier={loadmsgChat?true:false}

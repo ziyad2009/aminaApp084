@@ -16,7 +16,7 @@ import 'moment/locale/ar-sa';
 import { Rating,AirbnbRating } from 'react-native-ratings';
 import images from '../assets/Themes/Images';
 import CustomButton from '../services/buttons/buttton';
-  
+import DatePicker from 'react-native-date-picker';
 
 let MOTHERARRAY=[]
 
@@ -32,7 +32,8 @@ const Fourm1=(props)=>{
 
     const [timePicker, setTimePicker] = useState(false);
     const [timePicker2, setTimePicker2] = useState(false);
-    const [time, setTime] = useState(new Date(Date.now()));
+   // const [time, setTime] = useState(new Date(Date.now()));
+        const [time, setTime] =useState(new Date())
     const [time2, setTime2] = useState(new Date(Date.now()));
     const [datePicker, setDatePicker] = useState(false);
     const [date, setDate] = useState(new Date(Date.now()));
@@ -42,20 +43,16 @@ const Fourm1=(props)=>{
     const[mother,setMother]=useState([])
 
     const[ResWay,setResWay]=useState(1)
-    const [isTimelayDate1, setSimelayDate1] = useState(false);
-     const [isTimelayDate2,setSimelayDate2] = useState(false);
-    const [isDisplayDate, setShow] = useState(false);
+   
 
     const [showModal, setShowModal] = useState(false);
     const[childeArray,settChiledArray]=useState([])
-    const[sDay,setsDay]=useState("")
-    const[sMonth,setsMont]=useState("")
-    const[sPriod,setsPreoid]=useState("")
-    const[sPriod2,setsPreoid2]=useState("")
-    const[Start,setstart]=useState("")
-    const[End,setEnd]=useState('')
+    
     const [motherch,setmothersh]=useState([])
 
+    const [date4, setDate4] = useState(new Date())
+  const [open, setOpen] = useState(false)
+  const [open2, setOpen2] = useState(false)
     
 
 //Clender
@@ -85,45 +82,7 @@ if(Platform.OS==='ios'){
   } )
 
   
- 
-  const onTimeSelected=((event, value)=>{
-    console.log("time value ====", value)
-
-    if(Platform.OS==='ios'){
-        return setTime(value), setTimePicker(false);
-    }
-    setTimePicker(!timePicker);
-    setTime(value);
-    // if (event?.type === 'dismissed') {
-    //     console.log("ddessmes time")
-    //     setTimePicker(false);
-    // }else if(event?.type === 'set'){
-    //     setTime(value);
-    //     setTimePicker(false);
-    // }
-
-
-
-  })
- 
-
-  const  onTimeSelected2=((event, value)=>{
-    if(Platform.OS==='ios'){
-        return setTime2(value), setTimePicker2(false);
-     }
-     setTimePicker2(!timePicker2);
-     setTime2(value)
-    //  if (event?.type === 'dismissed') {
-    //      console.log("ddessmes time2")
-    //      setTimePicker2(false);
-    //  }else if(event?.type === 'set'){
-    //      setTime2(value);
-    //      setTimePicker2(false);
-    //  }
-    
-   })
-
-
+  
   const modelShow=()=>{
     setShowModal(false)
      //console.log("time1",moment(time1).format('HH:MM a'))
@@ -157,10 +116,16 @@ if(Platform.OS==='ios'){
              key={title._d} onPress={()=>handleSelection(i,title)}>
                 
                 <View style={{alignItems:'center',paddingTop:15,paddingBottom:5}} > 
-                    <Text color={ i===select?Colors.Milky:Colors.white} fontWeight={i===select?"light":"bold" }fontFamily={Fonts.type.aminafonts} >{title.services}</Text>
+                    <Text color={ i===select?Colors.Milky:Colors.white}   fontSize={13}
+                          fontFamily={ i===select? Fonts.type.boldextr:Fonts.type.light} >
+                            {title.services}
+                    </Text>
                 </View>
                 <View style={{alignItems:'center',paddingBottom:5,borderBottomColor:i===select?"#000000":null,borderBottomWidth:i===select?1:null}}>
-                    <Text style={{color: i===select?Colors.Milky:Colors.white,fontWeight:'600'}} >{title.descripton}</Text>
+                    <Text  color={i===select?Colors.Milky:Colors.white} fontWeight='600'
+                        fontFamily={ i===select? Fonts.type.boldextr:Fonts.type.light}>
+                            {title.descripton}
+                        </Text>
                 
                 </View> 
             </TouchableOpacity>
@@ -588,7 +553,8 @@ return(
         
         <View style={styles.framView}>
                 <View style={{justifyContent:'space-between',flexDirection:'row',padding:3}}>
-                    <Text fontFamily={Fonts.type.aminafonts} fontWeight='bold'  color={Colors.blacktxt} fontSize={18} ml="5" mt="1" textAlign='left'>اختر طفلك</Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'  color={Colors.blacktxt} 
+                        fontSize={18} ml="5" mt="1" textAlign='left'>اختر طفلك</Text>
                 </View>
                 <View style={styles.splite}/>
                 {motherch.map((nme,index)=>{
@@ -609,13 +575,15 @@ return(
                        <Text fontFamily={Fonts.type.light} fontWeight='600'  color={Colors.blacktxt} fontSize={14} ml="5" textAlign='center'>عدد الاطفال</Text>
                        <View style={{flexDirection:'row'}}>
                         <Text style={{marginRight:5}}> {childeArray.length}</Text>
-                       <Text style={{marginRight:5}}> اطفال</Text>
+                       <Text  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
+                               fontSize={14} mr={5}> اطفال</Text>
                        </View>
                 </View>
                 </View> 
                 <View style={styles.framView}>
                     <View style={{justifyContent:'space-between',flexDirection:'row',width:Metrics.WIDTH*0.822,marginLeft:10,alignContent:"baseline"}}>
-                    <Text fontFamily={Fonts.type.aminafonts} fontWeight='bold'  color={Colors.blacktxt} fontSize={15} ml="5" mt="2" textAlign='left'>اختر موعد الخدمة</Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'   color={Colors.blacktxt} 
+                          fontSize={15} ml="5" mt="2" textAlign='left'>اختر موعد الخدمة</Text>
                     <EvilIcons name="pencil" size={33} color={Colors.textZahry} onPress={()=>setShowModal(true)}   />
                     </View>
                     <View style={styles.splite}/>
@@ -641,7 +609,8 @@ return(
 
                 <View style={styles.framView}>
                     <View style={{justifyContent:'space-between',flexDirection:'row',width:Metrics.WIDTH*0.822,marginLeft:10}}>
-                        <Text fontFamily={Fonts.type.light} fontWeight='bold'  color={Colors.blacktxt} fontSize={15} ml="5" mt="2" textAlign='left'>الموقع
+                        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'  color={Colors.blacktxt} 
+                              fontSize={15} ml="5" mt="2" textAlign='left'>الموقع
                         </Text>
                         
                     </View>
@@ -649,7 +618,7 @@ return(
                     <View style={{flexDirection:'row',marginLeft:3 ,justifyContent:'space-around',marginBottom:2,marginTop:5,alignItems:'baseline'}}>
                         
                         <View style={styles.mapTextView}>
-                            <Text fontFamily={Fonts.type.aminafonts} textAlign='left' color="#2E2E2E" >{location}</Text>
+                            <Text fontFamily={Fonts.type.aminafonts} textAlign='left' fontSize={12} color="#2E2E2E" >{location}</Text>
                             <EvilIcons name="pencil" size={33} color={Colors.textZahry} onPress={()=>props.navigation.push("Mapscreen")}   />
                         </View> 
                         
@@ -662,7 +631,7 @@ return(
                     </View>
                   
 
-                    <View style={{flexDirection:'row',width:Metrics.WIDTH*0.8716,height:Metrics.HEIGHT*0.087,justifyContent:'space-around',marginLeft:20,marginTop:10
+                    <View style={{flexDirection:'row-reverse',width:Metrics.WIDTH*0.8716,height:Metrics.HEIGHT*0.087,justifyContent:'space-around',marginLeft:20,marginTop:10
                                 ,position:'absolute',bottom:10}}>
                     < TouchableOpacity onPress={()=>ConfirmScreen()}   
                             style={styles.endButton}>
@@ -678,7 +647,9 @@ return(
 
         <Center>
            
-            <Modal  isOpen={showModal} onClose={() => setShowModal(false)}>
+            <Modal  isOpen={showModal} onClose={() => setShowModal(false)}
+            borderColor={Colors.white}
+            avoidKeyboard justifyContent="flex-end" bottom="4">
             <Modal.Content width={Metrics.WIDTH*0.9711} backgroundColor='white'>
             <Modal.CloseButton />
             <Modal.Header backgroundColor={Colors.AminaButtonNew}>
@@ -691,7 +662,7 @@ return(
                 <View style={{justifyContent:'center',flexDirection:'column',marginLeft:1}}>
                     
                 
-                    <Stack space={1} w="100%" alignItems="center" marginTop={5} flexDirection='row' textAlign={'center'}>
+                    <Stack   w="100%"  alignItems="center" marginTop={5} flexDirection='row' textAlign={'center'} >
                         <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={18} fontWeight="400" mr={5} >اليوم</Text>
                     {datePicker ? (
                         <DateTimePicker
@@ -703,118 +674,80 @@ return(
                             onChange={onDateSelected}
                             style={styles.datePicker}
                         />):(<Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'left'}  value={moment(date).format("LL")}
-                            w={{base: "75%", md: "20%" }} borderColor={Colors.black} fontSize={'lg'} 
+                            fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
+                            w={{base: Platform.OS==='android'? "75%":"80%" , md: "20%" }} borderColor={Colors.black} fontSize={'lg'}  
                             InputLeftElement={<Icon as={ !datePicker && (<Feather name="calendar"  onPress={()=>setDatePicker(!datePicker)}/>  ) }
-                            size={'lg'} ml="4"   color={Colors.blacktxt} />}
+                            size={'lg'} ml="4"   color={Colors.textZahry} />}
                             color={Colors.blacktxt}  placeholder="تاريخ الخدمة" /> 
                          )}
                     </Stack>
 
-                    {Platform.OS==='android'?
-                        <Box flexDirection={'row'}>
-                            <Stack space={1} w="39%" alignItems="center" marginTop={5} flexDirection='row'>
+                    
+                        <Box flexDirection={'row'} ml={Platform.OS==='android'?8:5}   alignItems={'center'}>
+                            <HStack  w={Platform.OS==='android'? "38%": "46%"}  justifyContent={Platform.OS==='android'?'flex-start':'space-around'}  marginTop={5} flexDirection='row'  >
                                 <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
-                                 fontSize={18} fontWeight="400" mr={8} color={Colors.red}>من</Text>
-                                {timePicker?
-                                    (<DateTimePicker
-                                    value={time}
-                                    mode={'time'}
-                                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                                    is24Hour={false}
-                                    onChange={onTimeSelected}
-                                    //timeZoneOffsetInMinutes={60}
-                                    minuteInterval={60}
-                                    style={styles.datePicker}
-                                    />):
-                                (<Input isDisabled  h={Metrics.HEIGHT*0.0682}  textAlign={'left'} borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time).format("LT")}
-                                    w={{base: "75%",md: "20%"}}  
-                                    InputLeftElement={<Icon as={ !timePicker && (<Feather name="clock"    onPress={()=> setTimePicker(!timePicker) } /> )} 
-                                    size={'lg'} ml="4"   color={Colors.blacktxt}/>} 
-                                    color={Colors.blacktxt}  placeholder="وقت بداد  الخدمه و عدد الاطفال" />
-                                )}
-                            </Stack>
-                            
-                            <Stack space={1} w={Platform.OS==='android'?"39%":"40%"} alignItems="center" marginTop={5}  flexDirection='row'>
-                                <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={18} fontWeight="400" mr={5} ml='10' >الى</Text>
-                                    {timePicker2?
-                                (<DateTimePicker
-                                value={time2}
-                                mode={'time'}
-                                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                                is24Hour={false}
-                                onChange={onTimeSelected2}
-                                //timeZoneOffsetInMinutes={60}
-
-                                style={styles.datePicker}
-                                />):
-                                (<Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'left'}borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time2).format("LT")}
-                                w={{ base: "75%",md: "20%"}}  
-                                InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setTimePicker2(!timePicker2)}/>} color={Colors.blacktxt} size={'lg'} ml="4" />} 
-                                color={Colors.blacktxt}  placeholder="وقت انهاد الخدمه" />)}
-                            </Stack>
-                        </Box>
-                        :   
-                        <Box flexDirection={'column'} justifyContent='center' alignItems={'center'} >
-                            <HStack space={1} w="100%" alignItems='flex-start' marginTop={5} flexDirection='row'>
-                                <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
-                                 fontSize={18} fontWeight="400" mr={4} color={Colors.red}
-                                  w={"10%"}>من</Text>
-                                {timePicker?
-                                    (<DateTimePicker
-                                    value={time}
-                                    mode={'time'}
-                                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                                    is24Hour={false}
-                                    onChange={onTimeSelected}
-                                    //timeZoneOffsetInMinutes={60}
-                                    minuteInterval={60}
-                                    style={styles.datePicker}
-                                    />):
-                                (<Input isDisabled  h={Metrics.HEIGHT*0.0682}  textAlign={'left'} borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time).format("LT")}
-                                    w={{base: "75%",md: "20%"}}  
-                                    InputLeftElement={<Icon as={ !timePicker && (<Feather name="clock"    onPress={()=> setTimePicker(!timePicker) } /> )} 
-                                    size={'lg'} ml="4"   color={Colors.blacktxt}/>} 
-                                    color={Colors.blacktxt}  placeholder="وقت بداد  الخدمه و عدد الاطفال" />
-                                )}
+                                    fontSize={15} fontWeight="400"   mt={4} color={Colors.black}  
+                                    w={Platform.OS==='android'? "26%": "20%"} >من</Text>
+                                <Input isDisabled  h={Metrics.HEIGHT*0.0682}  textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time).format("LT")}
+                                fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
+                                    w={{base: "88%",md: "20%"}}   
+                                    InputLeftElement={<Icon as={ (<Feather name="clock" onPress={()=>   setOpen(true)  } /> )} 
+                                    size={'lg'} ml="4"   color={Colors.textZahry}/>} 
+                                    color={Colors.blacktxt}  />
+                                    <DatePicker
+                                        mode='time'
+                                        modal
+                                        theme='light'
+                                        //minuteInterval={60}
+                                        open={open}
+                                        date={time}
+                                        onConfirm={(date) => {
+                                            setTime(date)
+                                            setOpen(false)
+                                         }}
+                                        onCancel={() => {
+                                        setOpen(false)
+                                        }}
+                                    />
                             </HStack>
                             
-                            <Stack space={1} w={"100%"} alignItems="flex-start" marginTop={5}  flexDirection='row'>
-                                <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}fontSize={18} 
-                                    fontWeight="400" mr={4} color={Colors.red}
-                                    w={"10%"} >الى</Text>
-                                    {timePicker2?
-                                (<DateTimePicker
-                                value={time2}
-                                mode={'time'}
-                                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                                is24Hour={false}
-                                onChange={onTimeSelected2}
-                                //timeZoneOffsetInMinutes={60}
-
-                                style={styles.datePicker}
-                                />):
-                                (<Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'left'}borderColor={Colors.blacktxt} fontSize={'lg'} value={moment(time2).format("LT")}
-                                w={{ base: "75%",md: "20%"}}  
-                                InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setTimePicker2(!timePicker2)}/>} color={Colors.blacktxt} size={'lg'} ml="4" />} 
-                                color={Colors.blacktxt}  placeholder="وقت انهاد الخدمه" />)}
-                            </Stack>
+                            <HStack w={Platform.OS==='android'? "38%": "46%"} justifyContent={Platform.OS==='android'?'flex-start':'space-around'}  marginTop={5} ml={Platform.OS==='android'?8:4} flexDirection='row' >
+                                <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
+                                        fontSize={15} fontWeight="400"  mt={4} color={Colors.red}
+                                         w={Platform.OS==='android'? "26%": "20%"} >الى</Text>
+                                    
+                                <Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time2).format("LT")}
+                                     w={{ base: "88%",md: "20%"}}  
+                                    InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setOpen2(true) }/>} color={Colors.textZahry} size={'lg'} ml="4" />} 
+                                    color={Colors.blacktxt} />
+                                <DatePicker
+                                        mode='time'
+                                        modal
+                                        theme='light'
+                                        //minuteInterval={60}
+                                        open={open2}
+                                        date={time2}
+                                        onConfirm={(date) => {
+                                            setTime2(date)
+                                            setOpen2(false)
+                                         }}
+                                        onCancel={() => {
+                                        setOpen2(false)
+                                        }}
+                                    />
+                                    
+                            </HStack>
                         </Box>
-                    
-                    }
-                    
-
                 </View>
-          
-                
-           
             </Modal.Body>
             
             <Modal.Footer alignItems={'center'} justifyContent='center'>
             <View style={{flexDirection:'row' ,justifyContent:'space-around' ,marginBottom:10,alignContent:'stretch'}}>
                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} color="#2E2E2E">
                         مدة الحجز الافتراضيه</Text>
-                       <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} color={Colors.textZahry} letterSpacing={1.5} >
-                        {calclutDiff()}</Text>
+                       <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
+                             color={Colors.textZahry} letterSpacing={1.5} fontSize={10} >
+                              {calclutDiff()}</Text>
             </View>
                 <View style={{width:Metrics.WIDTH*0.893}}>
                     {/* <Button bgColor={Colors.amin1Button1} size={'lg'} onPress={() => {

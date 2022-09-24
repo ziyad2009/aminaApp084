@@ -15,8 +15,8 @@ inputFieldSec: {
     marginBottom:10,
     borderColor:"black",
     borderWidth:0,
-    width:Metrics.WIDTH*0.810,
-     height:Metrics.HEIGHT*0.180
+    width:Metrics.WIDTH*0.360,
+     height:Metrics.HEIGHT*0.0920
   },
   labetText:{
       alignSelf:'center',

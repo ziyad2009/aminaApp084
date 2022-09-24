@@ -211,7 +211,8 @@ console.log("tets DATA",data)
       price:item.price,
       settterfaileid:item._id,
       totalprice:totPrice,
-      totalhours:rhours
+      totalhours:rhours,
+      bio:item.bio
     }
     console.log("Babysetesrs Final data=",item)
     props.navigation.navigate('BabysetesrsProfile',{data1:newOrder,settertTitle: item.displayname})
@@ -229,8 +230,8 @@ return(
       </Box>:
       <FlatList data={babseters} renderItem={({item ,index}) => (<Box key={index} borderWidth="1"  bgColor={Colors.white} borderColor="#00ABB9" borderRadius='md'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.243}>
               <HStack alignItems={'center'} justifyContent='space-around' >
-                <Image  source={{ uri: `${URL}/users/${item.owner}/avatar`}} resizeMode='stretch' 
-                style={{width: Metrics.WIDTH*0.181, height: Metrics.HEIGHT*0.1270,marginLeft:5,marginRight:20,borderBottomLeftRadius:10}} />
+                <Image  source={{ uri: `${URL}/users/${item.owner}/avatar`}} resizeMode='contain' 
+                style={{width: Metrics.WIDTH*0.280, height: Metrics.HEIGHT*0.1870,marginLeft:5,marginRight:20,borderRadius:70}} />
                 <Spacer />
                 
                 <VStack flexDirection={'column'}    alignItems={'flex-start'} >

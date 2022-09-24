@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from 'react';
-import {View,TouchableOpacity,FlatList,Image, Alert} from 'react-native'
+import {View,TouchableOpacity,FlatList,Image, Alert, Platform} from 'react-native'
 import {Box, Button,Heading,Spinner,HStack,Spacer,VStack,Text,Modal, Stack,Center,TextArea} from 'native-base';
 import styles from './styles';
 import {Metrics,Colors,Fonts,Images} from '../assets/Themes/';
@@ -32,12 +32,11 @@ const Request=(props)=>{
     const[ShowModal,setShowModal]=useState(false)
     const[resoncansel,setresoncansel]=useState('')
 
+
+
     const Item = ({title,i}) => { 
-       // console.log("test section item ",title)
-          
-       return( 
-         
-            <TouchableOpacity style={{flexDirection:'column' ,backgroundColor:Colors.AminaButtonNew, marginLeft:1,marginTop:2,width:Metrics.WIDTH*0.313 ,height:Metrics.HEIGHT*0.0521} } 
+    return( 
+        <TouchableOpacity style={{flexDirection:'column' ,backgroundColor:Colors.AminaButtonNew, marginLeft:1,marginTop:2,width:Metrics.WIDTH*0.313 ,height:Metrics.HEIGHT*0.0521} } 
              key={title} onPress={()=>handleSelection(i,title)}> 
              <View style={{alignItems:'center',padding:2,paddingBottom:4,backgroundColor:Colors.transparent,height:Metrics.HEIGHT*0.0341}} > 
                     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}
@@ -46,11 +45,9 @@ const Request=(props)=>{
                 <View style={{alignItems:'center',paddingBottom:1,borderBottomColor:i===select?"#000000":null,borderBottomWidth:i===select?2:null}}>
                 </View>
              </TouchableOpacity>
-       
-            
-        
-      );
+        );
     }
+
 
    const handleSelection = (id,title) => {
     setselect(id)
@@ -78,13 +75,7 @@ const Request=(props)=>{
     } 
      
     
-     
-    // useEffect(async()=>{
       
-    //     setFilterData({work:false})
-         
-    // },[loadingpage])
-
     useEffect(()=>{
        
         if(IsFetching){
@@ -209,22 +200,22 @@ const Request=(props)=>{
    
             if(val==='pending'){
               return  <Box w={'50%'} bgColor={Colors.white}  alignItems='center'    justifyContent={'center'} >
-                <Text  color={Colors.AminaButtonNew} fontWeight='800' textAlign={'center'} justifyContent='center' mt='4'>انتظار الدفع</Text> </Box>
+                <Text  color={Colors.AminaButtonNew} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  fontWeight='800' textAlign={'center'} justifyContent='center' mt='4'>انتظار الدفع</Text> </Box>
             }
             if (val==='processing'){
                 return  <Box w={'50%'} bgColor={Colors.white}  alignItems='center' justifyContent={'center'} >
-                     <Text  color={Colors.AminaButtonNew} fontWeight='800' textAlign={'center'} justifyContent='center' mt='1'>قيد الانتظار</Text></Box>
+                     <Text  color={Colors.AminaButtonNew} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  fontWeight='800' textAlign={'center'} justifyContent='center' mt='1'>قيد الانتظار</Text></Box>
             }
             if (val==='canceled'){
                 return  <Box w={'50%'} bgColor={Colors.white}  alignItems='center' justifyContent={'center'} >
-                     <Text  color={Colors.AminaButtonNew} fontWeight='800' textAlign={'center'} justifyContent='center' mt='3' > لم يتم الموافقه</Text></Box>
+                     <Text  color={Colors.AminaButtonNew} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}   fontWeight='800' textAlign={'center'} justifyContent='center' mt='3' > لم يتم الموافقه</Text></Box>
             }   
             if (val==='completed'){
                 return <Box w={'50%'} bgColor={Colors.white}  alignItems='center' justifyContent={'center'} >
-                     <Text  color={Colors.AminaButtonNew} fontWeight='800' textAlign={'center'} justifyContent='center' mt='1'> تم الحجز</Text></Box>
+                     <Text  color={Colors.AminaButtonNew} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='800' textAlign={'center'} justifyContent='center' mt='3'> تم الحجز</Text></Box>
             }
             if (val==='failed'){
-                return <Box w={'50%'} bgColor={Colors.white}  alignItems='center' justifyContent={'center'} >reservition</Box>
+                return <Box w={'50%'} bgColor={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}   alignItems='center' justifyContent={'center'} >reservition</Box>
             }
         }
         const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -269,18 +260,17 @@ const showCanselMsg=(val)=>{
 return(
     <View style={styles.wrapper}>
        <Box h={Metrics.HEIGHT*0.0412}>
-        <FlatList
-        // sections={subservice}
-        data={data}
-        keyExtractor={(item, index) => item + index}
-        renderItem={({ item ,index}) => <Item title={item} i={index} />}
-        style={{marginLeft:11,marginRight:11 ,backgroundColor:'#00ABB9',borderRadius:10}}
-        horizontal={true}
+            <FlatList
+            // sections={subservice}
+            data={data}
+            keyExtractor={(item, index) => item + index}
+            renderItem={({ item ,index}) => <Item title={item} i={index} />}
+            style={{marginLeft:11,marginRight:11 ,backgroundColor:'#00ABB9',borderRadius:10}}
+            horizontal={true}
+            />
+        </Box>
         
-      /></Box>
-       
-        
-      <Box alignItems={'center'} mt='1' >
+        <Box alignItems={'center'} mt='1' backgroundColor={'white'}>
         
         <Box bgColor={Colors.transparent}  >
          {loading?
@@ -290,12 +280,12 @@ return(
                 <Spinner  size={'lg'} color={Colors.bloodOrange}/></Box>:
             <Box>
             
-            <Heading fontSize="xl"  p="2" pb="3" textAlign={'left'}> بيانات الطلبات</Heading>
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize="lg"  p="2" pb="3" textAlign={'left'}> بيانات الطلبات</Text>
             <FlatList data={motherReq} renderItem={({item }) => (
                  <Box   key={item._id} borderWidth=".5"  bgColor={Colors.white} borderColor="#00ABB9" borderRadius="md"  pr="5" py="2" ml="3" mr="5" mb={7} width={Metrics.WIDTH*0.963}>
                     <HStack space={3} justifyContent='space-around' >
                         <Image  source={{ uri: `${URL}/users/${item.settterowner}/avatar`}} resizeMode='stretch' 
-                            style={{width: Metrics.WIDTH*0.18130, height: Metrics.HEIGHT*0.12570,marginLeft:5,marginRight:2,borderBottomLeftRadius:20}} />
+                            style={{width: Metrics.WIDTH*0.25130, height: Metrics.HEIGHT*0.124570,marginLeft:5,marginRight:2,borderRadius:80}} />
                         <Spacer />
                         <VStack flexDirection={'column'}   alignItems={'flex-start'} >
                             <Text  color={ Colors.blacktxt}fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight="bold" fontSize={20}>
@@ -348,7 +338,10 @@ return(
                         </HStack>
                         {item.statuse==="canceled"?
                              
-                             <Button variant={'link'} colorScheme='red'  alignItems={'center'} fontSize={14} onPress={()=> showCanselMsg(item.reson)} >عرض سبب الرفض</Button>:<Box />
+                            <TouchableOpacity   style={{marginTop:2,marginBottom:1 , marginHorizontal:100}} onPress={()=> showCanselMsg(item.reson)} >
+                                <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  color={"#551A8B"}> عرض سبب الرفض</Text>
+                            </TouchableOpacity>:
+                              <Box />
                         }
                         <Box  flexDirection={'row'} borderLeftRadius='10' >
                            
@@ -357,7 +350,7 @@ return(
                             {/* <Button w={'55%'} bgColor={"#DDF1F4"} variant='outline' onPress={()=> ConfimSetterData(item)}>تفاصيل الطلب</Button> */}
                             {item.statuse==="canceled"?
                              <Box alignItems={'center'} justifyContent='center' backgroundColor={'error.100'} w="55%" >
-                                <Text>طلب ملغي</Text>
+                                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={12}>طلب ملغي</Text>
                             </Box>:
                              <CustomButton
                                         buttonColor= {Colors.AminaButtonNew}

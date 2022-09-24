@@ -21,21 +21,21 @@ import UserProvider, { UserContext } from '../services/UserContext';
 const slides = [
   {
     key: 1,
-    title: 'تطبيق امينه',
+    title: 'تطبيق أمينة',
     text: 'مجموعة مميزة من الحاضنات والجليسات بإنتظار طفلك.. اِنضمي إلينا الآن لبدء الخدمة',
     image: require('../assets/images/1.png'),
     backgroundColor: '#59b2ab',
   },
   {
     key: 2,
-    title: 'تطبيق امينه',
+    title: 'تطبيق أمينة',
     text: 'سنقوم بإختيار الحاضنة أو الجليسة المناسبة لطفلك بعد إدخالك للبيانات المطلوبه خلال وقت قصير',
     image: require('../assets/images/2.png'),
     backgroundColor: '#E5E5E5',
   },
   {
     key: 3,
-    title: 'تطبيق امينه',
+    title: 'تطبيق أمينة',
     text: 'سنقوم باختيار الجليسة او الحاضنه المناسبه لطفلك فقط ادخلي البينات المطلوبة خلال وقت قصير',
     image: require('../assets/images/3.png'),
     backgroundColor: '#22bcb5',
@@ -48,6 +48,7 @@ const IntroScreen =(props) => {
   const {tryGetUser} = useContext(UserContext);
  
  const [goButton,setGoButton]=useState(false)
+
   const onDone = () => {
    //()=> setshowRealAppval(true);
    console.log("fdd")
@@ -131,7 +132,7 @@ const IntroScreen =(props) => {
         }}>
           <Image
           style={styles.introImageStyle}
-          source={item.image} resizeMode='stretch' />
+          source={item.image} resizeMode='contain' />
           
         <Text style={styles.introTitleStyle}>
           {item.title}

@@ -1,6 +1,6 @@
 import React,{useState,useRef} from 'react';
  import { Image ,View,TouchableOpacity,Text} from 'react-native';
-import {Input,Box, Stack,VStack,Icon, HStack,WarningOutlineIcon,FormControl,Button} from 'native-base';
+import {Input,Box,Spacer, Stack,VStack,Icon, HStack,WarningOutlineIcon,FormControl,Button} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
  
 import{Metrics,Colors,Images} from '../assets/Themes/'
@@ -53,7 +53,7 @@ const inputCard=useRef()
    
   
   const handlepayment=async(price)=>{
-   // console.log("test props ConfitmScreen", (props.route.params.data1) )
+   console.log("test props ConfitmScreen", price )
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
     const transctionID=Number(Math.floor(Math.random() * 1000))
@@ -154,6 +154,33 @@ const inputCard=useRef()
   const creditCardMask = [/\d/, /\d/, /\d/, /\d/, " " [/\d/], [/\d/], [/\d/], [/\d/], " ", [/\d/], [/\d/], [/\d/], [/\d/], " ", /\d/, /\d/, /\d/, /\d/];
     return (
       <Box alignItems={'center'} backgroundColor='white' flex={1} > 
+       <Stack w={"88%"}   justifyContent={'space-around'} backgroundColor={Colors.ricePaper}>
+       
+        <VStack alignItems={'center'} padding={1}>
+          <Text>فاتورة</Text>
+        </VStack>
+        <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
+            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
+              <Text>المبلغ</Text>
+              <Text> SR {props.route.params.data1.totalprice}</Text>
+            </HStack>
+            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
+            <Text>قيمة الضريبة المضافة</Text>
+            <Text>SR{ (Number(0.15)* Number(props.route.params.data1.totalprice))}</Text>
+            </HStack>
+            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
+            <Text>طريقة الدفع</Text>
+            <Text>بطاقة مدى</Text>
+            </HStack>
+            <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
+            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
+            <Text>المبلغ الاجمالي</Text>
+            <Text> SR { (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice}</Text>
+             </HStack>
+            
+            
+            
+          </Stack>
 
       <Stack   w="95%" alignItems="center" borderWidth={.5} borderColor={Colors.greys} marginTop={'10'}   backgroundColor='gray.200' borderRadius={20} >
 
@@ -224,9 +251,9 @@ const inputCard=useRef()
       
       <View style={{flexDirection:'row',width:Metrics.WIDTH*0.87216,height:Metrics.HEIGHT*0.087,justifyContent:'space-around',marginLeft:10,marginTop:50}}>
           
-          <TouchableOpacity onPress={()=> handlepayment(props.route.params.data1.totalprice)}   
+          <TouchableOpacity onPress={()=> handlepayment( (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice)}   
               style={styles.endButton}>
-            <Text style={styles.endButtonTxt}> ادفع {props.route.params.data1.totalprice}</Text>
+            <Text style={styles.endButtonTxt}> ادفع { (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice} </Text>
           </TouchableOpacity>
       </View>
       
@@ -238,31 +265,7 @@ const inputCard=useRef()
             
       </View> */}
 
-          {/* <Stack w={"88%"} alignContent="flex-start" backgroundColor={Colors.ricePaper}>
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-              <Text>الاسم</Text>
-              <Text>{name}</Text>
-            </HStack>
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-            <Text>دقم البطاقه</Text>
-            <Text>{number}</Text>
-            </HStack>
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-            <Text>الرمز</Text>
-            <Text>{cvc}</Text>
-            </HStack>
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-            <Text>التاريخ</Text>
-            <Text>{expiry}</Text>
-            </HStack>
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-            <Text>المبلغ</Text>
-            <Text>{props.route.params.data1.totalprice}</Text>
-             </HStack>
-            
-            
-            
-          </Stack> */}
+         
       </Box>
     );
 }

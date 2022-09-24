@@ -1,5 +1,5 @@
 import React,{useEffect,useState,useRef} from 'react';
-import {View,Image, TouchableOpacity, Alert} from 'react-native'
+import {View,Image, TouchableOpacity, Alert, Platform} from 'react-native'
 import {FlatList,Box,Heading,Avatar,Text,VStack,HStack,Spacer, Button,Spinner,Modal,Center} from 'native-base';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { Colors,Fonts ,Metrics,Images} from '../assets/Themes';
@@ -235,27 +235,23 @@ const handelREQ= async(id)=>{
     // const minutes = Math.floor((remainingTime ))
     // const seconds = remainingTime % 60
    
-     return <Text fontSize={18} >{minutes}دقيقه</Text>
+     return <Text fontSize={15} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} >{minutes}دقيقه</Text>
    }
    
     return(
 
-    < VStack mt={Platform.OS==='android'?66:100}> 
-    <HStack borderColor={"#00ABB9"} borderWidth='1' flexDirection={'column'}  justifyContent='space-around' mt='10' ml='3' p={3} w={Metrics.WIDTH*0.928} >
-        <VStack  flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} mt={2} mb={1}>
-        <HStack>
-              <Text style={styles.mainTex}  >ملخص الطلب</Text>
+    < VStack mt={Platform.OS==='android'?60:100} backgroundColor='white' flex={1}> 
+        <HStack borderColor={"#00ABB9"} borderWidth='1' flexDirection={'column'}  justifyContent='space-around' mt='10' ml='3' p={3} w={Metrics.WIDTH*0.928} >
+        <HStack justifyContent={'center'} w="100%" >
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='18' textAlign={'center'} fontWeight='600' >
+                    ملخص الطلب</Text>
         </HStack>
-      
-        <HStack>
+         
+        <Box borderColor={'#00ABB9'} borderWidth='2'  />
+        <HStack  mt={2} justifyContent='flex-end'>
             <Text style={styles.mainTex}>رقم الطلب</Text>
              <Text style={styles.mainTex}>{babseters.orderid}</Text>
-            <Text style={styles.mainTex}>:</Text>
-        </HStack>
-        
-        </VStack>
-        <Box borderColor={'#00ABB9'} borderWidth='1' h={'1%'} />
-        
+         </HStack>
         
         <HStack flexDirection={'column'} alignItems='flex-start' mt={2}  >
             <VStack flexDirection={'row'} w={"full" } justifyContent='space-between'  mt='1' p={1}  >
@@ -309,6 +305,8 @@ const handelREQ= async(id)=>{
                     colors={[Colors.AminaButtonNew, '#F7B801', '#A30000', '#A30000']}
                     colorsTime={[500, 300, 100, 50]}
                     size={80}
+                    rotation='clockwise'
+                    style={{fontFamily:Fonts.type.aminafonts}}
                     strokeWidth={8} >
                         {children}
                     {/* {({ remainingTime }) => <Text>{remainingTime}</Text>} */}
@@ -322,7 +320,7 @@ const handelREQ= async(id)=>{
                             buttonColor={Colors.AminaButtonNew}
                             title="احجز"
                             buttonStyle={{width: '100%', alignSelf: 'center'}}
-                            textStyle={{fontSize: 20}}
+                            textStyle={{ fontFamily:Fonts.type.bold,fontSize: 22 }}
                             onPress={() => confirmRequest()}
                         />
                     </Box>
@@ -355,15 +353,18 @@ const handelREQ= async(id)=>{
 
 <Center >
 
-<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-<Modal.Content width={Metrics.WIDTH } h={Metrics.HEIGHT*0.422}>
-<Modal.CloseButton />
+<Modal isOpen={showModal} onClose={() => setShowModal(false)}
+borderColor={Colors.white}
+avoidKeyboard justifyContent="flex-end" bottom="4" >
+<Modal.Content width={Metrics.WIDTH } h={Metrics.HEIGHT*0.3552 }   >
+ 
 <Modal.Header>
     
 </Modal.Header>
 <Modal.Body alignItems={'center'} >
-<AntDesign name='checkcircleo' size={50} color={Colors.loginGreen} style={{ marginBottom:10}} />
-     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='2xl'  textAlign={'center'} >اكمل الدفع</Text>
+<Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='bold' fontSize='2xl'  textAlign={'center'} >تمت الموافقة على طلبك</Text>
+<AntDesign name='checkcircleo' size={50} color={Colors.loginGreen} style={{ marginBottom:2}} />
+    
      
 </Modal.Body>
  

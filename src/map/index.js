@@ -113,7 +113,7 @@ const Mapscreen = ({ route ,navigation}) => {
           setUserLatitude(position.coords.latitude);
           setUserLongitude(position.coords.longitude);
           setPositionError(null);
-          setIsLoading(false)
+          setIsLoading(false);
           console.log('Location Accessed',position.coords)
         },
         (error) => {
@@ -177,9 +177,9 @@ const Mapscreen = ({ route ,navigation}) => {
           lon:lond,
         });
 
-        console.log('START test API ',response.data.features[0].properties)
+        console.log('START test API ',response.results.features[0].properties)
         if(response){
-               await setItem.setItem('BS:Location', JSON.stringify(response.data.features[0].properties));
+               await setItem.setItem('BS:Location', JSON.stringify(response.results.features[0].properties));
                  
         }
         }catch(err){

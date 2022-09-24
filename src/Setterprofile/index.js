@@ -3,7 +3,8 @@ import React,{useEffect,useState} from 'react';
 import {View,Image, ScrollView,Platform} from 'react-native'
 import { Box,Heading,Avatar,Text, VStack, HStack,TextArea, Spinner, Spacer,Button} from 'native-base';
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import Feather from 'react-native-vector-icons/Feather'
+import Feather from 'react-native-vector-icons/Feather';
+import Foundation from 'react-native-vector-icons/Foundation';
 import Swiper from 'react-native-swiper'
 import setItem from '../services/storage';
 import api from '../services/api';
@@ -83,20 +84,23 @@ return(
         </VStack>   
       
       <HStack flexDirection={'column'}   ml='2'>
-      <Heading textAlign={'left'}><Text  fontFamily={Fonts.type.bold} fontSize={18} fontWeight="bold"> عن {babseters.displayname} </Text></Heading>
-      <TextArea    numberOfLines={4} placeholder="Invalid TextArea" isDisabled  value='إنني محاسب طموح امتلك عشر سنوات من الخبرة، ولدي حماس تجاه تحقيق مستقبل وظيفي أفضل، وهذا ما دفعني إلى تقديم طلب الانضمام إلى فريق العمل في شركة مرموقة مثل خاصتكم، كي أضيف إليها واستغل ما اكتسبته من خبرة ومهارة في مجال العمل وتتيح هي لي فرصة الاحتكاك بالعمل ضمن فريق عمل محترف مثلكم.'
+      <Heading textAlign={'left'}>
+        <Text  fontFamily={Fonts.type.bold} fontSize={18} fontWeight="bold"> عن {babseters.displayname} </Text>
+        </Heading>
+      <TextArea    numberOfLines={4} placeholder="نبذه عن الحاضنه"    value={babseters.bio}
          _dark={{
-        placeholderTextColor: "gray.300"
-      }}  w={'95%'} conte fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight={'medium'}  textAlign={'right'}/>
+        placeholderTextColor: "gray.100"
+      }}  w={'95%'} conte fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight={'light'} 
+          fontSize={10} textAlign={'right'}/>
       </HStack>
-
-         <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={2} space='3'  >
-         <EvilIcons name="location" size={33} color={'#00ABB9'} />
-         <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={18} fontWeight="light"  mr='10' alignItems='flex-start'>{babseters.address} </Text>
+       
+         <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={3} space='3'  >
+         <EvilIcons name="location" size={28} color={'#00ABB9'} />
+         <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={11} fontWeight='light'  mr='10' alignItems='flex-start'>{babseters.address} </Text>
          </VStack>
-         <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={4}>
-         <Feather name="dollar-sign" size={30   } color={'#00ABB9'} />
-         <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light">{babseters.price} ريال- تكلفة الساعه الواحده</Text>
+         <VStack flexDirection={'row'} alignItems='baseline' ml={2} mt={4}>
+         <Foundation name="dollar" size={28} color={'#00ABB9'}  style={{marginLeft:3}}/>
+         <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light" ml={3}>{babseters.price} ريال- تكلفة الساعه الواحده</Text>
          </VStack>
          <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={4}>
          <EvilIcons name="calendar" size={30   } color={'#00ABB9'} />
@@ -165,7 +169,7 @@ return(
                       <CustomButton
                         buttonColor={Colors.AminaButtonNew}
                         title="احجز"
-                        buttonStyle={{width: '90%', alignSelf: 'center'}}
+                        buttonStyle={{width: '90%', alignSelf: 'center',borderRadius:6}}
                         textStyle={{fontSize: 20}}
                         onPress={() =>  confirmReservisionTime()}
                       />

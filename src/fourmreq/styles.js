@@ -1,6 +1,6 @@
 
  
-import {StyleSheet,I18nManager} from 'react-native'
+import {StyleSheet,I18nManager, Platform} from 'react-native'
 import { Metrics,Colors, Fonts } from '../assets/Themes';
 
 const styles = StyleSheet.create({
@@ -25,10 +25,10 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     leftText:{
-        fontFamily:Fonts.type.base,
+        fontFamily:Platform.OS==='android'?Fonts.type.light: Fonts.type.light,
         color:'#616171',
-        fontWeight:'bold',
-        fontSize:10,
+        fontWeight:'500',
+        fontSize:12,
         alignContent:'flex-start',
         marginRight:8
     },

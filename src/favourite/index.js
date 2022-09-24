@@ -142,7 +142,7 @@ return(
         </Box>:
             <Box alignItems={'center'}  mt={40} ml='3' mr={3}>
                 <Heading>
-                    <Text fontFamily={Fonts.type.lightmore} fontSize={22} color={Colors.veryLightGray} textAlign='center'>عفوا لاتوجد لديك اضافات   في المفضله !</Text>
+                    <Text fontFamily={Fonts.type.base} fontWeight='bold' fontSize={22} color={Colors.blacktxt} textAlign='center'>عفوا لاتوجد لديك اضافات في المفضله !</Text>
                     
                 </Heading>
             </Box> 

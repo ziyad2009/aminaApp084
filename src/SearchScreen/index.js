@@ -149,7 +149,7 @@ const setterData= async(name)=>{
                 
                 <VStack flexDirection={'column'}    alignItems={'flex-start'} >
                   <Text  color= "#000000"
-                    fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='bold' fontSize={18}>
+                    fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}   fontSize={18}>
                     {item.displayname}
                   </Text>
                       <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} mr={6}>
@@ -182,7 +182,7 @@ const setterData= async(name)=>{
                    <Text color= "#000000" fontFamily={Fonts.type.aminafonts} fontWeight="thin" fontSize={15} ml={1}>{item.hourstotal} ساعة عمل</Text>
                 </Box>
                 <Box>
-                <Text   color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} >
+                <Text   color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}   fontSize={15} >
                   تكلفة الخدمه بالساعه {item.price} ريال
                 </Text>
                 <HStack backgroundColor={'amber.200'}>
@@ -212,9 +212,9 @@ const setterData= async(name)=>{
                 justifyContent: 'center',
                 marginTop: 1 }}
                  onPress={() => props.navigation.navigate('Shrtcutprofile',{data1:item,settertTitle:item.name}) }>
-                <Text  style={{ color:'#fff',letterSpacing:1.5,color: '#fff',fontSize: 16,
-                      fontWeight: Platform.OS==='android'? '400':'500',
-                      fontFamily:Platform.OS==='android'?Fonts.type.light:Fonts.type.base,}}>
+                <Text   letterSpacing={1.5} color= '#fff' fontSize= {16}  
+                     
+                      fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} >
                     احجز الان </Text>
                  </TouchableOpacity>
               

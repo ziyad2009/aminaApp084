@@ -62,6 +62,7 @@ const colors = {
   AmonaButtontext:'#F5F5F5',
   AminaButtonNew:'#00ABB9',
   textZahry:"#f38193",
+  textgray:"#e6e6e6",
   TexTPink:'#f38193',
   Milky:"#fcebd2",
   hederup:'#00ABB9',

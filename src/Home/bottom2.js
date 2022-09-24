@@ -50,45 +50,53 @@ const  BottomScreen=(props)=> {
                 امينه
               </Text>
             </Box> */}
-            <Actionsheet.Item alignItems={'baseline'}  >
+            <Actionsheet.Item alignItems={'baseline'} tintColor={Colors.AminaButtonNew}
+            startIcon={<Icon as={AntDesign} size="6" color={Colors.AminaButtonNew} name="setting" />}  >
               <Stack  justifyContent='center' flexDirection={'row'}>
-              <AntDesign name='setting' color={Colors.AminaButtonNew} size={22}/>
-              <Text color={Colors.AminaButtonNew} textAlign='left' onPress={()=>props.data.navigate('SettingScreen') }
-                fontWeight={'bold'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
+              
+              <Text color={Colors.AminaButtonNew} textAlign='left'
+               onPress={()=>props.data.navigate('SettingScreen')  } bgColor={Colors.red}
+                fontWeight={'500'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
                 fontSize={18}  ml={3}>الاعدادت</Text>
               </Stack>
              
             </Actionsheet.Item>
-            <Actionsheet.Item alignItems={'baseline'}  >
+
+            <Actionsheet.Item alignItems={'baseline'}
+            startIcon={<Icon as={AntDesign} size="6" color={Colors.AminaButtonNew} name="exclamationcircleo" />}  >
               <Stack  justifyContent='center' flexDirection={'row'}>
-              <AntDesign name='exclamationcircleo' color={Colors.AminaButtonNew} size={18}/>
-              <Text color={Colors.AminaButtonNew} textAlign='left' fontWeight={'bold'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
+              
+              <Text color={Colors.AminaButtonNew} textAlign='left' fontWeight={'500'} 
+                fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}
                 fontSize={18}  ml={3} onPress={()=>props.data.navigate('AboutScreen') }
                 >حول التطبيق</Text>
               </Stack>
              
             </Actionsheet.Item>
-            <Actionsheet.Item alignItems={'baseline'}  >
+            <Actionsheet.Item alignItems={'baseline'} 
+            startIcon={<Icon as={AntDesign} size="6" color={Colors.AminaButtonNew} name="exclamationcircleo" />} >
               <Stack  justifyContent='center' flexDirection={'row'}>
-              <AntDesign name='exclamationcircleo' color={Colors.AminaButtonNew} size={18}/>
-              <Text color={Colors.AminaButtonNew} textAlign='left' fontWeight={'bold'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
+               
+              <Text color={Colors.AminaButtonNew} textAlign='left' fontWeight={'500'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
                 fontSize={18}  ml={3}>المساعدة</Text>
               </Stack>
              
             </Actionsheet.Item>
-            <Actionsheet.Item alignItems={'baseline'}  >
+            <Actionsheet.Item alignItems={'baseline'} 
+            startIcon={<Icon as={AntDesign} size="6" color={Colors.AminaButtonNew} name="exclamationcircleo" />} >
               <Stack  justifyContent='center' flexDirection={'row'}>
-              <AntDesign name='exclamationcircleo' color={Colors.AminaButtonNew} size={18}/>
-              <Text color={Colors.AminaButtonNew} textAlign='left' fontWeight={'bold'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
+              
+              <Text color={Colors.AminaButtonNew} textAlign='left' fontWeight={'500'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
                 onPress={()=>props.data.navigate('PrivecyScreen')}
                 fontSize={18}  ml={3}>الخصوصيه</Text>
               </Stack>
              
             </Actionsheet.Item>
-            <Actionsheet.Item alignItems={'baseline'} onPress={()=>logOut()}  >
+            <Actionsheet.Item alignItems={'baseline'} onPress={()=>logOut()} 
+            startIcon={<Icon as={MaterialIcons} size="6" color={Colors.textZahry} name="logout" />}   >
               <Stack  justifyContent='center' flexDirection={'row'}>
-              <MaterialIcons name='logout' color={Colors.textZahry} size={22}/>
-              <Text color={Colors.TexTPink} textAlign='left' fontWeight={'bold'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
+               
+              <Text color={Colors.TexTPink} textAlign='left' fontWeight={'500'} fontFamily={Platform.OS=='android'?Fonts.type.aminafonts:Fonts.type.base}
                 fontSize={18}  ml={3}>تسجيل خدوج</Text>
               </Stack>
              

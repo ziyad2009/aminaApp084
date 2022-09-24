@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     introTitleStyle: {
       fontSize: 30,
       fontFamily:Platform.OS==='android'?Fonts.type.sembold: Fonts.type.aminafonts,
-      color: '#2E2E2E',
+      color: Colors.AminaButtonNew,
   
       textAlign: 'center',
       marginTop:20,

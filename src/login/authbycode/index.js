@@ -168,8 +168,10 @@ const Authbycode=({ route ,navigation})=>{
                 containerBackgroundColor={Colors.transparent}
                 codeViewBorderColor={Colors.lightGray}
                  focusedCodeViewBorderColor="#0000FF"
+                 warningTitle="الرجاء ادخال ارقام فقط"
                 codeViewBorderWidth={.4}
                 codeViewBorderRadius={2}
+                
             />
          
            
