@@ -36,7 +36,7 @@ import Notifactionscreen from '../notifactions';
 import Motherprofilw from '../profile/motherprofile';
 import FinleScreeen from '../workscreen/FinleScreeen';
 import SearchScreen from '../SearchScreen';
- 
+ import PubNubChat from '../chat/pupnup'
 import { Metrics,Colors,Fonts,Images } from '../assets/Themes/';
 import UserProvider from '../services/UserContext';
 import { NavigationContext } from '@react-navigation/native';
@@ -228,18 +228,16 @@ const StackNav = () => {
              backgroundColor:Colors.hederup,
             
            },
-           
-          
-          headerBackTitle:"بحث",
+            headerBackTitle:"بحث",
           // headerBackImageSource:Images.backButton,
           headerBackTitleStyle:{
-            fontFamily:Fonts.type.medium,
-            
-            
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+             
+          },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
           },
           headerLargeTitleShadowVisible:true,
-          
-          
           headerTintColor:"#F5F5F5",
            
         })} />
@@ -249,21 +247,14 @@ const StackNav = () => {
           headerTransparent: true,
            headerStyle:{
              backgroundColor:Colors.hederup,
-            
-           },
-           
-          
+          },
           headerBackTitle:"الاعدادت",
           // headerBackImageSource:Images.backButton,
           headerBackTitleStyle:{
             fontFamily:Fonts.type.medium,
-            
-            
           },
           headerLargeTitleShadowVisible:true,
-          
-          
-          headerTintColor:"#F5F5F5",
+           headerTintColor:"#F5F5F5",
            
         })} />
         
@@ -275,18 +266,17 @@ const StackNav = () => {
              backgroundColor:Colors.hederup,
             
            },
-           
-          
-          headerBackTitle:route.params.productTitle,
+           headerBackTitle:route.params.productTitle,
           // headerBackImageSource:Images.backButton,
           headerBackTitleStyle:{
             fontFamily:Fonts.type.medium,
-            
+           
+          },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
             
           },
           headerLargeTitleShadowVisible:true,
-          
-          
           headerTintColor:"#F5F5F5",
           headerRight:()=>{
             return(
@@ -294,6 +284,7 @@ const StackNav = () => {
                 )  
           },
         })}/>
+
       <Stack.Screen name="Mapscreen" component={Mapscreen} 
       options={({route,navigation})=>({
         headerTitle: Platform.OS==='android'? "الموقع":"",
@@ -311,12 +302,14 @@ const StackNav = () => {
           
           
         },
+        headerTitleStyle: {
+          fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+        },
         headerLargeTitleShadowVisible:true,
-        
-        
         headerTintColor:"#F5F5F5",
          
       })} />
+
       <Stack.Screen name="Zoomphoto" component={Zoomphoto} 
       options={({route,navigation})=>({
         headerTitle: Platform.OS==='android'? "عارض الصور":"",
@@ -325,18 +318,16 @@ const StackNav = () => {
            backgroundColor:Colors.hederup,
           
          },
-         
-        
         headerBackTitle:"عارض الصور",
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
-          
-          
+        
+        },
+        headerTitleStyle: {
+          fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
         },
         headerLargeTitleShadowVisible:true,
-        
-        
         headerTintColor:"#F5F5F5",
          
       })} />
@@ -352,18 +343,15 @@ const StackNav = () => {
            backgroundColor:Colors.hederup,
           
          },
-         
-        
-        headerBackTitle:"الخصوصيه",
+         headerBackTitle:"الخصوصيه",
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
-          
-          
+        },
+        headerTitleStyle: {
+          fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
         },
         headerLargeTitleShadowVisible:true,
-        
-        
         headerTintColor:"#F5F5F5",
          
       })} />
@@ -375,18 +363,15 @@ const StackNav = () => {
            backgroundColor:Colors.hederup,
           
          },
-         
-        
-        headerBackTitle:"حول التطبيق",
+          headerBackTitle:"حول التطبيق",
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
-          
-          
+        },
+        headerTitleStyle: {
+          fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
         },
         headerLargeTitleShadowVisible:true,
-        
-        
         headerTintColor:"#F5F5F5",
          
       })} />
@@ -401,6 +386,9 @@ const StackNav = () => {
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
+          },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
           },
         headerLargeTitleShadowVisible:true,
         headerTintColor:"#F5F5F5",
@@ -423,6 +411,9 @@ const StackNav = () => {
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
           },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+          },
         headerLargeTitleShadowVisible:true,
         headerTintColor:"#F5F5F5",
         headerRight:()=>{
@@ -444,6 +435,9 @@ const StackNav = () => {
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
           },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+          },
         headerLargeTitleShadowVisible:true,
         headerTintColor:"#F5F5F5",
         headerRight:()=>{
@@ -453,7 +447,30 @@ const StackNav = () => {
         },
       })}/>
        <Stack.Screen name="Ewallet" component={Ewallet} />
-      <Stack.Screen name="PaymentForm" component={PaymentForm} />
+       <Stack.Screen name="PubNubChat" component={PubNubChat} 
+        options={({route,navigation})=>({
+         
+          headerTitle: Platform.OS==='android'? "المحادثه":"",
+          headerTransparent: true,
+           headerStyle:{
+             backgroundColor:Colors.hederup,
+          },
+          headerBackTitle:"المحادثه",
+          // headerBackImageSource:Images.backButton,
+          headerBackTitleStyle:{
+            fontFamily:Fonts.type.medium,
+          },
+          headerBackVisible:false,
+          headerLargeTitleShadowVisible:true,
+           headerTintColor:"#F5F5F5",
+           
+        })} />
+      <Stack.Screen name="PaymentForm" component={PaymentForm} 
+      options={({route,navigation})=>({
+        headerShown:false,
+         
+      })}/>
+
       <Stack.Screen name='Invoice' component={Invoice} 
        options={({route,navigation})=>({
         headerTitle:Platform.OS==='android'?"طلباتي":"",
@@ -465,6 +482,9 @@ const StackNav = () => {
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
+          },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
           },
         headerLargeTitleShadowVisible:true,
         headerTintColor:"#F5F5F5",
@@ -489,6 +509,9 @@ const StackNav = () => {
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
           },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+          },
         headerLargeTitleShadowVisible:true,
         headerTintColor:"#F5F5F5",
         headerRight:()=>{
@@ -509,6 +532,9 @@ const StackNav = () => {
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
+          },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
           },
         headerLargeTitleShadowVisible:true,
         
@@ -532,6 +558,9 @@ const StackNav = () => {
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
           },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+          },
         headerLargeTitleShadowVisible:true,
         headerTintColor:"#F5F5F5",
         headerRight:()=>{
@@ -551,6 +580,9 @@ const StackNav = () => {
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
+          },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
           },
         headerLargeTitleShadowVisible:true,
         headerTintColor:"#F5F5F5",
@@ -573,6 +605,9 @@ const StackNav = () => {
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
           },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+          },
         headerLargeTitleShadowVisible:true,
         headerTintColor:"#F5F5F5",
         headerRight:()=>{
@@ -581,10 +616,7 @@ const StackNav = () => {
               )  
         },
       })}/>
-
-      
-      
-    </Stack.Navigator>
+      </Stack.Navigator>
   );
 };
 

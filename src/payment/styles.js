@@ -4,9 +4,9 @@ import { Metrics,Colors, Fonts } from '../assets/Themes';
 const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white'
+        paddingTop:Platform.OS==='android'?55:77 ,
+        backgroundColor: 'white',
+        
       },
       label: {
         color: 'black',
@@ -24,9 +24,10 @@ const styles = StyleSheet.create({
       endButton:{
         backgroundColor:Colors.amin1Button1,
         alignItems:'center',
-        alignContent:'center',
+        
+        justifyContent:'center',
         width:Metrics.WIDTH*0.400,
-        height:Metrics.HEIGHT*0.0621,
+        height:Metrics.HEIGHT*0.0651,
         marginTop:2,
         //marginLeft:0,
         //marginRight:Metrics.WIDTH*0.9
@@ -44,10 +45,37 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         fontSize: 18,
         borderWidth: 1,
+        backgroundColor:Colors.veryLightGray,
         borderColor: '#cdcdcd',
         paddingHorizontal: 12,
-        height: 54,
-        width:Metrics.WIDTH*0.9382
+        height: Metrics.HEIGHT*0.05582,
+        width:Metrics.WIDTH*0.8582
       },
+     
+      billMaintext:{
+        fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,
+        color : Colors.AminaButtonNew ,
+        fontSize:22
+      },
+      billRighttext:{
+        fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,
+        fontWeight:'400',
+        color : Colors.black ,
+        fontSize:15,
+        marginStart:10,
+        marginTop:2,
+       
+
+      },
+      billLifttext:{
+        fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,
+        fontWeight:'800',
+        color : Colors.black ,
+        fontSize:15,
+        marginStart:10,
+        marginTop:2,
+       
+
+      }
 })
 export default styles;

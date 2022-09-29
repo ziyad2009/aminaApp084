@@ -15,18 +15,10 @@ import {
 import styles from './styles.js'
 import * as PubNubKeys from './PubNubKeys.js'
 import DeviceInfo from 'react-native-device-info'
-
+import setItem from '../services/storage';
 import PubNub from 'pubnub'
 import {PubNubProvider} from 'pubnub-react'
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen'
-
+ 
 //  The deviceId is required to initiate the PubNub object, this will be updated once
 //  the application launches with an ID based on the device's hardware (considering the
 //  platforms privacy rules).
@@ -56,7 +48,7 @@ const PubNubChat = () => {
   //  State for friendly name edit field
   const [myFriendlyName, setMyFriendlyName] = useState('')
   const [friendlyNameEditable, setFriendlyNameEditable] = useState(false)
-  const [friendlyNameButtonText, setFriendlyNameButtonText] = useState('Edit')
+  const [friendlyNameButtonText, setFriendlyNameButtonText] = useState('تعديل')
 
   //  This application is designed to unsubscribe from the channel when it goes to the background and re-subscribe
   //  when it comes to the foreground.  This is a fairly common design pattern.  In production, you would probably
@@ -135,8 +127,10 @@ const PubNubChat = () => {
         //  periodically.
         presence: presenceMsg => {
           if (presenceMsg.action == 'join') {
+            console.log("start join",presenceMsg)
             addMember(presenceMsg.uuid)
           } else if (presenceMsg.action == 'leave') {
+            console.log("start leave",presenceMsg.uuid)
             removeMember(presenceMsg.uuid)
           } else if (presenceMsg.action == 'interval') {
             //  'join' and 'leave' will work up to the ANNOUNCE_MAX setting (defaults to 20 users)
@@ -200,6 +194,9 @@ const PubNubChat = () => {
         .hereNow({
           channels: [groupChatChannel],
           includeUUIDs: true,
+          function (status, response) {
+            console.log("test response  herby",status, response);
+          }
         })
         .then(devicesHereNow => {
           try {
@@ -214,9 +211,9 @@ const PubNubChat = () => {
           }
         })
 
-      return () => {
-        subscription.remove()
-      }
+      // return () => {
+      //   subscription.remove()
+      // }
     }
   }, [pubnub])
 
@@ -284,6 +281,7 @@ const PubNubChat = () => {
         //  Force an update of the messages view with the new name
         setMessages(msgs => [...msgs])
       } catch (error) {
+        console.log("unknown UUid",error)
         //  This happens if the UUID is not known on the server which is
         //  a common occurance so just swallow this
       }
@@ -301,15 +299,20 @@ const PubNubChat = () => {
         const result = await pubnub.objects.setUUIDMetadata({
           data: {
             name: myFriendlyName,
+            email: "johndoe@pubnub.com",
+            profileURL:'https://joeschmoe.io/api/v1/random',
+             custom: {
+            "nickname": "Mr. AminaUser"
+        }
           },
         })
       } catch (status) {
         console.log('Save friendly name status: ' + status)
       }
-      setFriendlyNameButtonText('Edit')
+      setFriendlyNameButtonText('تعديل')
       setFriendlyNameEditable(false)
     } else {
-      setFriendlyNameButtonText('Save')
+      setFriendlyNameButtonText('حفظ')
       setFriendlyNameEditable(true)
     }
   }
@@ -347,7 +350,7 @@ const PubNubChat = () => {
           <Text style={styles.headingTopContainer}>{appTitle}</Text>
           <View style={styles.membersOnlineContainer}>
             <Text style={[styles.member, styles.highlight]}>
-              Members Online:
+              المتصلون:
             </Text>
             {onlineMembers['online'].map(member => (
               <Text style={styles.member} key={member}>
@@ -359,9 +362,18 @@ const PubNubChat = () => {
           </View>
 
           <Text style={[styles.textTopContainer, styles.highlight]}>
-            Friendly Name:
+            اسم العرض:
           </Text>
           <View style={styles.friendlyNameEdit}>
+          <View style={styles.saveFriendlyName}>
+              <Button
+                title={friendlyNameButtonText}
+                buttonStyle={styles.saveFriendlyName}
+                color='#33687B'
+                onPress={handleSaveFriendlyName}
+              />
+            </View>
+            
             <TextInput
               style={styles.textInputFriendlyName}
               value={myFriendlyName}
@@ -372,15 +384,9 @@ const PubNubChat = () => {
               returnKeyType='send'
               enablesReturnKeyAutomatically={true}
               placeholder='friendly name'
+              
             />
-            <View style={styles.saveFriendlyName}>
-              <Button
-                title={friendlyNameButtonText}
-                buttonStyle={styles.saveFriendlyName}
-                color='#33687B'
-                onPress={handleSaveFriendlyName}
-              />
-            </View>
+            
           </View>
         </View>
 
@@ -486,3 +492,5 @@ const PubNubChat = () => {
     </SafeAreaView>
   )
 }
+
+export default PubNubChat;

@@ -283,7 +283,7 @@ return(
         })
         }
         {/* <Box>
-          <Button onPress={()=> props.navigation.navigate('PaymentForm') }>payment</Button>
+          <Button onPress={()=> props.navigation.navigate('PaymentForm') }>chat</Button>
         </Box> */}
 
         </View>

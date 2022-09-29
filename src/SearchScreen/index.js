@@ -129,8 +129,8 @@ const setterData= async(name)=>{
       <View style={styles.mainView}>
         <Box  backgroundColor={'red'} >
            
-        <Input placeholder="بخث" variant='outline' width="99%" size={'xl'} borderRadius="10" py="1" px="2" mt='3' borderWidth="2"
-         onChangeText={(v)=>updateSearch(v)}  backgroundColor= {Colors.white} alignItems='flex-start'
+        <Input placeholder="بحث" variant='outline' width="99%" size={'xl'} borderRadius="10" py="1" px="2" mt='3' borderWidth="2"
+         onChangeText={(v)=>updateSearch(v)}  backgroundColor= {Colors.white} textAlign='right' fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}
          onSubmitEditing={(val)=> setterDataSubmit(val.nativeEvent.text) } InputLeftElement={<Icon ml="2" size="22" color="gray.400" as={<Ionicons name="ios-search" size={25} onPress={()=>setterData()} style={{padding:10}} />} />} />
         
         </Box>

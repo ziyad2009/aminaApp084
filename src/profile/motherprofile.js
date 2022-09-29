@@ -42,14 +42,16 @@ const Motherprofilw=(props)=>{
         profileChick()
          alldesise()
         allchiled()
-        
+         
 
         const location= await setItem.getItem('BS:Location') 
         if (!location){
+            console.log("cant get location")
           setlocation('...')
         }else{
           const  existLocation=JSON.parse(location)
           setlocation(existLocation.formatted)
+          console.log("cant get",existLocation)
           setlat(existLocation.lat)
           setlon(existLocation.lon)
         }
@@ -262,80 +264,74 @@ const Motherprofilw=(props)=>{
     return(
        
        
-        <ScrollView style={{flex:1,marginLeft:10,paddingTop:Platform.OS==='android'?20:30}}>
+        <ScrollView style={{flex:1,marginLeft:10,paddingTop:Platform.OS==='android'?20:30,backgroundColor:Colors.white}}>
 
         {loding? <InstagramLoader active />
         :
         <View> 
-        <View  style={{flexDirection:'column',alignItems:'flex-start' }}> 
-        <View style={{flexDirection:'row',justifyContent:'space-around',alignContent:'baseline',marginLeft:12,}}>
-             {/* <EvilIcons name={"user"} size={33} color='#214F5E'  /> */}
-             <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400' ml={'2'} >الاسم الاول</Text>
-        </View>
-        <HStack  flexDirection={'column'} w='100%'>
-             <Stack space={4} w="88%"  >
-                <Input value={motherName}  onChangeText={(e)=>setmotherName(e)} variant='filled' placeholder="الاسم الاول " color={Colors.blacktxt} 
-                    fontSize={18} fontFamily={ Platform.OS==='android'?Fonts.type.medium:Fonts.type.base }   borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
+        <HStack  flexDirection={'column'} w='100%' alignItems={'flex-start'} ml='4'>
+        {/* <View style={{flexDirection:'row',justifyContent:'space-around',alignContent:'baseline',marginLeft:12,}}>
+            
+             <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'} >الاسم الاول</Text>
+        </View> */}
+            
+
+        
+            <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-around',alignContent:'baseline',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
+                <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400'   color={Colors.black} ml={'2'} >الاسم الاول</Text>
+            </View>
+            <Stack space={4} w="90%"  alignItems={'center'} >
+                <Input value={motherName}  onChangeText={(e)=>setmotherName(e)} variant='filled'  placeholder="الاسم الاول " color={Colors.blacktxt} 
+                    fontSize={18} fontFamily={ Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base }   borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
             </Stack>
             
-            < View style={{flexDirection:'row',alignItems:'flex-end',marginLeft:12,}}>
-             {/* <EvilIcons name={"user"} size={33} color='#214F5E'  /> */}
-             <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400' ml={'2'} mt="2">اسم العائلة</Text>
+            <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-around',alignContent:'baseline',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
+                <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'} mt="2">اسم العائلة</Text>
             </View>
-
-            <Stack space={4} w="88%"  >
-                <Input value={motherFamyly} onChangeText={(e)=>setmotherFamyly(e)} variant='filled' placeholder="اسم العائلة " color={Colors.blacktxt} 
-                    fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
+            <Stack space={4} w="90%"  alignItems={'center'} >
+                <Input value={motherFamyly} onChangeText={(e)=>setmotherFamyly(e)} variant='filled'  placeholder="اسم العائلة " color={Colors.blacktxt} 
+                    fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
             </Stack>
-
-        </HStack>
-        <HStack flexDirection={'column'} w='100%'>
-            <View style={{flexDirection:'row',alignItems:'flex-end',marginLeft:12,}}>
-                {/* <EvilIcons name={"user"} size={33} color='#214F5E'  /> */}
-                <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">رقم الهوية</Text>
+            
+            <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-around',alignContent:'baseline',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
+               
+                <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">رقم الهوية</Text>
             </View>
-            <Stack space={4} w="90%"  >
-                <Input value={motherId}   maxLength={10} onChangeText={(e)=>setmotherId(e)} variant='filled'   color={Colors.blacktxt} 
-                 fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
+            <Stack space={4} w="90%"  alignItems={'center'} >
+                <Input value={ (motherId).toString()}   maxLength={10} onChangeText={(e)=>setmotherId(e)} variant='filled'    color={Colors.blacktxt} 
+                 fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
             </Stack>
-
-        </HStack>
-        <HStack flexDirection={'column'} w='100%'>
-            <View style={{flexDirection:'row',alignItems:'flex-end',marginLeft:12,}}>
-                {/* <EvilIcons name={"user"} size={33} color='#214F5E'  /> */}
-                <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">العنوان</Text>
+            <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-around',alignContent:'baseline',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
+                <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">العنوان</Text>
             </View>
-            <Stack space={4} w="90%"  >
+            <Stack space={4} w="90%"  alignItems={'center'} >
                 <Input value={locationmother} onPressIn={()=>props.navigation.push("Mapscreen")}
-                  variant='filled'   color={Colors.blacktxt} 
-                 placeholder="ادخل العنوان"  fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}
+                  variant='filled'    color={Colors.blacktxt} 
+                 placeholder="ادخل العنوان"  fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}
                    borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
             </Stack>
-
-        </HStack>
-        
-        <HStack flexDirection={'column'} w='100%'>
-            <View style={{flexDirection:'row',alignItems:'flex-end',marginLeft:12,}}>
-                {/* <EvilIcons name={"user"} size={33} color='#214F5E'  /> */}
-                <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">البريد الالكتروني</Text>
+            
+            <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-around',alignContent:'baseline',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
+                
+                <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">البريد الالكتروني</Text>
             </View>
-            <Stack space={4} w="90%"  >
-                <Input value={motherEmail }  onChangeText={(e)=>setmotherEmail(e)} variant='filled' placeholder="البريد الالكتروني" color={Colors.blacktxt} 
-                 fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
+            <Stack space={4} w="90%"  alignItems={'center'} >
+                <Input value={motherEmail }  onChangeText={(e)=>setmotherEmail(e)} variant='filled'  backgroundColor={'white'} placeholder="البريد الالكتروني" color={Colors.blacktxt} 
+                 fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
             </Stack>
 
-        </HStack>
-        </View>
+        
+       
         
         {chieldList.length>=1? <HStack    flexDirection={'column'}>
-        <Text textAlign={'left'} fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">اطفالك</Text>
+        <Text textAlign={'left'} fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">اطفالك</Text>
                    {chieldList.map((chld)=>{    
                     return(
                         <Box  key={chld.id}   w={"90%"} flexDirection={'row'} borderColor='#00ABB9' alignItems={'center'} borderWidth='1' borderRadius={5}  mt={3}  h={Metrics.HEIGHT*0.0624} >
                             <Box w={"80%"}  flexDirection={'row'} >
-                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base ,marginLeft:4}} > {chld.name} </Text>
-                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base ,marginLeft:4}} > {chld.age} - سنوات  </Text>
-                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base ,marginLeft:4}} >- {chld.diseasses}</Text>
+                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} > {chld.name} </Text>
+                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} > {chld.age} - سنوات  </Text>
+                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} >- {chld.diseasses}</Text>
                             </Box>
                             
                             <Box  w={"20%"} flexDirection={'row'}   >
@@ -348,12 +344,13 @@ const Motherprofilw=(props)=>{
                 </HStack>
                 :<Box> </Box>
             }
-        <View  style={{flexDirection:'column',alignItems:"center",marginTop:20 ,backgroundColor:Colors.transparent,width:Metrics.WIDTH*0.8867}}> 
-            <View style={{flexDirection:'row',justifyContent:'space-around',alignContent:'baseline'}}>
-                <Text alignItems="center" fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  ml={20}>اضف طفلك</Text>
+        <View  style={{alignItems:"center",padding:2 ,marginTop:30 ,width:Metrics.WIDTH*0.9272}}> 
+            <HStack flexDirection={'row'} space={3} justifyContent='space-around' w={"37%"}>
+                <Text alignItems="center" fontSize={20} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}   >اضف طفلك</Text>
                 <EvilIcons name={"plus"} size={33} color='#f38193' onPress={()=>addChield()}/>
-            </View>
+            </HStack>
         </View>
+        </HStack>
 
         {msgerorr?<View style={{ width:Metrics.WIDTH,height:Metrics.HEIGHT*0.0583,alignItems:'center',alignContent:'space-around',marginTop:8}}>
             <Text style={{color:Colors.error,fontSize:20}}>{msg}</Text>  
@@ -363,7 +360,7 @@ const Motherprofilw=(props)=>{
                     {/* <Button bgColor={Colors.amin1Button1} size={'lg'} onPress={() => 
                  updatemotherdata(motherData.mother._id) }>حفظ</Button> */}
                    <CustomButton
-                    buttonColor={Colors.amin1Button1}
+                    buttonColor={Colors.AminaButtonNew}
                     title="حفظ"
                     buttonStyle={{width: '90%', alignSelf: 'center'}}
                     textStyle={{fontSize: 20}}
@@ -372,29 +369,29 @@ const Motherprofilw=(props)=>{
         </View>
         <Center >
 
-            <Modal isOpen={ShowModal} onClose={() => setShowModal(false)}>
-            <Modal.Content width={Metrics.WIDTH } h={Metrics.HEIGHT*0.752}>
+            <Modal isOpen={ShowModal} backgroundColor={Colors.veryLightGray} onClose={() => setShowModal(false)}>
+            <Modal.Content width={Metrics.WIDTH }  h={Metrics.HEIGHT*0.752}>
             <Modal.CloseButton padding={3} />
-            <Modal.Header alignItems={'center'}>
-            <Heading fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='500'>بيانات طفلك</Heading>
+            <Modal.Header backgroundColor={Colors.AminaButtonNew}  alignItems={'center'}>
+            <Heading fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='500' color={'white'}>بيانات طفلك</Heading>
             </Modal.Header> 
             <Modal.Body alignItems={'center'} >
  
             <Stack flexDirection={"column"} alignItems='flex-start'  space={4} w="95%" padding={2}   >
-                <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base,
+                <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,
                 fontWeight:'400',marginLeft:1}}>اسم الطفل</Text>
                 <Input variant='outline' placeholder="اسم الطفل" onChangeText={(e)=>setChiled(e)}  borderColor='#00ABB9'  borderWidth='1'  style={{textAlign:'right'}}
                         fontSize={18} w={Metrics.WIDTH*0.824}   />
 
                 <HStack flexDirection={'row'} justifyContent='space-between'   w={Metrics.WIDTH*0.824}>
                     <Box alignItems={'flex-start'}  w={Metrics.WIDTH*0.324}  >
-                        <Text style={{alignItems:"center",fontSize:15,fontFamily:Fonts.type.base,fontWeight:'400',marginLeft:1}}> العمر</Text>
+                        <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base,fontWeight:'400',marginLeft:1}}> العمر</Text>
                         <Input variant='outline' placeholder="العمر"  onChangeText={(e)=>setAge(e)}   borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}}
                                 fontSize={18} />
                     </Box>
                     
                     <Box alignItems={'flex-start'}  w={Metrics.WIDTH*0.324}   >
-                        <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base,
+                        <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,
                         fontWeight:'400',marginLeft:1}}>الجنس</Text>    
                         <Select selectedValue={gender===null?"":null}  accessibilityLabel="الجنس" placeholder="الجنس" defaultValue="ذكر"
                                     _selectedItem={{
@@ -417,7 +414,7 @@ const Motherprofilw=(props)=>{
                             setSelectdies(nextValue) 
                                     }}>
                                     {desise.map((ds)=>{ 
-                                    return( <Radio key={ds._id} value={ds.name}  >{ds.name}</Radio>)
+                                    return( <Radio fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} key={ds._id} value={ds.name}  >{ds.name}</Radio>)
                                     
                                     })}
                             
@@ -428,27 +425,33 @@ const Motherprofilw=(props)=>{
             
              </Modal.Body>
             
-             <Modal.Footer alignItems={'center'}>
-                {chieldList.length>=1? <HStack   flexDirection={'row'} flexWrap='wrap'  alignItems={'flex-end'}   >
+             <Modal.Footer alignItems={'flex-start'}>
+                {chieldList.length>=1? <HStack   flexDirection={'row'} flexWrap='wrap'  alignItems={'flex-start'}   >
                    {chieldList.map((chld)=>{ 
                     return(
-                        <Box  key={chld.id} borderColor='#00ABB9' alignItems={'center'} borderWidth='1' borderRadius={20}  mt={2}  w={Metrics.WIDTH*0.232} >
-                            <EvilIcons name={"close"} size={18} color={Colors.blacktxt} onPress={()=>removeChiiled(chld.id,chld.name)}  style={{marginTop:3}}/>
+                        <Box  key={chld.id} borderColor='#00ABB9' alignItems={'center'} borderWidth='1' borderRadius={40}  mt={2} ml={2}  w={Metrics.WIDTH*0.232} >
+                            <EvilIcons name={"close"} size={18} color={Colors.red} onPress={()=>removeChiiled(chld.id,chld.name)}  style={{marginTop:3,marginBottom:1}}/>
                                     {/* <EvilIcons name={"close"} size={18} color={Colors.skyblue} onPress={()=>console.log(chld)}  style={{marginTop:3}}/> */}
-                            <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base ,marginLeft:4}} > {chld.name} </Text>
+                            <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} > {chld.name} </Text>
                         </Box> )
                         })}
                 </HStack>:null}
                 
-                <Box alignItems={'center'}   w={"100%"} p='2'> 
-                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base ,fontSize:15 ,fontWeight:'400',textAlign:'center'} } >
+                <Stack alignItems={'center'}   w={"100%"} p='2' mt={2}> 
+                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,fontSize:15 ,fontWeight:'400',textAlign:'center',color:Colors.textZahry} } >
                                     الرجاء الحرص على ادخال بيانات طفلك بشكل دقيق </Text>
-                    {chiieldAcount >=1 ? <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base ,fontSize:15 ,fontWeight:'400',textAlign:'center'} } >
+                    {chiieldAcount >=1 ? <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,fontSize:15 ,fontWeight:'400',textAlign:'center' ,marginTop:2} } >
                             عدد الاطفال المسجلين  مسبقا {chiieldAcount} </Text>:null}
-                </Box>
+                </Stack>
                 <Box alignItems={'center'} w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>
-                    <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-                    onPress={() => addChield2()}> اضف الطفل</Button>
+                    <CustomButton
+                        buttonColor={Colors.AminaButtonNew}
+                        title=" اضف الطفل"
+                        buttonStyle={{width: '90%', alignSelf: 'center'}}
+                        textStyle={{fontSize: 20}}
+                        onPress={() =>   addChield2()  }
+                    />
+                     
                 </Box> 
             </Modal.Footer>
             </Modal.Content>

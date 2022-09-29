@@ -116,14 +116,14 @@ if(Platform.OS==='ios'){
              key={title._d} onPress={()=>handleSelection(i,title)}>
                 
                 <View style={{alignItems:'center',paddingTop:15,paddingBottom:5}} > 
-                    <Text color={ i===select?Colors.Milky:Colors.white}   fontSize={13}
-                          fontFamily={ i===select? Fonts.type.boldextr:Fonts.type.light} >
+                    <Text color={ i===select?Colors.Milky:Colors.white}   fontSize={12}
+                          fontFamily={ i===select? Fonts.type.bold:Fonts.type.light} >
                             {title.services}
                     </Text>
                 </View>
                 <View style={{alignItems:'center',paddingBottom:5,borderBottomColor:i===select?"#000000":null,borderBottomWidth:i===select?1:null}}>
-                    <Text  color={i===select?Colors.Milky:Colors.white} fontWeight='600'
-                        fontFamily={ i===select? Fonts.type.boldextr:Fonts.type.light}>
+                    <Text  color={i===select?Colors.Milky:Colors.white} fontWeight='600' fontSize={10}
+                        fontFamily={ i===select? Fonts.type.bold:Fonts.type.light}>
                             {title.descripton}
                         </Text>
                 
@@ -718,6 +718,7 @@ return(
                                     
                                 <Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time2).format("LT")}
                                      w={{ base: "88%",md: "20%"}}  
+                                    fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'
                                     InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setOpen2(true) }/>} color={Colors.textZahry} size={'lg'} ml="4" />} 
                                     color={Colors.blacktxt} />
                                 <DatePicker

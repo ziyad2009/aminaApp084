@@ -11,12 +11,12 @@ inputFieldSec: {
   },
   mainlogo:{
     alignItems:'center',
-    marginTop:Metrics.HEIGHT*0.132,
-    marginBottom:10,
+    marginTop:Metrics.HEIGHT*0.162,
+    marginBottom:2,
     borderColor:"black",
     borderWidth:0,
-    width:Metrics.WIDTH*0.360,
-     height:Metrics.HEIGHT*0.0920
+    width:Metrics.WIDTH*0.460,
+     height:Metrics.HEIGHT*0.0970
   },
   labetText:{
       alignSelf:'center',

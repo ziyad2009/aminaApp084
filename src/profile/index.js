@@ -59,6 +59,7 @@ const Profile=(props)=>{
 
         const location= await setItem.getItem('BS:Location') 
         if (!location){
+            console.log("cant get loccation")
           setlocation('عنوان المنزل')
         }else{
           const  existLocation=JSON.parse(location)
@@ -285,44 +286,44 @@ return(
             { loding ?
                 <HStack  flexDirection={'column'} w='100%' alignItems={'flex-start'} ml='4'>
                         <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-around',alignContent:'baseline',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
-                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'   color={Colors.textgray} ml={'2'} >الاسم الاول</Text>
+                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'   color={Colors.black} ml={'2'} >الاسم الاول</Text>
                         </View>
                     <Stack   w="88%"alignItems={'center'} >
-                        <Input value={motherName} onChangeText={(e)=>setmotherName(e)} variant='filled' placeholder="الاسم الاول " color={Colors.blacktxt}  bg='white'
+                        <Input value={motherName} onChangeText={(e)=>setmotherName(e)} variant='filled' backgroundColor={'white'}  placeholder="الاسم الاول " color={Colors.blacktxt}  bg='white'
                         fontSize={18} fontFamily={ Platform.OS==='android'?Fonts.type.medium:Fonts.type.base }   borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
                     </Stack>
                         <View style={{flexDirection:'row',alignItems:'flex-start',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
-                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.textgray}  ml={'2'} mt="2">اسم العائلة</Text>
+                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.black}  ml={'2'} mt="2">اسم العائلة</Text>
                         </View>
                     <Stack space={4} w="88%" alignItems={'center'}  >
-                        <Input value={motherFamyly} onChangeText={(e)=>setmotherFamyly(e)} variant='filled' placeholder="اسم العائلة " color={Colors.blacktxt}  bg='white'  
+                        <Input value={motherFamyly} onChangeText={(e)=>setmotherFamyly(e)} variant='filled' backgroundColor={'white'}  placeholder="اسم العائلة " color={Colors.blacktxt}  bg='white'  
                         fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
                     </Stack>
                         <View style={{flexDirection:'row',alignItems:'center',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
-                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.textgray}  ml={'2'}  mt="2">رقم الهوية</Text>
+                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.black}  ml={'2'}  mt="2">رقم الهوية</Text>
                         </View>
                     <Stack space={4} w="90%"  alignItems={'center'} >
-                        <Input value={motherId}  maxLength={10} onChangeText={(e)=>setmotherId(e)} variant='filled'   color={Colors.blacktxt}  bg='white'
+                        <Input value={(motherId).toString()}  maxLength={10} onChangeText={(e)=>setmotherId(e)} variant='filled' backgroundColor={'white'}    color={Colors.blacktxt}  bg='white'
                         fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
                     </Stack>
                     
                     <View style={{flexDirection:'row',alignItems:'flex-end',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
                         
-                        <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.textgray}  ml={'2'}  mt="2">العنوان</Text>
+                        <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.black}  ml={'2'}  mt="2">العنوان</Text>
                     </View>
                 <Stack space={4} w="90%"  alignItems={'center'} >
                     <Input value={locationmother} onPressIn={()=>props.navigation.push("Mapscreen")}
-                    variant='filled'   color={Colors.blacktxt}  bg='white'
+                    variant='filled' backgroundColor={'white'}    color={Colors.blacktxt}  bg='white'
                     placeholder="ادخل العنوان"  fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}
                     borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
                 </Stack>
             
                 <View style={{flexDirection:'row',alignItems:'flex-end',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
                     
-                    <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.textgray}  ml={'2'}  mt="2">البريد الالكتروني</Text>
+                    <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.black}  ml={'2'}  mt="2">البريد الالكتروني</Text>
                 </View>
                 <Stack space={4} w="90%"  alignItems={'center'} >
-                    <Input value={motherEmail}  onChangeText={(e)=>setmotherEmail(e)} variant='filled' placeholder="البريد الالكتروني" color={Colors.blacktxt}  bg='white'
+                    <Input value={motherEmail}  onChangeText={(e)=>setmotherEmail(e)} variant='filled' backgroundColor={'white'}  placeholder="البريد الالكتروني" color={Colors.blacktxt}  bg='white'
                     fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
                 </Stack>
             
@@ -364,7 +365,7 @@ return(
                     onPress={() => addMother()}
                 />
             </View>:
-             <VStack   justifyContent="center" alignItems={'center'} alignSelf='center' ml={20}> 
+             <VStack   justifyContent="center" alignItems={'center'} alignSelf='center' ml={Platform.OS==='android'?20:10}> 
                 <Spinner accessibilityLabel="Loading posts"  color={Colors.AminaButtonNew} size={'lg'}/>
                 <Text color={Colors.textZahry} fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} fontSize='22' fontWeight={'extrabold'}>
                      جاري التوجيه للصفحه الرئيسية

@@ -47,20 +47,19 @@ const styles = StyleSheet.create({
       color: '#214F5E',
       textAlign: 'center',
       //paddingVertical: 30,
-      fontFamily:Platform.OS==='android'?Fonts.type.sembold: Fonts.type.aminafonts,
+      fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.aminafonts,
       fontWeight:'400',
-     
-      
     },
+
     introTitleStyle: {
       fontSize: 30,
-      fontFamily:Platform.OS==='android'?Fonts.type.sembold: Fonts.type.aminafonts,
+      fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base,
       color: Colors.AminaButtonNew,
   
       textAlign: 'center',
       marginTop:20,
       marginBottom: 1,
-      fontWeight:Platform.OS==='android'?'bold':'700',
+      fontWeight:Platform.OS==='android'?'100':'700',
      // backgroundColor:"red"
     },
     paginationContainer: {

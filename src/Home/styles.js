@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     },
     title: {
       fontSize: 14,
-      fontFamily:Platform.OS==='android'? Fonts.type.bold:Fonts.type.base,
+      fontFamily:Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold,
       color:Colors.blacktxt,
       
       textAlign:'center'

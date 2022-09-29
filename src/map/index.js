@@ -177,13 +177,13 @@ const Mapscreen = ({ route ,navigation}) => {
           lon:lond,
         });
 
-        console.log('START test API ',response.results.features[0].properties)
+        console.log('START test API ',response.data.features[0].properties.formatted)
         if(response){
-               await setItem.setItem('BS:Location', JSON.stringify(response.results.features[0].properties));
+          await setItem.setItem('BS:Location', JSON.stringify(response.data.features[0].properties));
                  
         }
         }catch(err){
-          console.log('START Erorr',err) 
+          console.log(' Erorr  Get location',err) 
         }
         navigation.goBack()
        // const response =await api.post(`/motheraddres`,  {

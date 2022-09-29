@@ -491,7 +491,7 @@ const chikchatRoomMsg=async(roomID)=>{
      api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
         await api.post(`${URL}/ordercomplete/${id}`)
         .then((res)=>{
-          console.log("finesh order change to complete",res.data)
+          console.log("finesh order change to complete")
           increasHours(res.data.order)
           
         }).finally(()=>{}).catch((err)=>console.log('erorr:',err))
@@ -513,11 +513,6 @@ const chikchatRoomMsg=async(roomID)=>{
     const increasHours= async(order)=>{
      
       const token = await setItem.getItem('BS:Token');
-      const data={
-            id:order._id,
-            setterID:order.settterowner
-      }
-      console.log("update hours to setter in order",data)
       api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
        await api.patch(`${URL}/incrementsetterhoursr`,
       {
@@ -527,9 +522,9 @@ const chikchatRoomMsg=async(roomID)=>{
       // alll condtion expete filte
        console.log("order Data",res.data)
       }).finally(()=> setTimeout(() => {
-        props.navigation.navigate('FinleScreeen',{data1:babysetter})
-         
-      },1000)).catch((err)=>console.log('erorr:',err))
+        props.navigation.navigate('FinleScreeen',{data1:babysetter})}
+        ,1000)
+      ).catch((err)=>console.log('erorr:',err))
 
     }
    
@@ -553,7 +548,7 @@ const chikchatRoomMsg=async(roomID)=>{
       console.log("test noti",data)
      }
      
-
+ 
      const calcluateTotalprice=(value)=>{
       const price =babysetter.price
         console.log("tets value ",value)
@@ -656,14 +651,13 @@ return(
         <HStack flexDirection={'row'} alignItems="center" background={"#ddf1f4"} justifyContent='space-around'
          w={Metrics.WIDTH*0.940} borderRadius={10} ml={2} mt={3}    >
                 <Stack flexDirection={'row'} alignItems='baseline'>
-                <Feather name="calendar" size={24}  color={Colors.blacktxt}  style={ {marginLeft:Metrics.HEIGHT*0.0121,marginVertical:10}} />
-                <Text fontSize={13} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} color='black' ml="2">{moment(babysetter.potementdate).format("'dddd,MMM,YY'")}</Text>
+                  <Feather name="calendar" size={24}  color={Colors.blacktxt}  style={ {marginLeft:Metrics.HEIGHT*0.0121,marginVertical:10}} />
+                  <Text fontSize={13} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} color='black' ml="2">{moment(babysetter.potementdate).format("'dddd,MMM,YY'")}</Text>
                 </Stack>
                 <Stack flexDirection={'row'} alignItems='baseline'>
-                <Feather name="clock" size={24}  color={Colors.blacktxt} style={ {marginLeft:Metrics.HEIGHT*0.0121,marginVertical:10}}  />
-                <Text fontSize={13} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} color='black' ml="2">{moment(babysetter.start).format("hh:mm a")}</Text>
+                  <Feather name="clock" size={24}  color={Colors.blacktxt} style={ {marginLeft:Metrics.HEIGHT*0.0121,marginVertical:10}}  />
+                  <Text fontSize={13} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} color='black' ml="2">{moment(babysetter.start).format("hh:mm a")}</Text>
                   <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base}>{moment(babysetter.end).format("hh:mm a")}</Text>
-
                 </Stack>
                 
                   
@@ -684,22 +678,20 @@ return(
 
 
             </Box>
-                 <Feather name= {livechat?'user':"activity"} color={Colors.bloodOrange} size={33} onPress={()=> console.log(recvMessages.length)} />
+                 {/* <Feather name= {livechat?'user':"activity"} color={Colors.bloodOrange} size={33} onPress={()=> console.log(recvMessages.length)} /> */}
                  
             <Box alignItems={'center'} w={Metrics.WIDTH*0.401} ml='3' mr='4' mt={1}  >
                          
-                            <OutlaintButton
+                        <OutlaintButton
                           buttonColor={Colors.white}
                           title="انهاء وتقييم"
                           buttonStyle={{width: '77%', alignSelf: 'center'}}
                           titleColor={Colors.blacktxt}
                           textStyle={{fontSize: 15}}
                           onPress={() => serviceCompleate(babysetter._id)  }
-                            />
+                        />
             </Box>
         </Center>
-        
-    {/* <Text fontSize={20}>weelcome;{greating}</Text> */}
     </Box>
     
     <Box h={ Platform.OS==="android"?"57%" : "62%" } backgroundColor={Colors.white} borderTopRadius={20} padding={1} >

@@ -1,9 +1,9 @@
 import React,{useState,useRef} from 'react';
- import { Image ,View,TouchableOpacity,Text} from 'react-native';
-import {Input,Box,Spacer, Stack,VStack,Icon, HStack,WarningOutlineIcon,FormControl,Button} from 'native-base';
+ import { Image ,View,TouchableOpacity,Text, Platform} from 'react-native';
+import {Input,Box,Spacer, Stack,VStack,Icon, HStack,WarningOutlineIcon,FormControl,Button, ScrollView} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
  
-import{Metrics,Colors,Images} from '../assets/Themes/'
+import{Metrics,Colors,Images, Fonts} from '../assets/Themes/'
 import styles from './styles';
 import images from '../assets/Themes/Images';
 import setItem from '../services/storage'
@@ -153,71 +153,44 @@ const inputCard=useRef()
   var cardno = /^(?:5[1-5][0-9]{14})$/;
   const creditCardMask = [/\d/, /\d/, /\d/, /\d/, " " [/\d/], [/\d/], [/\d/], [/\d/], " ", [/\d/], [/\d/], [/\d/], [/\d/], " ", /\d/, /\d/, /\d/, /\d/];
     return (
-      <Box alignItems={'center'} backgroundColor='white' flex={1} > 
-       <Stack w={"88%"}   justifyContent={'space-around'} backgroundColor={Colors.ricePaper}>
+      <View  style={styles.wrapper }>
+ 
+     
+      <Box alignItems={'center'} backgroundColor='white' > 
        
-        <VStack alignItems={'center'} padding={1}>
-          <Text>فاتورة</Text>
-        </VStack>
-        <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-              <Text>المبلغ</Text>
-              <Text> SR {props.route.params.data1.totalprice}</Text>
-            </HStack>
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-            <Text>قيمة الضريبة المضافة</Text>
-            <Text>SR{ (Number(0.15)* Number(props.route.params.data1.totalprice))}</Text>
-            </HStack>
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-            <Text>طريقة الدفع</Text>
-            <Text>بطاقة مدى</Text>
-            </HStack>
-            <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
-            <HStack flexDirection={'row'} justifyContent='space-around' mt={2}    >
-            <Text>المبلغ الاجمالي</Text>
-            <Text> SR { (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice}</Text>
-             </HStack>
-            
-            
-            
-          </Stack>
+        
+        <Stack   w="88%" alignItems="center" borderWidth={.5} borderColor={Colors.greys} marginTop={'4'}   backgroundColor="trueGray.100" borderRadius={20} >
 
-      <Stack   w="95%" alignItems="center" borderWidth={.5} borderColor={Colors.greys} marginTop={'10'}   backgroundColor='gray.200' borderRadius={20} >
-
-        <Box ml={5} mt={2}  w='88%' justifyContent={'space-between'} flexDirection={'row'}   >
+        <Box mt={2} mb={2} w='88%' justifyContent={'space-between'} flexDirection={'row'}   >
           <Image  source={images.aminamainlogo} resizeMode='contain' style={{width:Metrics.WIDTH*0.182 ,height:Metrics.HEIGHT*0.0401,alignItems:'flex-start'}} />
           <AntDesign name='creditcard'  size={35} color={Colors.black}/>
         </Box>
         
         <Input   w={'97%'} type='text' color={Colors.blacktxt} fontSize='lg' onChangeText={(e)=>handelNameholdercard(e)}
               InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
-              placeholder="name"
+              placeholder="name" bgColor={'blue.100'}
         />
-        <Stack alignItems='flex-end' mt={2} p="1">
-           <MaskInput
+        
+        <MaskInput
               mask={Masks.CREDIT_CARD}
               keyboardType="numeric"
-                value={number}
-                placeholder='Card number'
-                 
-              //showObfuscatedValue
-            style={styles.inputBasic}
-            onChangeText={(formatted) => {
+              value={number}
+              placeholder='Card number'
+                //showObfuscatedValue
+              style={styles.inputBasic}
+              onChangeText={(formatted) => {
               handelCardnumber(formatted);
-             
-              console.log(formatted); // "1234 1234 1234 1234"
-            
-            }}
+              //console.log(formatted); // "1234 1234 1234 1234"
+             }}
         />
-        </Stack>
-        
-        
-        <HStack   w='97%' justifyContent={'space-between'} mb={5}  >
-           <Stack alignItems='flex-end' mt={2} p="1" ml={5}>
+        <HStack   w='88%' justifyContent={'space-between'} mb={5}  >
+            
             <MaskInput
             value={expiry}
             mask={DATEMASK}
             maxLength={6}
+            placeholder='Expir ----'
+           
             onChangeText={(masked, unmasked) => {
             // setDValue(unmasked); // you can use the masked value as well
               handelEXPnumber(unmasked,"Y")
@@ -226,12 +199,13 @@ const inputCard=useRef()
               console.log("value=",unmasked); // "123456"
             }}
           />
-          </Stack>
-          <Stack alignItems='flex-end' mt={2} p="1" mr={4}>
+          
           <MaskInput
             value={CVCvalue}
             mask={CVCMASK}
             maxLength={6}
+            placeholder='CVC---'
+            
             onChangeText={(masked, unmasked) => {
               setCVCValue(unmasked); // you can use the masked value as well
               handelCVCnumber(unmasked)
@@ -240,16 +214,16 @@ const inputCard=useRef()
               console.log(unmasked); // "123456"
             }}
           />
-          </Stack>
+          
           </HStack>
           
-          <Box bgColor ={'red'} w='full'  ml={2} mb='4'>
-                <Image  source={images.madacard} resizeMode='contain' style={{width:Metrics.WIDTH*0.2 ,height:Metrics.HEIGHT*0.0601,alignItems:'flex-start'}} />
+          <Box bgColor ={'red'} w='full'  ml={2} mb='1'>
+                <Image  source={images.madacard} resizeMode='contain' style={{width:Metrics.WIDTH*0.2 ,height:Metrics.HEIGHT*0.0601}} />
           </Box>
           
       </Stack>
       
-      <View style={{flexDirection:'row',width:Metrics.WIDTH*0.87216,height:Metrics.HEIGHT*0.087,justifyContent:'space-around',marginLeft:10,marginTop:50}}>
+      <View style={{flexDirection:'row',width:Metrics.WIDTH*0.87216,height:Metrics.HEIGHT*0.068,justifyContent:'center',marginTop:17} }>
           
           <TouchableOpacity onPress={()=> handlepayment( (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice)}   
               style={styles.endButton}>
@@ -265,8 +239,34 @@ const inputCard=useRef()
             
       </View> */}
 
-         
+<Stack w={"88%"}  mt='24' backgroundColor={Colors.white}>
+       
+       <Stack alignItems={'center'}>
+         <Text  style={styles.billMaintext}> تفاصيل الفاتورة</Text>
+       </Stack>
+         <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"}/>
+         <VStack alignItems={'center'}>
+           <HStack flexDirection={'row'}  mt={2} w="80%" justifyContent={'space-between'} >
+               <Text style={styles.billRighttext}>المبلغ</Text>
+               <Text style={styles.billLifttext}> SR {props.route.params.data1.totalprice}</Text>
+           </HStack>
+           <HStack flexDirection={'row'}  mt={2} w="80%" justifyContent={'space-between'}>
+             <Text style={styles.billRighttext} >قيمة الضريبة المضافة</Text>
+             <Text style={styles.billLifttext}>SR{ (Number(0.15)* Number(props.route.params.data1.totalprice))}</Text>
+           </HStack>
+           <HStack flexDirection={'row'}  mt={2} w="80%" justifyContent={'space-between'}>
+             <Text style={styles.billRighttext}>طريقة الدفع</Text>
+             <Text style={styles.billLifttext}>بطاقة مدى</Text>
+           </HStack>
+           <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
+           <HStack flexDirection={'row'}  mt={2} w="80%" justifyContent={'space-between'}>
+             <Text style={styles.billRighttext}>المبلغ الاجمالي</Text>
+             <Text style={styles.billLifttext} > SR { (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice}</Text>
+           </HStack>
+         </VStack>
+       </Stack>
       </Box>
+      </View>
     );
 }
   
