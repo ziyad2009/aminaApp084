@@ -334,11 +334,12 @@ const chikchatRoomMsg=async(roomID)=>{
      console.log("start load  Previous  chat message ")
     const messsagess= res.data.messages.sort((a, b) => b.createdAt  - a.createdAt  )
    
-    res.data.messages.map((msg)=>{
+    res.data.messages.map((msg,i)=>{
       console.log("MSGS ",msg)
-      setRecvMessages(prevState => GiftedChat.append(prevState, msg));
+      setRecvMessages(prevState => GiftedChat.prepend(prevState, msg,i));
     })
-   // setRecvMessages(res.data.messages)
+   // setRecvMessages(prevState =>GiftedChat.prepend(prevState, res.data.messages))
+     //setRecvMessages(res.data.messages)
      //setRecvMessages(prevState => GiftedChat.append(prevState, ...res.data.messages));
      
     }).finally(( )=>{
@@ -424,45 +425,46 @@ const chikchatRoomMsg=async(roomID)=>{
   }
 
 
-  // const onSend = async messages => {
-  // //  console.log("message send by app",messages);
-  // //  if(!livechat){
-  // //   Alert.alert('تنبيه',' الحاضنه غير قادر علي استقبال الرسائل ')
-  // //   return
-  // //  }
-
-  // const token = await setItem.getItem('BS:Token');
-  // const massegdata={
-  //   tokens:JSON.parse(token),
-  //   ROOMID:`babayAmina${props.route.params.data1._id}`,
-  //   message:messages[0].text
-   
-  // }
-    
-  //   console.log("send by app",messages)
-  //   socket.current.emit("sendMessage", massegdata);
-  //   setRecvMessages(prevState => GiftedChat.append(prevState, messages));
-    
-    
-  // };
-
   const onSend = async messages => {
-    //  console.log("message send by app",messages);
-    //  if(!livechat){
-    //   Alert.alert('تنبيه',' الحاضنه غير قادر علي استقبال الرسائل ')
-    //   return
-    //  }
-  
-    const token = await setItem.getItem('BS:Token');
+  //  console.log("message send by app",messages);
+  //  if(!livechat){
+  //   Alert.alert('تنبيه',' الحاضنه غير قادر علي استقبال الرسائل ')
+  //   return
+  //  }
+
+  const token = await setItem.getItem('BS:Token');
+  const massegdata={
+    tokens:JSON.parse(token).toString(),
+    ROOMID:`babayAmina${props.route.params.data1._id}`,
+    message:messages[0].text
+   
+  }
+  console.log("test mmmm+++ send by app",massegdata);
     
-      const tokens=JSON.parse(token)
-      const ROOMID=`babayAmina${props.route.params.data1._id}`
-      console.log(tokens)
-      socket.current.emit("sendMessage",  messages[0].text);
-      setRecvMessages(prevState => GiftedChat.append(prevState, messages));
+    console.log("send by app",messages)
+    socket.current.emit("sendMessage", massegdata);
+    setRecvMessages(prevState => GiftedChat.append(prevState, messages));
+    
+    
+  };
+
+  // const onSend = async messages => {
+  //   //  console.log("message send by app",messages);
+  //   //  if(!livechat){
+  //   //   Alert.alert('تنبيه',' الحاضنه غير قادر علي استقبال الرسائل ')
+  //   //   return
+  //   //  }
+  
+  //   const token = await setItem.getItem('BS:Token');
+    
+  //     const tokens=JSON.parse(token)
+  //     const ROOMID=`babayAmina${props.route.params.data1._id}`
+  //     console.log(tokens)
+  //     socket.current.emit("sendMessage",  messages[0].text);
+  //     setRecvMessages(prevState => GiftedChat.append(prevState, messages));
       
       
-    };
+  //   };
  
 
    const ENDDEXP=()=>{
@@ -627,7 +629,7 @@ return(
              
             <Box   flexDirection='row'  justifyContent={'space-around'} w="50%" backgroundColor={Colors.transparent} > 
                 <VStack mt={2}>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={12} >{`متبيقي من نهاية  `}</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={12} >{`متبقي من نهاية  `}</Text>
                 <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={12}>{`الحضانه ${elapsedTime} دقيقه`}</Text> 
                 </VStack>
                 <Box mt={2}>

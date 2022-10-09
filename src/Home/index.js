@@ -86,8 +86,10 @@ const Home=(props)=>{
             const user = await setItem.getItem('BS:User');
             const token = await setItem.getItem('BS:Token');
             const  coordinates=[ existLocation.lat,existLocation.lon]
+            const limit=10
+            const skip=1
             api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
-            const response =await api.post('setterlocationall',{coordinates}).then((res)=>{
+            const response =await api.post(`setterlocationall?limit=${limit}&skip=${skip}`,{coordinates}).then((res)=>{
                 if(res.data){
                 setbabseters(res.data)
                 console.log("get ",coordinates)

@@ -22,7 +22,7 @@ const[loading,setLoading]=useState(true)
 const[loadStorage,setloadStorage]=useState(false)
  
 const [favoriteList, setFavoriteList] = useState([]);
-
+const [page,setpage]=useState(0)
 
 useEffect( ()=>{
 
@@ -145,10 +145,12 @@ const setterData= async()=>{
     "mainservice":mainservice,
     "service":serviestype?serviestype:"",
     "coordinates":[existLocation.lat,existLocation.lon],
-    "token":JSON.parse(token) 
+    "token":JSON.parse(token) ,
+    "limit":20,
+    "skip":page
 
 }
-console.log("tets DATA",data)
+console.log("DATA for serche serveses",data)
  
 
     socket.on("connect", () => {
@@ -309,6 +311,8 @@ return(
             </Box>)
             
           }
+          onEndReachedThreshold={0.5}
+          onEndReached={()=> setpage(page+1)}
           keyExtractor={item => item.id} />}
       
       
