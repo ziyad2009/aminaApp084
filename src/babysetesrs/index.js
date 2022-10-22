@@ -14,13 +14,13 @@ import images from '../assets/Themes/Images';
 import {URL_ws,URL} from '../services/links';
 import CustomButton from '../services/buttons/buttton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { getDistance ,convertDistance} from 'geolib';
 const Babysetesrs=(props)=>{
  
 const[babseters,setbabyseters]=useState([])
 const[loading,setLoading]=useState(true)
 const[loadStorage,setloadStorage]=useState(false)
- 
+ const[mylocattion,setmylocation]=useState({})
 const [favoriteList, setFavoriteList] = useState([]);
 const [page,setpage]=useState(0)
 
@@ -41,6 +41,11 @@ useEffect( async ()=>{
 //})
 
    setterData()
+
+   const location= await setItem.getItem('BS:Location') 
+   const  existLocation=JSON.parse(location)
+   console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
+    setmylocation( existLocation)
 
 },[])
 
@@ -164,7 +169,7 @@ console.log("DATA for serche serveses",data)
     socket.emit("setterlocation",(data))
         
        socket.on("seteeslocation", (loc) => {
-        // console.log("setter ddata",loc);
+        console.log("setter ddata",loc);
          setbabyseters(loc)
          if(loc.length >= 1){
           setLoading(false)
@@ -221,7 +226,20 @@ console.log("DATA for serche serveses",data)
     
   }
 
-  
+  const calcDistance=  (locat)=>{
+   
+
+    let myLoca={latitude: mylocattion.lat,longitude :mylocattion.lon}
+    let setteerloc={latitude:locat.coordinates[0],longitude :locat.coordinates[1]}
+    let distance=getDistance(myLoca,setteerloc,1000) 
+    let distatnkm=convertDistance(distance,"km")
+    if(distance <= 1000){
+      return<Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={12} fontWeight='300'>{distance} M</Text>
+    }else{
+      return<Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={12} fontWeight='300'>{distatnkm} KM</Text>
+    }
+   
+  }
    
 return(
 <Box backgroundColor={Colors.red}  mt={Platform.OS==='android'?66:94} flex={1}>
@@ -241,9 +259,16 @@ return(
                     fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='bold' fontSize={18}>
                     {item.displayname}
                   </Text>
+                    <VStack flexDirection={'row'} justifyContent='space-around' alignItems={'baseline'} >
                       <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} mr={6}>
                         {item.mainservice}
                       </Text>
+                      <Box>
+                      { calcDistance(item.location) }
+                      </Box>
+                    </VStack>
+                      
+                      
                       <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
                       <Rating
                     type='custom'
@@ -274,6 +299,9 @@ return(
                 <Text   color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} >
                   تكلفة الخدمه بالساعه {item.price} ريال
                 </Text>
+                {/* <Button onPress={()=> calcDistance(item.location) }>test</Button> */}
+              
+                 
                 <HStack backgroundColor={'amber.200'}>
                 
                 </HStack>

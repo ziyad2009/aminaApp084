@@ -629,8 +629,17 @@ return(
              
             <Box   flexDirection='row'  justifyContent={'space-around'} w="50%" backgroundColor={Colors.transparent} > 
                 <VStack mt={2}>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={12} >{`متبقي من نهاية  `}</Text>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={12}>{`الحضانه ${elapsedTime} دقيقه`}</Text> 
+                {elapsedTime <=  1 ? 
+                <Box  alignItems={'center'} mr='3' mt={2} p='1'>
+                  <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={12} color='red.400' >{"تم تجاوز موعد الخدمه"}</Text> 
+                </Box>:
+                
+                <View>
+                  <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={12} >{`متبقي من نهاية  `}</Text>
+                  <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={12}>{`الحضانه ${elapsedTime} دقيقه`}</Text>
+                  </View>
+                }
+                 
                 </VStack>
                 <Box mt={2}>
                 <CountdownCircleTimer
@@ -719,19 +728,21 @@ return(
 
 <Center >
 
-<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+<Modal isOpen={showModal} onClose={() => setShowModal(false)}
+borderColor={Colors.white}
+avoidKeyboard justifyContent="flex-end" bottom="2">
 <Modal.Content width={Metrics.WIDTH } h={Metrics.HEIGHT*0.622}>
 <Modal.CloseButton />
 <Modal.Header alignItems={'center'}>
-<AntDesign name='checkcircleo' size={50} color={Colors.loginGreen} style={{ marginBottom:10}} />
-     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='2xl'  textAlign={'center'} >  تم طلب وقت اضافي للحاضنه</Text>
-     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='2xl'  textAlign={'center'} > سعر الساعه الواحد ب{babysetter.price}</Text>
+<AntDesign name='checkcircleo' size={33} color={Colors.loginGreen} style={{ marginBottom:10}} />
+     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='lg'  textAlign={'center'} >  تم طلب وقت اضافي للحاضنه</Text>
+     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='lg'  textAlign={'center'} > سعر الساعه الواحد بـ{babysetter.price}</Text>
 </Modal.Header>
-<Modal.Body alignItems={'center'} >
+<Modal.Body alignItems={'center'} borderColor={Colors.AminaButtonNew} >
           <Stack Stack direction={{ base: "column",md: "row"}} space='4'   >
                             <Radio.Group name="myRadioGroup" accessibilityLabel="favorite number" value={hoursopt} 
-                              onChange={nextValue => {setHoursopt(nextValue)  }}>
-                                <Radio value="one" my={1}>
+                              onChange={nextValue => {setHoursopt(nextValue)  }} >
+                                <Radio value="one" my={1} >
                                   ساعه
                                 </Radio>
                                 <Radio value="tow" my={1}>
@@ -750,14 +761,26 @@ return(
      
 </Modal.Body>
  
-<Modal.Footer alignItems={'center'}>
+<Modal.Footer alignItems={'center'} justifyContent='center'>
   <Box alignItems={'center'}   w={"90%"} p='2'> 
-    <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='xl' textAlign={'center'} mb={2}>السعر الاجمالي ل{totallhours} = {totallprice} </Text>
+    <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='lg' textAlign={'center'} mb={2}>السعر الاجمالي لـ{totallhours} = {totallprice} </Text>
   </Box>
 <Box alignItems={'center'} w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>
-    <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='2xl' textAlign={'center'} mb={2}>اكمل الدفع عن طريق</Text>
-    <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-             onPress={() => paymentScreen()}> مدى</Button>
+    <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='lg' textAlign={'center'} mb={2}>اكمل الدفع عن طريق</Text>
+     
+    <Box alignItems={'center'}  w={Metrics.WIDTH*0.461} ml='3' mr='4'   >
+                     {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
+                        onPress={() =>   setShowModal(true) }> تمديد</Button> */}
+                         <CustomButton
+                          buttonColor={Colors.AminaButtonNew}
+                          title="مدى"
+                          buttonStyle={{width: '88%', alignSelf: 'center'}}
+                          textStyle={{fontSize: 15}}
+                          onPress={() =>  paymentScreen(true)  }
+                            />
+
+
+      </Box>
     </Box> 
    
 </Modal.Footer>

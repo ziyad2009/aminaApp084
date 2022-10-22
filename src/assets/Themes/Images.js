@@ -1,6 +1,7 @@
 const images = {
   aminamainlogo: require("../images/logoamina3.png"),
   women: require("../images/women.png"),
+  introimage:require("../images/Aminahchar.png"),
   MainLogo: require("../images/MainLogo.png"),
   MainLogo3: require("../images/MainLogo3.png"),
   caption1: require("../images/caption1.png"),

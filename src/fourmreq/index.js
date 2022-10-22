@@ -690,7 +690,7 @@ return(
                                     w={Platform.OS==='android'? "26%": "20%"} >من</Text>
                                 <Input isDisabled  h={Metrics.HEIGHT*0.0682}  textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time).format("LT")}
                                 fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                                    w={{base: "88%",md: "20%"}}   
+                                    w={{base:Platform.OS==='android'?"88":"75%",md: "20%"}}   
                                     InputLeftElement={<Icon as={ (<Feather name="clock" onPress={()=>   setOpen(true)  } /> )} 
                                     size={'lg'} ml="4"   color={Colors.textZahry}/>} 
                                     color={Colors.blacktxt}  />
@@ -717,7 +717,7 @@ return(
                                          w={Platform.OS==='android'? "26%": "20%"} >الى</Text>
                                     
                                 <Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time2).format("LT")}
-                                     w={{ base: "88%",md: "20%"}}  
+                                     w={{ base:Platform.OS==='android'?"88":"75%",md: "20%"}}  
                                     fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'
                                     InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setOpen2(true) }/>} color={Colors.textZahry} size={'lg'} ml="4" />} 
                                     color={Colors.blacktxt} />

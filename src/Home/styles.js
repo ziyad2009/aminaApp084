@@ -10,12 +10,12 @@ const styles = StyleSheet.create({
     item: {
       backgroundColor: Colors.transparent,
       padding:1,
-      marginLeft:10,
+      marginLeft:2,
       borderRadius:10,
       borderColor:Colors.AminaButtonNew,
-      borderWidth:.8,
+      borderWidth:.2,
       height:Metrics.HEIGHT*0.2151,
-     justifyContent:'space-around'
+     justifyContent:'flex-end'
       //marginVertical: 8
     },
     header: {
@@ -23,11 +23,12 @@ const styles = StyleSheet.create({
       backgroundColor: "#fff"
     },
     title: {
-      fontSize: 14,
+      fontSize: 12,
       fontFamily:Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold,
       color:Colors.blacktxt,
-      
-      textAlign:'center'
+      fontWeight:'200',
+      textAlign:'center',
+      marginTop:5
     },
     title2: {
       fontSize: 14,

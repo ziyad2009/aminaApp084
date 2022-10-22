@@ -36,6 +36,7 @@ import Notifactionscreen from '../notifactions';
 import Motherprofilw from '../profile/motherprofile';
 import FinleScreeen from '../workscreen/FinleScreeen';
 import SearchScreen from '../SearchScreen';
+//import Paymentint from '../payment/test';
  import PubNubChat from '../chat/pupnup'
 import { Metrics,Colors,Fonts,Images } from '../assets/Themes/';
 import UserProvider from '../services/UserContext';
@@ -47,6 +48,7 @@ import PrivecyScreen from '../extrascreen/privcy';
 import AboutScreen from '../extrascreen/about';
 import Zoomphoto from '../Setterprofile/zoomphoto';
 import Ewallet from '../Wallet/ewalet';
+
   
 
 
@@ -68,13 +70,15 @@ return(
   <View style={{ marginRight:2,flexDirection:'row',justifyContent:'flex-start'}}>
     
     <View >
-      <Badge // bg="red.400"
-      colorScheme="danger" rounded="full" mb={-4} mr={-4} zIndex={1} variant="solid" alignSelf="flex-end" _text={{
-        fontSize: 9
-      }}>
+      <Badge // bg="red.400" 
+       colorScheme="danger" rounded="30"   mb={-4} mr={-4}   zIndex={1}
+       onPress={()=> navigation.navigate('Notifactionscreen') }
+        variant="solid" alignSelf="flex-end" _text={{
+        fontSize: 7
+      }} >
           {notifaction}
         </Badge>
-        <Ionicons name="notifications" size={22} color={"#F5F5F5"} style={{marginLeft:3}} onPress={()=> navigation.navigate('Notifactionscreen') } /> 
+        <Ionicons name="notifications" size={25} color={"#F5F5F5"} style={{marginLeft:3}} onPress={()=> navigation.navigate('Notifactionscreen') } /> 
       
     </View>
     
@@ -460,7 +464,7 @@ const StackNav = () => {
           headerBackTitleStyle:{
             fontFamily:Fonts.type.medium,
           },
-          headerBackVisible:false,
+          headerBackVisible:true,
           headerLargeTitleShadowVisible:true,
            headerTintColor:"#F5F5F5",
            
@@ -616,6 +620,7 @@ const StackNav = () => {
               )  
         },
       })}/>
+      {/* <Stack.Screen name="Paymentint" component={Paymentint} /> */}
       </Stack.Navigator>
   );
 };

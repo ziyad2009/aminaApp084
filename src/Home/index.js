@@ -1,5 +1,5 @@
 import React,{useContext,useEffect, useState,useRef,useMemo,useCallback} from 'react';
-import {View,Text,Image, TouchableOpacity, Platform ,PermissionsAndroid} from 'react-native';
+import {View,Text,Image, TouchableOpacity, Platform ,PermissionsAndroid,ScrollView, Alert} from 'react-native';
 import {Skeleton, StatusBar,VStack,Center, Box, Button ,FlatList, Stack} from 'native-base'
 import { UserContext } from '../services/UserContext';
 import api from '../services/api';
@@ -14,18 +14,39 @@ import io from "socket.io-client";
 import BottomSheet, {
   BottomSheetView
 } from '@gorhom/bottom-sheet';
+import Sound from 'react-native-sound';
+
+ page=0
+
+ Sound.setCategory('Playback');
  
- 
-  
+ var ding = new Sound(Platform.OS==='android'?'notification.mp3':"IphoneNotification.m4r", Sound.MAIN_BUNDLE, (error) => {
+  if (error) {
+    console.log('failed to load the sound', error);
+    return;
+  }
+  // when loaded successfully
+  console.log('duration in seconds: ' + ding.getDuration() + 'number of channels: ' + ding.getNumberOfChannels());
+
+});
+
+
 const Home=(props)=>{
     const [services,setservices]=useState({})
     const [loading,setloding]=useState(false)
     const [loading2,setloding2]=useState(false)
     const [babseters,setbabseters]=useState([])
     const [change,setchange]=useState(false)
+    const [itemnumber,setitemnumber]=useState(0)
+    const[lemitsetters,setlimetsetter]=useState(10)
+    const {setnotifaction,SOKITIOSetter} = useContext(UserContext);
+    
+    const[newSetter,setneswSetter]=useState(false)
+    const [isFetching, setIsFetching] = useState(false);
 
-    const {setnotifaction} = useContext(UserContext);
+
     const socket = useRef(null);
+    socket.current =SOKITIOSetter;
     // ref
     const bottomSheetRef = useRef(<BottomSheet />|| null );
   
@@ -53,7 +74,12 @@ const Home=(props)=>{
       const data={
         "receiverid":motherId,"username":username,"token":JSON.parse(token) 
       }
-      socket.current = io(URL_ws);
+     // socket.current = io(URL_ws);
+      socket.current.emit("newuser",data)
+      socket.current.on("welcomeuser",msg=>{
+        console.log("start login",msg)
+      })
+
       socket.current.on('connection',(data)=>{
         console.log("test SOKET",data)
        },{})
@@ -61,33 +87,53 @@ const Home=(props)=>{
     // socket.current.on("seconds",(msg)=>{
     //   console.log("test SOKET ping ",msg)
     // })
-    socket.current.emit("newuser",data)
-    socket.current.on("welcomeuser",msg=>{
-      console.log("start login",msg)
+   
+
+    socket.current.on('userlogin',(data)=>{
+      console.log("new login from setter",data)
+     // setneswSetter(true)
     })
+
     socket.current.on("newnotifaction",(response)=>{
-       //console.log("start read  Notifctions ",response)
+       console.log("start read  Notifctions ",response)
       setnotifaction(response)
+     // setItem.setItem("notifaction",response)
+      //palysound()
     })
     
     ///
-  },)
+  },[])
+
+  //serch all setter by near location
+  useEffect( async() => {
+    setTimeout(() => {
+      console.log('start upddate seteeers array')
+      setterSerchall()
+    }, 4000);
+    
+  }, [newSetter]);
+
+  useEffect(() => {
+    ding.setVolume(1);
+    return () => {
+      ding.release();
+    };
+  }, []);
+
 
   useEffect( async() => {
     setloding2(true)
-   
     const location= await setItem.getItem('BS:Location') 
     let  existLocation=JSON.parse(location)
    if(existLocation===null){
-      existLocation
       requestPermissions()
    }else{
             console.log("test location3 ",existLocation)
             const user = await setItem.getItem('BS:User');
             const token = await setItem.getItem('BS:Token');
             const  coordinates=[ existLocation.lat,existLocation.lon]
-            const limit=10
-            const skip=1
+            const limit=lemitsetters
+            const skip=itemnumber
             api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
             const response =await api.post(`setterlocationall?limit=${limit}&skip=${skip}`,{coordinates}).then((res)=>{
                 if(res.data){
@@ -98,15 +144,9 @@ const Home=(props)=>{
               }).finally(()=> setloding2(false)).catch(err=>console.log("Erorr",err))
 
    }
-   // console.log("test location3 ",existLocation)
    
-    
-    // socket.emit("login",data, ( res ) => {
-    //   console.log("tst res" ,res);
-    //   //console.log(err.message); 
-    // });
     }, []);
-
+ 
     useEffect(async()=>{
         getallservice()
         console.log("Main services  from HOME service ",services)
@@ -131,11 +171,7 @@ const Home=(props)=>{
 
     }
 
-    
-    const ratingCompleted=(rating)=> {
-      console.log("Rating is: " + rating)
-    }
-
+     
 
     const fetchGeoPosition = async() => {
       const user = await setItem.getItem('BS:User');
@@ -213,11 +249,34 @@ const requestLocationaPermission = async () => {
     console.log(err);
   }
 };
+
+const setterSerchall=async ()=>{
+  const location= await setItem.getItem('BS:Location') 
+    let  existLocation=JSON.parse(location)
+   if(existLocation===null){
+    Alert.alert("يجب عليك تفعيل الموقع لأظهار الحاضنات الاقرب لديك")
+    return;
+   }else{
+            console.log("test is location! ",existLocation)
+            const user = await setItem.getItem('BS:User');
+            const token = await setItem.getItem('BS:Token');
+            const  coordinates=[ existLocation.lat,existLocation.lon]
+            const limit=30 
+            const skip=itemnumber
+            api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+            const response =await api.post(`setterlocationall?limit=${limit}&skip=${skip}`,{coordinates}).then((res)=>{
+                if(res.data){
+                setbabseters(res.data)
+              }
+              }).finally(()=> setneswSetter(false)).catch(err=>console.log("Erorr",err))
+
+   }
+} 
     
     const Item = ({ setterdata }) => (
      
     
-      <TouchableOpacity style={styles.item} onPress={()=>props.navigation.navigate('Shrtcutprofile',{data1:setterdata,settertTitle:setterdata.name}) }  >
+    <TouchableOpacity style={styles.item} onPress={()=>props.navigation.navigate('Shrtcutprofile',{data1:setterdata,settertTitle:setterdata.name}) }  >
         <Image source={{uri:  `${URL}/users/${setterdata.owner}/avatar`}} resizeMode='center' style={styles.imagecross} />
          <Text style={styles.title}>{setterdata.name}</Text>
          <AirbnbRating
@@ -235,6 +294,7 @@ const requestLocationaPermission = async () => {
 
        
       </TouchableOpacity>
+      
     );
 
 //maiservice data
@@ -247,6 +307,27 @@ const requestLocationaPermission = async () => {
       }
     
     }
+    const myItemSeparator = () => {
+      return (
+        <View
+         style={{ height: 1, backgroundColor: "gray", marginHorizontal:10 }}
+        />
+      );
+    };
+
+    const palysound=()=>{
+      ding.setVolume(1)
+      ding.play(success => {
+        if (success) {
+          console.log('successfully finished playing');
+        } else {
+          console.log('playback failed due to audio decoding errors');
+        }
+      });
+
+     
+  }
+    
 
 return(
     <View  style={{backgroundColor:Colors.AminabackgroundColor,marginTop:0,flex:1}} >
@@ -285,13 +366,16 @@ return(
         })
         }
         {/* <Box>
-          <Button onPress={()=> props.navigation.navigate('PaymentForm') }>chat</Button>
+          <Button onPress={()=> props.navigation.navigate('Paymentint') }>chat</Button>
+        </Box> */}
+         {/* <Box>
+          <Button onPress={()=> palysound()  }>sound</Button>
         </Box> */}
 
         </View>
         <View style={{alignItems:'flex-start' ,marginLeft:10}}>
         <Text style={{paddingTop:20,fontWeight:Platform.OS==='android'?"300":"700",fontFamily:Platform.OS==='android'? Fonts.type.bold:Fonts.type.base,fontSize:22,marginLeft:5,marginBottom:2}}>الافضل لك </Text>
-        <Text style={{fontFamily:Platform.OS==='android'? Fonts.type.light:Fonts.type.light,fontWeight:'300',fontSize:18,marginBottom:4}}>نرشح لك افضل الحاضنات الاقرب لمنزل</Text>
+        <Text style={{fontFamily:Platform.OS==='android'? Fonts.type.light:Fonts.type.light,fontWeight:'300',fontSize:18,marginBottom:4}}>نرشح لك افضل الحاضنات الاقرب للمنزل</Text>
         </View>
         {loading2? 
           <Center w="100%" >
@@ -303,16 +387,25 @@ return(
             </VStack>
           </Center> :
           <Stack>
+             
             <FlatList
               data={babseters}
               keyExtractor={(item, index) => item + index}
               renderItem={({
                 item
               }) => <Item setterdata={item} /> }
+               
+              
+              ItemSeparatorComponent={myItemSeparator}
               horizontal={true}
+              // onRefresh={onRefresh}
+              //  refreshing={isFetching}
+              onEndReachedThreshold={0.5}
+              
+              onEndReached={()=> setneswSetter(true)}
              
             />
-         
+             
           </Stack>
            }       
      

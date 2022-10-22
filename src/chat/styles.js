@@ -32,7 +32,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    paddingTop:Platform.OS==='android'? 55:40,
+    paddingTop:Platform.OS==='android'? 55:10,
     backgroundColor: Colors.AminaButtonNew,
   },
   textTopContainer: {

@@ -93,10 +93,10 @@ const Authbycode=({ route ,navigation})=>{
       }
       
      async function confirmCode (code) {
-       console.log("user id",route.params.id)
+       console.log("user id",code,"  ",usrId)
         const usrId=route.params.id
           loginbycoded(code,usrId).then((res)=>{
-
+            console.log("res",res)
           if(res.status===false){
              return seterorrmesage(true)
           }

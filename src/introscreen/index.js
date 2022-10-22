@@ -1,6 +1,6 @@
 
 
-import React,{useState, useContext} from 'react';
+import React,{useState, useEffect,useContext, version} from 'react';
  
 import {
   SafeAreaView,Image,
@@ -8,14 +8,14 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
+import  NetInfo  from "@react-native-community/netinfo";
 import {
   Colors,Fonts,Metrics
 } from '../assets/Themes/';
 import styles from './styles'
 import AppIntroSlider from 'react-native-app-intro-slider';
 import UserProvider, { UserContext } from '../services/UserContext';
- 
+import DeviceInfo from 'react-native-device-info';
 
 
 const slides = [
@@ -23,21 +23,21 @@ const slides = [
     key: 1,
     title: 'تطبيق أمينة',
     text: 'مجموعة مميزة من الحاضنات والجليسات بإنتظار طفلك.. اِنضمي إلينا الآن لبدء الخدمة',
-    image: require('../assets/images/1.png'),
+    image: require('../assets/images/Aminahchar.png'),
     backgroundColor: '#59b2ab',
   },
   {
     key: 2,
     title: 'تطبيق أمينة',
     text: 'سنقوم بإختيار الحاضنة أو الجليسة المناسبة لطفلك بعد إدخالك للبيانات المطلوبه خلال وقت قصير',
-    image: require('../assets/images/2.png'),
+    image: require('../assets/images/Aminahchar.png'),
     backgroundColor: '#E5E5E5',
   },
   {
     key: 3,
     title: 'تطبيق أمينة',
     text: 'سنقوم باختيار الجليسة او الحاضنه المناسبه لطفلك فقط ادخلي البينات المطلوبة خلال وقت قصير',
-    image: require('../assets/images/3.png'),
+    image: require('../assets/images/Aminahchar.png'),
     backgroundColor: '#22bcb5',
   }
 ];
@@ -48,7 +48,7 @@ const IntroScreen =(props) => {
   const {tryGetUser} = useContext(UserContext);
  
  const [goButton,setGoButton]=useState(false)
-
+ let buildNumber = DeviceInfo.getBuildNumber();
   const onDone = () => {
    //()=> setshowRealAppval(true);
    console.log("fdd")
@@ -58,6 +58,13 @@ const IntroScreen =(props) => {
     setshowRealAppval(true);
   };
   
+  useEffect(()=>{
+    NetInfo.fetch().then(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+    });
+    console.log("Version is",buildNumber)
+  })
   const  _renderNextButton = () => {
     return (
       <View style={styles.buttonCircle}>
@@ -110,7 +117,6 @@ const IntroScreen =(props) => {
         </TouchableOpacity> 
           }
          
-            
         </View>
         </SafeAreaView>
       </View>
@@ -147,6 +153,7 @@ const IntroScreen =(props) => {
 
      return(
       <View style={{height:Metrics.HEIGHT,width:Metrics.WIDTH ,backgroundColor:Colors.white}}>
+     
       <AppIntroSlider
          data={slides}
          renderItem={RenderItem}
@@ -157,6 +164,10 @@ const IntroScreen =(props) => {
         //  renderDoneButton={_renderDoneButton}
         //  renderNextButton={_renderNextButton}
        />
+      <View style={{alignItems:'center' ,marginBottom:40}}>
+        <Text style={{fontFamily:Fonts.type.aminafonts ,fontSize:20}}>version no: {buildNumber}</Text>
+       </View>
+      
      </View>
      )
     };

@@ -15,6 +15,7 @@
 		1595BCE5284457EADA9FE6F7 /* libPods-Aminah.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA0509183F9019D759A9D5C /* libPods-Aminah.a */; };
 		16E9FE2685B743149BB9BBD6 /* Cairo-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27A43C45C688415F9F0F4AF4 /* Cairo-ExtraLight.ttf */; };
 		2B9C7A76F6E045AD9783D7EF /* Cairo-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4ADDDAB4881E443DB24D6BC0 /* Cairo-ExtraBold.ttf */; };
+		548025B02903377400859B82 /* IphoneNotification.m4r in Resources */ = {isa = PBXBuildFile; fileRef = 548025AF2903377400859B82 /* IphoneNotification.m4r */; };
 		5D79192D448049C19C6AD04E /* Cairo-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6ECA5A984FC0411C906FD221 /* Cairo-Medium.ttf */; };
 		72EC7FDFF8294F40B0E0A2A1 /* Cairo-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAF7AEF20A7F4808973B0CE0 /* Cairo-SemiBold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -59,6 +60,7 @@
 		4ADDDAB4881E443DB24D6BC0 /* Cairo-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-ExtraBold.ttf"; path = "../src/assets/fonts/Cairo-ExtraBold.ttf"; sourceTree = "<group>"; };
 		5451ECA028BA8D8000F1B184 /* splash2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash2.png; path = ../src/assets/images/splash2.png; sourceTree = "<group>"; };
 		546B814F28CD41AC0083D855 /* appstoreplay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appstoreplay.png; path = ../../Downloads/AppIcons/appstoreplay.png; sourceTree = "<group>"; };
+		548025AF2903377400859B82 /* IphoneNotification.m4r */ = {isa = PBXFileReference; lastKnownFileType = file; name = IphoneNotification.m4r; path = ../src/assets/IphoneNotification.m4r; sourceTree = "<group>"; };
 		54CAF6C728BABD0A00810B6A /* Aminah.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Aminah.entitlements; path = Aminah/Aminah.entitlements; sourceTree = "<group>"; };
 		5D2996F1507C4F0CA58FFE51 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = ../src/assets/fonts/Fontisto.ttf; sourceTree = "<group>"; };
 		6BCA8667142E4B03ACEEB60D /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = ../src/assets/fonts/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				548025AF2903377400859B82 /* IphoneNotification.m4r */,
 				13B07FAE1A68108700A75B9A /* Aminah */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* AminahTests */,
@@ -324,6 +327,7 @@
 				A88F9372D65C4C2F9F7BB6BC /* Cairo-Light.ttf in Resources */,
 				5D79192D448049C19C6AD04E /* Cairo-Medium.ttf in Resources */,
 				9613687C882E449B9739AF4D /* Cairo-Regular.ttf in Resources */,
+				548025B02903377400859B82 /* IphoneNotification.m4r in Resources */,
 				72EC7FDFF8294F40B0E0A2A1 /* Cairo-SemiBold.ttf in Resources */,
 				96DDB2DD5B0E46FAB820BEFF /* Cairo-VariableFont_wght.ttf in Resources */,
 			);
@@ -566,7 +570,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Aminah/Aminah.entitlements;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = 8HKZ8K3U59;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -633,7 +637,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.11;
+				MARKETING_VERSION = 1.2.12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -655,7 +659,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Aminah/Aminah.entitlements;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 8HKZ8K3U59;
 				HEADER_SEARCH_PATHS = (
@@ -722,7 +726,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.11;
+				MARKETING_VERSION = 1.2.12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

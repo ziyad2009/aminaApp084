@@ -288,6 +288,8 @@ PODS:
     - React-Core
   - react-native-maps (1.3.1):
     - React-Core
+  - react-native-netinfo (9.3.4):
+    - React-Core
   - react-native-restart (0.0.24):
     - React-Core
   - react-native-safe-area-context (3.0.7):
@@ -364,7 +366,7 @@ PODS:
     - React-Core
   - RNDateTimePicker (3.5.2):
     - React-Core
-  - RNDeviceInfo (10.2.0):
+  - RNDeviceInfo (10.2.1):
     - React-Core
   - RNGestureHandler (2.4.0):
     - React-Core
@@ -399,6 +401,11 @@ PODS:
     - React-Core
     - React-RCTImage
   - RNShare (7.3.9):
+    - React-Core
+  - RNSound (0.11.2):
+    - React-Core
+    - RNSound/Core (= 0.11.2)
+  - RNSound/Core (0.11.2):
     - React-Core
   - RNSVG (12.3.0):
     - React-Core
@@ -450,6 +457,7 @@ DEPENDENCIES:
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -473,6 +481,7 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNShare (from `../node_modules/react-native-share`)
+  - RNSound (from `../node_modules/react-native-sound`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -535,6 +544,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-restart:
     :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
@@ -581,6 +592,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNShare:
     :path: "../node_modules/react-native-share"
+  RNSound:
+    :path: "../node_modules/react-native-sound"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -622,6 +635,7 @@ SPEC CHECKSUMS:
   react-native-geolocation-service: c0efb872258ed9240f1003a70fca9e9757e5c785
   react-native-google-maps: 751f1dd2362c09d4ac45b09970d78f138a109268
   react-native-maps: f4067ffa5044ade5bf98d6dde15014318a537c2f
+  react-native-netinfo: 6ac9bcc7c88dc51717bda3484eb99093acb755e0
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: ef6f16c66b0797ecae1bf86c103dfb3dc16fc33d
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
@@ -640,11 +654,12 @@ SPEC CHECKSUMS:
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   RNCAsyncStorage: 005c0e2f09575360f142d0d1f1f15e4ec575b1af
   RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
-  RNDeviceInfo: 8b83e99e290deaf1bab71673cc636776ef647b6f
+  RNDeviceInfo: c31137f22ee779fe3931d1a8d60cc1af80ef4077
   RNGestureHandler: 50e6ffee79932d14ea747d4ea4cc99aac0f24e86
   RNReanimated: 93fe36bf01e6bd4346e0ffc9e469ce37a6b2bea9
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNShare: 807d6f8231b8ebcf6dd839294b877342eb93d4e5
+  RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
