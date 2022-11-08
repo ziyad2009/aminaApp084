@@ -303,8 +303,8 @@ const getasubservice=async()=>{
 
   
  const confirmReservisionTime=()=>{
-    const startShiftTime = moment(time, 'DD-MM-YYYY hh:mm:ss A');
-    const endShiftTime = moment(time2, 'DD-MM-YYYY hh:mm:ss A');
+    const startShiftTime = moment(time, 'DD-MM-YYYY hh:mm:ss');
+    const endShiftTime = moment(time2, 'DD-MM-YYYY hh:mm:ss');
     if (startShiftTime.isAfter(endShiftTime)){
         endShiftTime.add(1, 'days');
       }
@@ -319,7 +319,7 @@ const getasubservice=async()=>{
    const extraMinuts= Math.floor((duration%3600)/60)
     
     if(extraMinuts >= 1){
-      return  Alert.alert("تنبيه","يجب ان تكون الفتره فقط ساعات كامله من دون دقائق ")
+      return  Alert.alert("تنبيه","يجب ان تكون الفتره فقط ساعات كامله من دون دقائق اضافية ")
 
     }else{
         modelShow()
@@ -353,8 +353,8 @@ const getasubservice=async()=>{
 }
 
 const calclutDiff=()=>{ 
-const startShiftTime = moment(time, 'hh:mm:ss A');
-const endShiftTime = moment(time2, 'hh:mm:ss A');
+const startShiftTime = moment(time, 'hh:mm:ss');
+const endShiftTime = moment(time2, 'hh:mm:ss');
 
 if (startShiftTime.isAfter(endShiftTime)){
     endShiftTime.add(1, 'days');
@@ -363,13 +363,13 @@ if (startShiftTime.isAfter(endShiftTime)){
 const duration = moment.duration(endShiftTime.diff(startShiftTime)) ;
 
 // console.log('as hours: ' + duration.asHours(), 'as minutes: ' + duration.asMinutes());
-// console.log('hours: ' + duration.hours(), 'minutes: ' + duration.minutes());
+ console.log('hours: ' +Math.floor(duration.asHours()), 'minutes: ' );
  
-//return (`${duration.hours()}  hours:  ${duration.minutes()} minutes: ` );
+// return (`${duration.hours()}  hours:  ${duration.minutes()} minutes: ` );
 return(
-    <Box justifyContent={'space-around'} flexDirection='row'  backgroundColor={'amber.200'} w="40%">
-        <Text mr={3} fontSize={9}>{parseInt(duration.asHours())} ساعات </Text>
-        <Text ml={3} fontSize={9} >{duration.minutes()} دقائق </Text>
+    <Box justifyContent={'space-around'} flexDirection='row'   w="10%">
+        <Text mr={3} fontSize={9}>{Math.floor(duration.asHours()) } ساعات </Text>
+        <Text mr={3} fontSize={9} >{Math.floor(duration.minutes()) } دقائق </Text>
     </Box>
 )
 }   
@@ -684,15 +684,17 @@ return(
 
                     
                         <Box flexDirection={'row'} ml={Platform.OS==='android'?8:5}   alignItems={'center'}>
-                            <HStack  w={Platform.OS==='android'? "38%": "46%"}  justifyContent={Platform.OS==='android'?'flex-start':'space-around'}  marginTop={5} flexDirection='row'  >
+                            <HStack  w={Platform.OS==='android'? "42%": "46%"}  justifyContent={Platform.OS==='android'?'flex-start':'space-around'}  marginTop={5} flexDirection='row'  >
                                 <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
                                     fontSize={15} fontWeight="400"   mt={4} color={Colors.black}  
                                     w={Platform.OS==='android'? "26%": "20%"} >من</Text>
-                                <Input isDisabled  h={Metrics.HEIGHT*0.0682}  textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time).format("LT")}
-                                fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                                    w={{base:Platform.OS==='android'?"88":"75%",md: "20%"}}   
+                                <Input 
+                                    h={Metrics.HEIGHT*0.0682}  textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'}
+                                    value={moment(time).format("LT")} onPressIn={()=> setOpen(true)  }
+                                    fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
+                                    w={{base:Platform.OS==='android'?"90":"75%",md: "20%"}}   
                                     InputLeftElement={<Icon as={ (<Feather name="clock" onPress={()=>   setOpen(true)  } /> )} 
-                                    size={'lg'} ml="4"   color={Colors.textZahry}/>} 
+                                    size={Platform.OS==='android'?'sm':'lg'} ml="4"   color={Colors.textZahry}/>} 
                                     color={Colors.blacktxt}  />
                                     <DatePicker
                                         mode='time'
@@ -716,10 +718,11 @@ return(
                                         fontSize={15} fontWeight="400"  mt={4} color={Colors.red}
                                          w={Platform.OS==='android'? "26%": "20%"} >الى</Text>
                                     
-                                <Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time2).format("LT")}
-                                     w={{ base:Platform.OS==='android'?"88":"75%",md: "20%"}}  
+                                <Input 
+                                     h={Metrics.HEIGHT*0.0682} textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time2).format("LT")}
+                                     w={{ base:Platform.OS==='android'?"90":"75%",md: "20%"}}  onPressIn={()=> setOpen2(true)  }
                                     fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'
-                                    InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setOpen2(true) }/>} color={Colors.textZahry} size={'lg'} ml="4" />} 
+                                    InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setOpen2(true) }/>} color={Colors.textZahry} size={Platform.OS==='android'?'sm':'lg'} ml="4" />} 
                                     color={Colors.blacktxt} />
                                 <DatePicker
                                         mode='time'
@@ -743,7 +746,7 @@ return(
             </Modal.Body>
             
             <Modal.Footer alignItems={'center'} justifyContent='center'>
-            <View style={{flexDirection:'row' ,justifyContent:'space-around' ,marginBottom:10,alignContent:'stretch'}}>
+            <View style={{flexDirection:'row' ,justifyContent:'space-between',marginBottom:10,alignContent:'stretch'}}>
                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} color="#2E2E2E">
                         مدة الحجز الافتراضيه</Text>
                        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 

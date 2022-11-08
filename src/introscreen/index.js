@@ -165,7 +165,7 @@ const IntroScreen =(props) => {
         //  renderNextButton={_renderNextButton}
        />
       <View style={{alignItems:'center' ,marginBottom:40}}>
-        <Text style={{fontFamily:Fonts.type.aminafonts ,fontSize:20}}>version no: {buildNumber}</Text>
+        <Text style={{fontFamily:Fonts.type.aminafonts ,fontSize:15}}>version no: {buildNumber}</Text>
        </View>
       
      </View>

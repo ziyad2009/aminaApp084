@@ -139,7 +139,7 @@ const Authflow =()=>{
   
          <Stack.Screen name="Authbycode" component={Authbycode}
          options={{
-           headerShown:true,
+           headerShown:false,
            title:"التحقق من الرقم",
            headerStyle:{
             backgroundColor:Colors.white,

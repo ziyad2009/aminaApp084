@@ -40,10 +40,10 @@ const confirmReservisionTime =()=>{
  
 return(
   <ScrollView>
-    <Box flex={1} backgroundColor={Colors.red} mt={Platform.OS==='android'?60:90}  >
+    <Box flex={1} backgroundColor={Colors.white} mt={Platform.OS==='android'?55:94}  >
         <VStack alignItems={'center'}   space={1} > 
         <Image  source={{ uri: `${URL}/users/${babseters.owner}/avatar`}} resizeMode='stretch' 
-                style={{width: 100, height:100,marginLeft:5,marginRight:20,borderRadius:60}} />
+                  style={{width: 100, height:100,marginLeft:5,marginRight:20,borderRadius:60}} />
         <Image source={Images.like1} resizeMode='contain'  style={{position:'absolute',left:150,bottom:3, width:Metrics.WIDTH*0.09922,backgroundColor:Colors.transparent}} />
         </VStack>
         <VStack alignItems={'center'}>
@@ -55,45 +55,29 @@ return(
         </VStack>   
       
       <HStack flexDirection={'column'}   ml='2'>
-      <Heading textAlign={'left'}><Text  fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} fontSize={18} fontWeight="700"> عن {babseters.displayname} </Text></Heading>
-      <TextArea    numberOfLines={4} placeholder="Invalid TextArea"  isDisabled
-      
-      value={babseters.certificate}
-          w={'95%'}   fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} fontWeight={'bold'}  textAlign={'right'} borderColor="white"/>
+      <Heading textAlign={'left'}>
+      <Text  fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} fontSize={18} fontWeight="700"> عن {babseters.displayname} </Text></Heading>
+      <TextArea    numberOfLines={4}placeholder="نبذه عن الحاضنه"   value={babseters.bio}
+            _dark={{
+              placeholderTextColor: "gray.100"
+            }}  w={'95%'} conte fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight={'light'} 
+                fontSize={10} textAlign={'right'}/>
       </HStack>
 
          <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={2} w="88%" space='3'  >
-         <EvilIcons name="location" size={33} color={'#00ABB9'} />
-         <Text  fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base}
-          fontSize={15} fontWeight="600" flexWrap={'wrap'}>{babseters.address} </Text>
+          <EvilIcons name="location" size={28} color={'#00ABB9'} />
+          <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={11} fontWeight='light'  mr='10' alignItems='flex-start'>{babseters.address} </Text>
          </VStack>
          <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={4}>
-         <Feather name="dollar-sign" size={30} color={'#00ABB9'} />
-         <Text  fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} fontSize={15} fontWeight='600'>{babseters.price} ريال- تكلفة الساعه الواحده</Text>
+          <Foundation name="dollar" size={28} color={'#00ABB9'}  style={{marginLeft:3}}/>
+          <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light" ml={3}>{babseters.price} ريال- تكلفة الساعه الواحده</Text><Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light" ml={3}>{babseters.price} ريال- تكلفة الساعه الواحده</Text>
          </VStack>
          <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={4}>
          <EvilIcons name="calendar" size={30   } color={'#00ABB9'} />
-         <Text  fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} fontSize={15} fontWeight='600'>{babseters.totalhours===undefined ?"0":babseters.totalhours} ساعه عمل في التطبيق  </Text>
+         <Text  fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} fontSize={15} fontWeight='light'>{babseters.totalhours===undefined ?"0":babseters.totalhours} ساعه عمل في التطبيق  </Text>
          </VStack>
-         {/* <HStack flexDirection={'column'}   ml='2' mt='4'>
-            <Heading textAlign={'left'}><Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="bold">  شهادات ودورات مهنيه:</Text></Heading>
-            <TextArea    numberOfLines={4} placeholder="Invalid TextArea" isDisabled  value='إنني محاسب طموح امتلك عشر سنوات من الخبرة، ولدي حماس تجاه تحقيق مستقبل وظيفي أفضل، وهذا ما دفعني إلى تقديم طلب الانضمام إلى فريق العمل في شركة مرموقة مثل خاصتكم، كي أضيف إليها واستغل ما اكتسبته من خبرة ومهارة في مجال العمل وتتيح هي لي فرصة الاحتكاك بالعمل ضمن فريق عمل محترف مثلكم.'
-            _dark={{ placeholderTextColor: "gray.300"}}  
-            w={'96%'} conte fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontWeight={'medium'}  textAlign={'right'}/>
-      </HStack> */}
-      {/* <Stack>
-        {babseters.map((item)=>{
-          item.imagesInWork.map((imgs)=>{
-            return(
-              <Text>{imgs.name}</Text>
-            )
-          })
-          
-        })}
-      </Stack> */}
-      
-      
-        <View style={{ alignItems:'center',marginBottom:10,marginLeft:8, marginTop:8,width:Metrics.WIDTH*0.952,
+        
+         <View style={{ alignItems:'center',marginBottom:10,marginLeft:8, marginTop:8,width:Metrics.WIDTH*0.952,
           height:Metrics.HEIGHT*0.2381,backgroundColor:Colors.transparent}}>
 
         <Swiper    style={styles.wrapper}
@@ -125,10 +109,10 @@ return(
                 return  (
                   <View key={name} style={{alignItems:'center'}}>
                     <Image
-                  resizeMode='cover'
-                  style={styles.imagHome}
-                  source={{uri: `${URL}/${name}` }}
-                  />
+                      resizeMode='cover'
+                      style={styles.imagHome}
+                      source={{uri: `${URL}/${name}` }}
+                      />
                      <MaterialIcons name='zoom-out-map' size={33} color={Colors.white} onPress={()=>props.navigation.navigate('Zoomphoto',{setterdata :name}) }
                     style={{position:'absolute',left:25,top:2}} />
                    
@@ -140,7 +124,7 @@ return(
             </Swiper>
 
         </View>
-        <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' rounded='lg'>
+        <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' mb={Platform.OS==='android'?4:1}  >
           {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full' 
             onPress={() => {confirmReservisionTime( ) }} > احجز</Button> */}
             <CustomButton
@@ -151,13 +135,6 @@ return(
                         onPress={() =>  confirmReservisionTime()}
                       />
         </Box>
-        
-          
-          
-          
-          
-          
-         
     </Box>
     </ScrollView>
 )

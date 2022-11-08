@@ -122,6 +122,7 @@ useEffect( async()=>{
     const motherID=motherData._id
     setuserID(motherID)
     setbabyseters(props.route.params.data1)
+    console.log("DDAAATTA++++ ",props.route.params.data1)
     setroom(`babayAmina${props.route.params.data1._id}`)
     var then = moment(babysetter.end).format("HH:mm:ss");
     var ss= moment(babysetter.end).diff( moment(), 'minute')
@@ -490,13 +491,15 @@ const chikchatRoomMsg=async(roomID)=>{
     // console.log("usestat filter",filterData)
     //interval = setInterval(async() => {
     
+    
      api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
         await api.post(`${URL}/ordercomplete/${id}`)
         .then((res)=>{
           console.log("finesh order change to complete")
           increasHours(res.data.order)
           
-        }).finally(()=>{}).catch((err)=>console.log('erorr:',err))
+        }).finally(()=>{ sendNotif()}).catch((err)=>console.log('erorr:',err))
+ 
 
         // if(response.length >= 1){
         //     console.log("DATA Orders with condtions,",response)
@@ -509,7 +512,8 @@ const chikchatRoomMsg=async(roomID)=>{
         //     setloading(!loading)
         //     console.log("response baad -Active")
         // }
-        sendNotif()
+      
+       
        
     }
     const increasHours= async(order)=>{
@@ -533,6 +537,7 @@ const chikchatRoomMsg=async(roomID)=>{
     const paymentScreen=()=>{
       setShowModal(false)
       sendNotif2()
+      console.log("test total price to payment ",totallprice ,"a n d ",totallhours)
       props.navigation.navigate('PaymentForm',{data1:babysetter,datainfo:{totallhours:totallhours,totallprice:totallprice}})
       //
       
@@ -567,6 +572,7 @@ const chikchatRoomMsg=async(roomID)=>{
               console.log("start filter pendeng")
               settotallprice(price * 2)
               settotallhours(2)
+              console.log("test price",price * 2)
            break;
           case "three":
               console.log("start filter cansel")
@@ -593,7 +599,7 @@ const chikchatRoomMsg=async(roomID)=>{
         orderid:babysetter.orderid
     }
     sendNotifcation(data)
-    console.log("test noti",data)
+    props.navigation.navigate('FinleScreeen',{data1:babysetter})
    }
 
    const  children = ({ remainingTime }) => {
@@ -645,7 +651,7 @@ return(
                 <CountdownCircleTimer
                     isPlaying={true}
                     //initialRemainingTime={intialTime}
-                    duration={totalmin*60}
+                    duration={babysetter.hours*60}
                     colors={['#00Abb9', '#F7B801', '#A30000', '#A30000']}
                     colorsTime={[500, 100, 50, 10]}
                     size={50}

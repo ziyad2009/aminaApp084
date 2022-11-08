@@ -282,7 +282,8 @@ const setterSerchall=async ()=>{
          <AirbnbRating
          // onFinishRating={(e)=>ratingCompleted(e)}
           style={{ paddingVertical: 1 ,backgroundColor:Colors.transparent}}
-          ratingCount={setterdata.rating}
+          count={5}
+          //defaultRating={setterdata.rating ? Number(setterdata.rating)/5:0}
           imageSize={20}
           tintColor={"#E5E5E5"}
           showRating={false}

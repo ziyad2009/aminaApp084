@@ -85,7 +85,7 @@ return(
       
       <HStack flexDirection={'column'}   ml='2'>
       <Heading textAlign={'left'}>
-        <Text  fontFamily={Fonts.type.bold} fontSize={18} fontWeight="bold"> عن {babseters.displayname} </Text>
+        <Text  fontFamily={Fonts.type.bold} fontSize={18} fontWeight="700"> عن {babseters.displayname} </Text>
         </Heading>
       <TextArea    numberOfLines={4} placeholder="نبذه عن الحاضنه"    value={babseters.bio}
          _dark={{
@@ -95,27 +95,19 @@ return(
       </HStack>
        
          <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={3} space='3'  >
-         <EvilIcons name="location" size={28} color={'#00ABB9'} />
-         <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={11} fontWeight='light'  mr='10' alignItems='flex-start'>{babseters.address} </Text>
+          <EvilIcons name="location" size={28} color={'#00ABB9'} />
+          <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={11} fontWeight='light'  mr='10' alignItems='flex-start'>{babseters.address} </Text>
          </VStack>
          <VStack flexDirection={'row'} alignItems='baseline' ml={2} mt={4}>
-         <Foundation name="dollar" size={28} color={'#00ABB9'}  style={{marginLeft:3}}/>
-         <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light" ml={3}>{babseters.price} ريال- تكلفة الساعه الواحده</Text>
+          <Foundation name="dollar" size={28} color={'#00ABB9'}  style={{marginLeft:3}}/>
+          <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light" ml={3}>{babseters.price} ريال- تكلفة الساعه الواحده</Text>
          </VStack>
          <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={4}>
-         <EvilIcons name="calendar" size={30   } color={'#00ABB9'} />
-         <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light">{babseters.totalhours===undefined ?"0":babseters.hourstotal} ساعه عمل في التطبيق  </Text>
+          <EvilIcons name="calendar" size={30   } color={'#00ABB9'} />
+          <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light">{babseters.totalhours===undefined ?"0":babseters.hourstotal} ساعه عمل في التطبيق  </Text>
          </VStack>
-         {/* <HStack flexDirection={'column'}   ml='2' mt='4'>
-            <Heading textAlign={'left'}><Text  fontFamily={Fonts.type.base} fontSize={15} fontWeight="bold">  شهادات ودورات مهنيه:</Text></Heading>
-            <TextArea    numberOfLines={4} placeholder="Invalid TextArea" isDisabled  value='إنني محاسب طموح امتلك عشر سنوات من الخبرة، ولدي حماس تجاه تحقيق مستقبل وظيفي أفضل، وهذا ما دفعني إلى تقديم طلب الانضمام إلى فريق العمل في شركة مرموقة مثل خاصتكم، كي أضيف إليها واستغل ما اكتسبته من خبرة ومهارة في مجال العمل وتتيح هي لي فرصة الاحتكاك بالعمل ضمن فريق عمل محترف مثلكم.'
-            _dark={{ placeholderTextColor: "gray.300"}}  
-            w={'96%'} conte fontFamily={Fonts.type.base} fontWeight={'medium'}  textAlign={'right'}/>
-      </HStack> */}
-       
-      
         
-      <View style={{ alignItems:'center',marginBottom:10,marginLeft:8, marginTop:8,width:Metrics.WIDTH*0.952,
+        <View style={{ alignItems:'center',marginBottom:10,marginLeft:8, marginTop:8,width:Metrics.WIDTH*0.952,
           height:Metrics.HEIGHT*0.2381,backgroundColor:Colors.transparent}}>
 
         <Swiper    style={styles.wrapper}
@@ -147,11 +139,11 @@ return(
                 return  (
                   <View key={name} style={{alignItems:'center'}}>
                     <Image
-                  resizeMode='cover'
-                  style={styles.imagHome}
-                  source={{uri: `${URL}/${name}` }}
-                  />
-                  <MaterialIcons name='zoom-out-map' size={33} color={Colors.white} onPress={()=>props.navigation.navigate('Zoomphoto',{setterdata :name}) }
+                      resizeMode='cover'
+                      style={styles.imagHome}
+                      source={{uri: `${URL}/${name}` }}
+                      />
+                    <MaterialIcons name='zoom-out-map' size={33} color={Colors.white} onPress={()=>props.navigation.navigate('Zoomphoto',{setterdata :name}) }
                     style={{position:'absolute',left:25,top:2}} />
                    
                   </View>
@@ -162,7 +154,7 @@ return(
             </Swiper>
 
         </View>
-        <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' mb={Platform.OS==='android'?4:1}  >
+          <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' mb={Platform.OS==='android'?4:1}  >
                     {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full' onPress={() => {
                         confirmReservisionTime() }}
                     > احجز</Button> */}
@@ -174,15 +166,8 @@ return(
                         onPress={() =>  confirmReservisionTime()}
                       />
 
-                 </Box>
-        
-          
-          
-          
-          
-          
-         
-    </Box>
+          </Box>
+        </Box>
     </ScrollView>
 )
 

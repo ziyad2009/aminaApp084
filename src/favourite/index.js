@@ -76,23 +76,27 @@ return(
                         fontFamily={Fonts.type.base} fontWeight='bold' fontSize={15}>
                         {item.displayname}
                       </Text>
+                      
                       <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} mr={6}>
                         {item.service}
                       </Text>
                       <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
                        <Rating
-                    type='custom'
-                     //onFinishRating={(e)=>ratingCompleted(e)}
-                     style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
-                    ratingCount={5}
-                   imageSize={20}
-                   ratingBackgroundColor={"#BFD1D6"}
-                   ratingColor={"#F38193"}
-                   tintColor={"#FFFFFF"}
-                    showRating ={false}
-                   starContainerStyle={styles.ratingContainerStyle}
-                    
-                   isDisabled 
+                          type='custom'
+                          //onFinishRating={(e)=>ratingCompleted(e)}
+                          style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
+                          
+                          readonly={true}
+                          ratingCount={5}
+                          startingValue={item.rate ? Number(item.rate)/5:0}
+                          imageSize={20}
+                          ratingBackgroundColor={"#BFD1D6"}
+                          ratingColor={"#F38193"}
+                          tintColor={"#FFFFFF"}
+                            showRating ={false}
+                          starContainerStyle={styles.ratingContainerStyle}
+                          
+                          
                     />
                     <Box>
                        <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base}

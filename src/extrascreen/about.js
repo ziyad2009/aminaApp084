@@ -1,9 +1,10 @@
 import React ,{useState}from 'react';
 import {View,Platform} from 'react-native';
-import{Button,Modal,Center,Text,Box, HStack, Stack,Switch} from 'native-base';
+import{Button,Modal,Center,Text,Box, HStack, Stack,Switch, VStack} from 'native-base';
  import AntDesign  from 'react-native-vector-icons/AntDesign'
 import { Colors ,Metrics, Fonts} from '../assets/Themes/';
- 
+import api from '../services/api';
+import setItem from '../services/storage/index';
 const AboutScreen=()=>{
     const[slide,setslide]=useState(0)
     const[msg,setMsg]=useState('')
@@ -38,11 +39,12 @@ const bubleMsg=(val)=>{
         setslide(5)
   break;
    
-break;
+ 
    }
 
-}
-    
+  }
+
+
     return(
         <Box mt={Platform.OS==='android'?58:46} background='white' flex={1}>
             <Text  fontSize={18}   textAlign={'left'}  ml='4' mt={3} mb={2}
@@ -102,7 +104,6 @@ break;
               <Text fontSize={18}   textAlign={'left'}  ml='1'
             fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}>{msg} </Text></Stack>}
 
-            
         </Box>
     )
 }

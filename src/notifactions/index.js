@@ -70,21 +70,20 @@ const getNotifaction= async()=>{
                 <Text fontFamily={Fonts.type.aminafonts} fontSize={22}>التنبيهات</Text>
                 {notifactions.map((item,index)=>{
                   return(
-                    <TouchableOpacity key={item._id} style={{marginTop:3,marginBottom:2,width:Metrics.WIDTH*0.910,
+                    <TouchableOpacity key={item._id} style={{marginTop:3,marginBottom:2,width:Metrics.WIDTH*0.810,
                       flexDirection:'column',borderBottomWidth:1,borderColor:Colors.amin1Button1,
-                      marginRight:3,padding:10 }}  onPress={()=>setoncliks(index)} >
-
-                   
-              
-                  <Box flexDirection={'row'}>
-                    <Stack w={"15%"} backgroundColor='#F38193' justifyContent={'center'} alignItems='center' 
-                    borderRadius={70} borderColor={'warmGray.200'} borderWidth={1} >
-                      <Ionicons  name='notifications' size={25} color={Colors.white}/>
+                      marginRight:3,padding:7 }} 
+                      //  onPress={()=>setoncliks(index)}
+                        >
+                      <Box flexDirection={'row'}  w={Metrics.WIDTH*0.883}>
+                        <Stack w={"15%"} backgroundColor='#F38193' justifyContent={'center'} alignItems='center' 
+                          borderRadius={70} borderColor={'warmGray.200'} borderWidth={1} >
+                        <Ionicons  name='notifications' size={22} color={Colors.white}/>
                     </Stack>
                     
                     <VStack  alignItems={'flex-start'} ml={2} flexWrap={'wrap'} >
-                        <Text  mr={2} fontSize={18} fontFamily={Fonts.type.bold}>{item.title}</Text>
-                        <Text  mr={2} fontSize={12} fontFamily={Fonts.type.bold}>{item.content}</Text>
+                        <Text  mr={2} fontSize={18} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base} fontWeight='bold' >{item.title}</Text>
+                        <Text  mr={2} fontSize={12} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>{item.content}</Text>
                     </VStack>
                   <Spacer/>
                   {/* <Stack alignItems={'center'} flexDirection='row' justifyContent={'space-between'} w={"24%"}  >
@@ -92,9 +91,8 @@ const getNotifaction= async()=>{
                   <Ionicons  name={Platform.OS==='ios'?'close':"close"} size={25} color={Colors.red} style={{marginRight:7}}  />
                   </Stack> */}
                   <Stack alignContent={'flex-end'} flexDirection='row' justifyContent={'flex-end'} w={"10%"}  >
-                   
-                  <Ionicons  name={Platform.OS==='ios'?'ios-eye-outline':"eye"} size={30} color={Colors.TexTPink} 
-                   onPress={()=>handelNotifcation(item._id)} style={{marginRight:1}}  />
+                    <Ionicons  name={Platform.OS==='ios'?'ios-eye-outline':"eye"} size={30} color={Colors.TexTPink} 
+                      onPress={()=>handelNotifcation(item._id)} style={{marginRight:1}}  />
                   </Stack>
                   </Box>
                   {!oncliks===index&&<Stack mt={2} alignItems='flex-end'>
@@ -124,29 +122,3 @@ const getNotifaction= async()=>{
 }
   
 export default Notifactionscreen;
-
-{/* <TouchableOpacity>
-                    <Text fontSize={18} color={Colors.blacktxt} fontFamily={Fonts.type.base}>rnhVi</Text>
-                   </TouchableOpacity> */}
-
-{/* <Center mt={'50'}  flex={1} > 
-<Box  backgroundColor={'amber.400'}  _dark={{
-bg:'coolGray.800'
-}} _light={{
-bg: 'white'
-}} flex="1" safeAreaTop maxW="400px" w="100%">
-  {/* <Heading p="4" pb="3" size="lg">
-    Notifaction
-  </Heading> */}
-//   {notifactions.map((item)=>{
-//     <Box alignItems={'center'}><Text>{item._id}</Text>
-//     <Button>ttEst</Button>
-//       </Box>
-     
-//   })}
- 
-//   {/* <ScrollView  showsVerticalScrollIndicator={false}>
-//     <Basic />
-//   </ScrollView> */}
-// </Box>
-// </Center> */}

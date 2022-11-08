@@ -23,7 +23,8 @@ const[loadStorage,setloadStorage]=useState(false)
  const[mylocattion,setmylocation]=useState({})
 const [favoriteList, setFavoriteList] = useState([]);
 const [page,setpage]=useState(0)
-
+const  [loadrate,setloadrate]=useState(false)
+const[ratedata,setratedata]=useState([])
 useEffect( ()=>{
 
   console.log("Pre ====Data ==== Babysetter==========" )
@@ -240,6 +241,25 @@ console.log("DATA for serche serveses",data)
     }
    
   }
+  const calcRevew= async  (id)=>{
+    console.log('test id',id)
+    let rate=0
+    // const token = await setItem.getItem('BS:Token');
+    // api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+    const setterrevew=api.get(`totalratforsetter/${id}`).then((res)=>{
+      
+      return res.data
+        
+    }) 
+    
+      const result= await setterrevew
+     return   result.map((item)=>{
+     // console.log('test total',item.total)
+      return console.log('test total',item.total)
+    })
+   
+   
+  }
    
 return(
 <Box backgroundColor={Colors.red}  mt={Platform.OS==='android'?66:94} flex={1}>
@@ -248,7 +268,7 @@ return(
         <Spinner size={'lg'} color={Colors.bloodOrange}/>
 
       </Box>:
-      <FlatList data={babseters} renderItem={({item ,index}) => (<Box key={index} borderWidth="1"  bgColor={Colors.white} borderColor="#00ABB9" borderRadius='md'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.243}>
+      <FlatList data={babseters} renderItem={({item ,index}) => (<Box key={index} borderWidth=".5"  bgColor={Colors.white} borderRightColor="#00ABB9" borderLeftColor="#00ABB9" borderTopColor="#00ABB9" borderRadius='sm'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.243}>
               <HStack alignItems={'center'} justifyContent='space-around' >
                 <Image  source={{ uri: `${URL}/users/${item.owner}/avatar`}} resizeMode='contain' 
                 style={{width: Metrics.WIDTH*0.280, height: Metrics.HEIGHT*0.1870,marginLeft:5,marginRight:20,borderRadius:70}} />
@@ -267,26 +287,29 @@ return(
                       { calcDistance(item.location) }
                       </Box>
                     </VStack>
-                      
-                      
-                      <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
+                    
+                    <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
                       <Rating
-                    type='custom'
-                    //onFinishRating={(e)=>ratingCompleted(e)}
-                    style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
-                    ratingCount={5}
-                  imageSize={20}
-                  ratingBackgroundColor={"#BFD1D6"}
-                  ratingColor={"#F38193"}
-                  tintColor={"#FFFFFF"}
-                    showRating ={false}
-                  starContainerStyle={styles.ratingContainerStyle}
+                      type='custom'
+                      //onFinishRating={(e)=>ratingCompleted(e)}
+                      style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
+                      readonly={true}
+                     
+                      ratingCount={5}
+                      startingValue={item.rate ? Number(item.rate)/5:0}
+                     // ratingCount={item.rate ? Number(item.rate)/5:0}
+                      imageSize={20}
+                      ratingBackgroundColor={"#BFD1D6"}
+                      ratingColor={"#F38193"}
+                      tintColor={"#FFFFFF"}
+                      showRating ={false}
+                      starContainerStyle={styles.ratingContainerStyle}
                     
                   isDisabled 
                 />
                 <Box>
                    <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base}
-                    fontWeight="thin" fontSize={15}>التقييم {item.rate ? Number(item.rate):0}</Text>
+                    fontWeight="thin" fontSize={15}>التقييم {item.rate ? Math.floor(item.rate):0}</Text>
                 </Box>
                
                 
@@ -299,8 +322,8 @@ return(
                 <Text   color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} >
                   تكلفة الخدمه بالساعه {item.price} ريال
                 </Text>
-                {/* <Button onPress={()=> calcDistance(item.location) }>test</Button> */}
-              
+                 
+                 
                  
                 <HStack backgroundColor={'amber.200'}>
                 
@@ -324,7 +347,7 @@ return(
                 marginTop: 30,
                 backgroundColor:"#F38193",
                 height: 48,
-                width:Metrics.WIDTH*0.957,
+                width:Metrics.WIDTH*0.950,
                 borderBottomLeftRadius:25,
                 alignItems: 'center',
                 justifyContent: 'center',

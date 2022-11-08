@@ -225,9 +225,9 @@ const inputCard=useRef()
       
       <View style={{flexDirection:'row',width:Metrics.WIDTH*0.87216,height:Metrics.HEIGHT*0.068,justifyContent:'center',marginTop:17} }>
           
-          <TouchableOpacity onPress={()=> handlepayment( (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice)}   
+          <TouchableOpacity onPress={()=> handlepayment( (Number(0.15)* Number(props.route.params.datainfo.totallprice)) + props.route.params.datainfo.totallprice)}   
               style={styles.endButton}>
-            <Text style={styles.endButtonTxt}> ادفع { (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice} </Text>
+            <Text style={styles.endButtonTxt}> ادفع { (Number(0.15)* Number(props.route.params.datainfo.totallprice)) + props.route.params.datainfo.totallprice} </Text>
           </TouchableOpacity>
       </View>
       
@@ -248,11 +248,12 @@ const inputCard=useRef()
          <VStack alignItems={'center'}>
            <HStack flexDirection={'row'}  mt={2} w="80%" justifyContent={'space-between'} >
                <Text style={styles.billRighttext}>المبلغ</Text>
-               <Text style={styles.billLifttext}> SR {props.route.params.data1.totalprice}</Text>
+               <Text style={styles.billLifttext}> SR {props.route.params.datainfo.totallprice}</Text>
            </HStack>
+            
            <HStack flexDirection={'row'}  mt={2} w="80%" justifyContent={'space-between'}>
              <Text style={styles.billRighttext} >قيمة الضريبة المضافة</Text>
-             <Text style={styles.billLifttext}>SR{ (Number(0.15)* Number(props.route.params.data1.totalprice))}</Text>
+             <Text style={styles.billLifttext}>SR{ (Number(0.15)* Number(props.route.params.datainfo.totallprice))}</Text>
            </HStack>
            <HStack flexDirection={'row'}  mt={2} w="80%" justifyContent={'space-between'}>
              <Text style={styles.billRighttext}>طريقة الدفع</Text>
@@ -261,7 +262,7 @@ const inputCard=useRef()
            <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
            <HStack flexDirection={'row'}  mt={2} w="80%" justifyContent={'space-between'}>
              <Text style={styles.billRighttext}>المبلغ الاجمالي</Text>
-             <Text style={styles.billLifttext} > SR { (Number(0.15)* Number(props.route.params.data1.totalprice)) + props.route.params.data1.totalprice}</Text>
+             <Text style={styles.billLifttext} > SR { (Number(0.15)* Number(props.route.params.datainfo.totallprice)) + props.route.params.datainfo.totallprice}</Text>
            </HStack>
          </VStack>
        </Stack>

@@ -24,26 +24,63 @@ const FinleScreeen=(props)=>{
     const[rating5,setrating5]=useState(0)
     const[rating6,setrating6]=useState(0)
     const[totalRating,settotalRating]=useState(2)
+    const[loading,setloading]=useState(false)
 
+const unitTes=async()=>{
+    console.log("test id ",babysetter._id)
+    const id =babysetter.settterfaileid
+    const ownerid=babysetter.settterowner
+    console.log("r1",rating1,"r1",rating2,"r1",rating3)
+    const total=(rating1+rating2+rating3+rating4+rating5+rating6)
+    const finleRating=total/5
+    settotalRating(finleRating)
+    console.log('test finel total',finleRating)
 
     
+
+     
+}
+    const endingRate= async( )=>{
+        const id =babysetter.settterfaileid
+        const setterrevew=await api.get(`totalratforsetter/${id}`)
+        .then((res)=>{  return res.data }) 
+
+        const result= await setterrevew
+          const totalrate= result.map((item)=>{
+            return item.total 
+        })
+
+        const finleResult=Number(totalrate) 
+        console.log('total all is',Number(finleResult))
+        
+        const updateRate= await api.patch(`updatesetter/${id}`,{
+            rate:finleResult
+            
+        }).then((res)=>{
+    
+            console.log(' Update total total',res.data)
+        }) .finally(()=>{
+            sendNotif()
+          })
+    }
+
     const totalratingSetter=async( )=>{
+        setloading(true)
         console.log("r1",rating1,"r1",rating2,"r1",rating3)
         const total=(rating1+rating2+rating3+rating4+rating5+rating6)
         const finleRating=total/5
         settotalRating(finleRating)
 
-        console.log("id",babysetter._id ," rating ",total)
+        console.log("id",babysetter._id ,"first  rating ",finleRating)
         await api.patch('/rateordersetter',{
             orderID:babysetter._id,
             totalrating:finleRating
-        }).then((res)=>console.log("Data from Rating ",res.data) ).finally(() => sendNotif() ).catch((err)=>console.log("Erorr",err))
-        props.navigation.popToTop()
+        }).then((res)=>console.log("order after rating==",res.data) ).finally(() =>endingRate(finleRating)  
+        ).catch((err)=>console.log("Erorr",err))
+     
     
     }
-       const testunit=()=>{
-        console.log(rating1)
-       }
+      
 
     const sendNotif= ()=>{
     
@@ -55,6 +92,8 @@ const FinleScreeen=(props)=>{
         }
         sendNotifcation(data)
         console.log("test noti",data)
+        setloading(false)
+        props.navigation.popToTop()
        }
        
     return(
@@ -199,7 +238,8 @@ const FinleScreeen=(props)=>{
                                 title="ارسال"
                                 buttonStyle={{width: '50%', alignSelf: 'center'}}
                                 textStyle={{fontSize: 20}}
-                                onPress={() => totalratingSetter()}
+                               // onPress={() => totalratingSetter()}
+                               onPress={() => totalratingSetter()}
                             />
                         
                         {/* <Button size={'lg'}  variant={'outline'} ml={3} w={"44%"} borderRadius={10}
@@ -214,7 +254,9 @@ const FinleScreeen=(props)=>{
                             />
 
                     </Box>
-                     
+                     {loading&&<Box>
+                        <Spinner size={'lg'} color={Colors.AminaButtonNew} />
+                        </Box>}
             
              
         </Box>
