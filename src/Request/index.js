@@ -108,9 +108,18 @@ const Request=(props)=>{
             console.log("ALL ORDERS++++++ filterData")
     },[filterData])  
 
+    useEffect(  () => {
+        const unsubscribe = props.navigation.addListener('focus',async () => {
+            console.log("start refresh data")
+            handelREQ()
+        }); 
+    
+        return unsubscribe;
+      }, []);
+
     const handelREQ= async(id)=>{ 
         let orders1=[]
-        
+        setloadingpage(true) 
         const user = await setItem.getItem('BS:User');
         const token = await setItem.getItem('BS:Token');
         const motherData=JSON.parse(user)
@@ -132,7 +141,7 @@ const Request=(props)=>{
                 //console.log("DATA Orders filter,",orders1)
                 return orders1
              
-            }).catch((err)=>{ 
+            }).finally(()=>setloadingpage(false)).catch((err)=>{ 
             console.log("ERORR",err)
             
             })
@@ -240,12 +249,16 @@ const Request=(props)=>{
                 break;
                 case  "completed":
                     console.log("  Go Invoice screen",2)
+                    //Alert.alert("تنبيه","تم تنفيذ الخدمة حالة الطلب مكتملة")
                     props.navigation.navigate('Invoice',{data1:item})
                    
                 break;
                 case  "pending":
                     console.log("  Go Payment screen",2)
-                    props.navigation.navigate('PaymentForm',{data1:item})
+                    //props.navigation.navigate('PaymentForm',{data1:item})
+                    const newData=item
+                    
+                    props.navigation.navigate('TelerPage',paymentdata={newData})
                    
                 break;
 
@@ -281,6 +294,9 @@ return(
             <Box>
             
             <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize="lg"  p="2" pb="3" textAlign={'left'}> بيانات الطلبات</Text>
+                {loadingpage&&<Box>
+                 <Spinner size={44} animating={loadingpage?true:false} color={Colors.AminaButtonNew} />
+                </Box>}
             <FlatList data={motherReq} renderItem={({item }) => (
                  <Box   key={item._id} borderWidth=".5"  bgColor={Colors.white} borderColor="#00ABB9" borderRadius="md"  pr="5" py="2" ml="3" mr="5" mb={7} width={Metrics.WIDTH*0.963}>
                     <HStack space={3} justifyContent='space-around' >
@@ -348,24 +364,26 @@ return(
                             {stReq(item.statuse)}
                             
                             {/* <Button w={'55%'} bgColor={"#DDF1F4"} variant='outline' onPress={()=> ConfimSetterData(item)}>تفاصيل الطلب</Button> */}
-                            {item.statuse==="canceled"?
-                             <Box alignItems={'center'} justifyContent='center' backgroundColor={'error.100'} w="55%" >
-                                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={12}>طلب ملغي</Text>
+                            {item.statuse==="canceled"  ?
+                             <Box alignItems={'center'}  justifyContent='center' backgroundColor={'error.100'} w="55%" >
+                                <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.bold} fontSize={12} fontWeight={'bold'}>طلب ملغي</Text>
                             </Box>:
                              <CustomButton
                                         buttonColor= {Colors.AminaButtonNew}
                                         title="تفاصيل الطلب"
-                                        buttonStyle={{width: '53%', alignSelf: 'center',marginTop:1}}
+                                        buttonStyle={{width: '53%', alignSelf: 'center',marginTop:1,borderRadius:9}}
                                         textStyle={{fontSize: 18}}
                                         titleColor={Colors.white}
                                         onPress={()=> ConfimSetterData(item)}
                              /> }
                         </Box> 
                         
+                        
                 </Box>)
                 }
                 keyExtractor={item => item._id}  onRefresh={onRefresh} refreshing={IsFetching}/>
             </Box>}
+            
             </Box>
           
       </Box>

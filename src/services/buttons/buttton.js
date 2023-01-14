@@ -8,13 +8,16 @@ const CustomButton = ({
   titleColor,
   buttonStyle,
   textStyle,
-  margnBtn
+  margnBtn,
+  disabled
 }) => {
   return (
     <TouchableOpacity
+    disabled ={disabled}
       style={{
         ...styles.container,
         ...buttonStyle,
+       
         backgroundColor: buttonColor || Colors.AminaButtonNew,
         marginTop: margnBtn ||20
       }}
@@ -36,6 +39,7 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   title: {
     color: '#fff',

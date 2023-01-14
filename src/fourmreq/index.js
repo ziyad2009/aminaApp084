@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {View,TouchableOpacity,Platform,ScrollView,Image, Alert,StatusBar} from 'react-native';
-import {Spinner,Text,VStack,HStack,Spacer,FlatList,Button,Checkbox, Input,Box,Icon,Modal,Center,Radio,Stack} from 'native-base'
+import {Spinner,Text,VStack,HStack,Spacer,FlatList,Button,Checkbox, Input,Box,Icon,Modal,Center,Radio,Stack, KeyboardAvoidingView, Heading} from 'native-base'
 import styles from './styles'
 import api from '../services/api';
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcons from 'react-native-vector-icons/Feather'
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import timeslots from './timeslots';
 import { Colors ,Metrics, Fonts,Images} from '../assets/Themes/';
 import moment from 'moment';
 import {URL_ws,URL} from '../services/links';
@@ -43,7 +43,7 @@ const Fourm1=(props)=>{
     const[mother,setMother]=useState([])
 
     const[ResWay,setResWay]=useState(1)
-   
+   const[numcolor,setnumcolor]=useState(0)
 
     const [showModal, setShowModal] = useState(false);
     const[childeArray,settChiledArray]=useState([])
@@ -348,7 +348,7 @@ const getasubservice=async()=>{
     const response =await api.get(`/mother/childe`).then((res)=>{
        return res.data
     })     
-    //console.log("Start chiled",response)
+    console.log("Start______ chiled",response)
     setmothersh(response)
 }
 
@@ -367,9 +367,9 @@ const duration = moment.duration(endShiftTime.diff(startShiftTime)) ;
  
 // return (`${duration.hours()}  hours:  ${duration.minutes()} minutes: ` );
 return(
-    <Box justifyContent={'space-around'} flexDirection='row'   w="10%">
-        <Text mr={3} fontSize={9}>{Math.floor(duration.asHours()) } ساعات </Text>
-        <Text mr={3} fontSize={9} >{Math.floor(duration.minutes()) } دقائق </Text>
+    <Box alignItems={'flex-end'} flexDirection='row' ml={5} backgroundColor={'amber.200'} >
+        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' >{Math.floor(duration.asHours()) } ساعات </Text>
+        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' >{ Math.floor(duration.minutes())==="59"?"0": Math.floor(duration.minutes())  } دقائق </Text>
     </Box>
 )
 }   
@@ -419,7 +419,7 @@ const addOrRemove = (item) => {
     const timeresult=`${time} الى ${time}`
     if(totalInminuts<1  || childeArray.length < 1 ){
         console.log("account",totalInminuts,"=",childeArray.length < 1)
-        return Alert.alert("تنبيه","الرجاء تحديد موعد الخدمه")
+        return Alert.alert("تنبيه","الرجاء تحديد الاطفال او تحديد موعد الخدمة")
      }
     
     const requestData={
@@ -530,6 +530,16 @@ const QiuqRREQUEST=async()=>{
     }
     console.log("tets items**",babseters)
     props.navigation.navigate('ConfirmRes',{data1:JSON.stringify(babseters)})
+}
+const extraTime=(time,num,index)=>{
+    
+    console.log("test extr",time,"and number",num)
+   const poitmenttime= moment(time) 
+   const endpoitmentime= moment(poitmenttime).add(num,'hour')
+   setTime2(endpoitmentime)
+   setnumcolor(index)
+   console.log("test new time",moment(endpoitmentime).format('hh:mm') )
+   console.log("test new INDEX",index )
 }
   
 return(
@@ -646,11 +656,11 @@ return(
 
 
         <Center>
-           
+            <KeyboardAvoidingView behavior={Platform.OS==='android'?'height':"padding"}>
             <Modal  isOpen={showModal} onClose={() => setShowModal(false)}
-            borderColor={Colors.white}
+            borderColor={Colors.white} 
             avoidKeyboard justifyContent="flex-end" bottom="4">
-            <Modal.Content width={Metrics.WIDTH*0.9711} backgroundColor='white'>
+            <Modal.Content width={Metrics.WIDTH*0.9711}  h={Metrics.HEIGHT*0.6922} backgroundColor='white'>
             <Modal.CloseButton />
             <Modal.Header backgroundColor={Colors.AminaButtonNew}>
                     <View>
@@ -659,11 +669,14 @@ return(
                     </View>
             </Modal.Header>
             <Modal.Body>
-                <View style={{justifyContent:'center',flexDirection:'column',marginLeft:1}}>
-                    
-                
-                    <Stack   w="100%"  alignItems="center" marginTop={5} flexDirection='row' textAlign={'center'} >
-                        <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={18} fontWeight="400" mr={5} >اليوم</Text>
+                <Box alignItems={'center'} w='100%' mt={1}  >
+                    <Heading fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize='18' fontWeight={Platform.OS==='android'?"bold":'400'} marginTop={7}  >
+                        حددي موعد الخدمة وعدد الساعات التي ترغبينها
+                    </Heading>
+                </Box>
+                <View style={{justifyContent:'center',flexDirection:'row',marginLeft:1 ,marginTop:5}}>
+                    <Stack   w="66%"  alignItems="center" marginTop={5} flexDirection='row' textAlign={'center'} >
+                        <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={18} fontWeight="400" mr={1} >اليوم</Text>
                     {datePicker ? (
                         <DateTimePicker
                             value={date}
@@ -673,34 +686,34 @@ return(
                             dateFormat={"day month year"}
                             onChange={onDateSelected}
                             style={styles.datePicker}
-                        />):(<Input isDisabled h={Metrics.HEIGHT*0.0682} textAlign={'left'}  value={moment(date).format("LL")}
+                        />):(<Input isReadOnly={true} h={Metrics.HEIGHT*0.0682} textAlign={'center'}  value={moment(date).format("LL")}
                             fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                            w={{base: Platform.OS==='android'? "75%":"80%" , md: "20%" }} borderColor={Colors.black} fontSize={'lg'}  
+                            w={{base: Platform.OS==='android'? "75%":"80%" , md: "15%" }}   onPressIn={()=>setDatePicker(!datePicker)}
+                            borderColor={Colors.black} fontSize={'lg'}  
                             InputLeftElement={<Icon as={ !datePicker && (<Feather name="calendar"  onPress={()=>setDatePicker(!datePicker)}/>  ) }
                             size={'lg'} ml="4"   color={Colors.textZahry} />}
                             color={Colors.blacktxt}  placeholder="تاريخ الخدمة" /> 
                          )}
                     </Stack>
-
                     
-                        <Box flexDirection={'row'} ml={Platform.OS==='android'?8:5}   alignItems={'center'}>
-                            <HStack  w={Platform.OS==='android'? "42%": "46%"}  justifyContent={Platform.OS==='android'?'flex-start':'space-around'}  marginTop={5} flexDirection='row'  >
-                                <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
-                                    fontSize={15} fontWeight="400"   mt={4} color={Colors.black}  
-                                    w={Platform.OS==='android'? "26%": "20%"} >من</Text>
+                    <Box flexDirection={'row'} ml={Platform.OS==='android'?1:1}   marginTop={3} alignItems={'center'} >
+                            <TouchableOpacity  onPress={()=>setOpen(true)} style={{width:Platform.OS==='android'?Metrics.WIDTH*0.231:Metrics.WIDTH*0.311,justifyContent:Platform.OS==='android'?'flex-start':'space-around',  marginTop:5, flexDirection:'row'  }}   >
+                                {/* <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
+                                    fontSize={15} fontWeight="400"    color={Colors.black}  
+                                    w={Platform.OS==='android'? "26%": "22%"} >الوقت</Text> */}
                                 <Input 
-                                    h={Metrics.HEIGHT*0.0682}  textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'}
-                                    value={moment(time).format("LT")} onPressIn={()=> setOpen(true)  }
+                                    h={Metrics.HEIGHT*0.0682} isReadOnly={true}  textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'}
+                                    value={moment(time).format("LT") }
                                     fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                                    w={{base:Platform.OS==='android'?"90":"75%",md: "20%"}}   
-                                    InputLeftElement={<Icon as={ (<Feather name="clock" onPress={()=>   setOpen(true)  } /> )} 
-                                    size={Platform.OS==='android'?'sm':'lg'} ml="4"   color={Colors.textZahry}/>} 
+                                    w={{base:Platform.OS==='android'?"95":"80%",md: "20%"}}   onPressIn={()=> setOpen(true)}
+                                    InputLeftElement={<Icon as={ (<Feather name="clock"   onPress={()=>setOpen(true)} />   )} 
+                                    size={Platform.OS==='android'?'lg':'lg'} ml="2"   color={Colors.textZahry}/>} 
                                     color={Colors.blacktxt}  />
                                     <DatePicker
                                         mode='time'
                                         modal
                                         theme='light'
-                                        //minuteInterval={60}
+                                        minuteInterval={30}
                                         open={open}
                                         date={time}
                                         onConfirm={(date) => {
@@ -711,16 +724,16 @@ return(
                                         setOpen(false)
                                         }}
                                     />
-                            </HStack>
+                            </TouchableOpacity>
                             
-                            <HStack w={Platform.OS==='android'? "38%": "46%"} justifyContent={Platform.OS==='android'?'flex-start':'space-around'}  marginTop={5} ml={Platform.OS==='android'?8:4} flexDirection='row' >
+                            {/* <TouchableOpacity   onPressIn={()=> setOpen2(true)} style={{width:Platform.OS==='android'?Metrics.WIDTH*0.391:Metrics.WIDTH*0.423,justifyContent:Platform.OS==='android'?'flex-start':'space-around',  marginTop:5, flexDirection:'row'  }}   >
                                 <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
                                         fontSize={15} fontWeight="400"  mt={4} color={Colors.red}
                                          w={Platform.OS==='android'? "26%": "20%"} >الى</Text>
                                     
                                 <Input 
-                                     h={Metrics.HEIGHT*0.0682} textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time2).format("LT")}
-                                     w={{ base:Platform.OS==='android'?"90":"75%",md: "20%"}}  onPressIn={()=> setOpen2(true)  }
+                                     h={Metrics.HEIGHT*0.0682} isReadOnly={true} textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time2).format("LT")}
+                                     w={{ base:Platform.OS==='android'?"95":"75%",md: "20%"}}  onPressIn={()=> setOpen2(true)  }
                                     fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'
                                     InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setOpen2(true) }/>} color={Colors.textZahry} size={Platform.OS==='android'?'sm':'lg'} ml="4" />} 
                                     color={Colors.blacktxt} />
@@ -728,7 +741,7 @@ return(
                                         mode='time'
                                         modal
                                         theme='light'
-                                        //minuteInterval={60}
+                                        minuteInterval={40}
                                         open={open2}
                                         date={time2}
                                         onConfirm={(date) => {
@@ -740,19 +753,72 @@ return(
                                         }}
                                     />
                                     
-                            </HStack>
+                            </TouchableOpacity> */}
                         </Box>
+                        
+                </View>
+                <View style={{marginTop:20,alignItems:'center'}}>
+                    
+                    <Box flexDirection={'column'} mt={5}>
+                   <Stack alignItems={'center'} >
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize='18' fontWeight={Platform.OS==='android'?"bold":'400'} >
+                        عدد ساعات الخدمة
+                    </Text>
+                   </Stack>
+                   <Stack  flexDirection={'row'}>
+                   {timeslots.map((slot,index)=>{
+                        return(
+                            <TouchableOpacity onPress={()=>extraTime(time,slot.time,index) }
+                            style={{flexDirection:"column", backgroundColor:Colors.amin1Button1,alignItems:'center',padding:2,
+                                    borderTopEndRadius:10,borderBottomStartRadius:20,width:Metrics.WIDTH*0.1192,height:Metrics.HEIGHT*0.0732,marginLeft:10}}    key={slot.id}>
+                            <Text fontFamily={Fonts.type.aminafonts} fontSize={18} color={numcolor===index? Colors.bloodOrange:Colors.white} fontWeight='400' textAlign={'center'}  backgroundColor={Colors.banner} >{slot.time} </Text>
+                            <Text fontFamily={Fonts.type.aminafonts} fontSize={14} color={numcolor===index? Colors.bloodOrange:Colors.white} fontWeight='400' textAlign={'center'}>
+                                    {slot.time.toString() === "2" ? "ساعة ":"ساعات"}</Text>
+                            </TouchableOpacity>
+                        )
+                    })}
+                   </Stack>
+                </Box>
                 </View>
             </Modal.Body>
             
-            <Modal.Footer alignItems={'center'} justifyContent='center'>
-            <View style={{flexDirection:'row' ,justifyContent:'space-between',marginBottom:10,alignContent:'stretch'}}>
-                       <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} color="#2E2E2E">
-                        مدة الحجز الافتراضيه</Text>
-                       <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                             color={Colors.textZahry} letterSpacing={1.5} fontSize={10} >
-                              {calclutDiff()}</Text>
-            </View>
+            <Modal.Footer alignItems={'center'} justifyContent='space-around'>
+                <View style={{flexDirection:'column' ,marginBottom:3,alignItems:'center'}}>
+                    <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} alignItems={'center'} fontWeight={Platform.OS==='android'?"bold":'400'}
+                     color="#2E2E2E">
+                       تفاصيل موعد الخدمة</Text>
+                <Box flexDirection={"row"} justifyContent='space-around'   w={Metrics.WIDTH*0.722}>
+                    <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color="#2E2E2E" alignItems={'flex-start'}>
+                        تاريخ الخدمة</Text>
+                    <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color="#2E2E2E" alignItems={'flex-end'}>
+                      {moment(date).format('LL')}</Text>
+                </Box>
+
+                <Box flexDirection={"row"} justifyContent={'space-around'} w={Metrics.WIDTH*0.722}>
+                    <Box alignItems={'flex-start'}>
+                         <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color="#2E2E2E" alignItems={'flex-start'} >
+                            تتم خدمتك من</Text>
+                    </Box>
+                    
+                        <Box justifyContent={'space-around'} flexDirection='row'>
+                            <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.darktext} alignItems={'flex-end'}>
+                                {moment(time).format('hh:mm a')}</Text>
+                            <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.darktext} >الى</Text>
+                            <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.darktext}>
+                            {moment(time2).format('hh:mm a')}</Text>
+                        </Box>
+                    </Box>
+
+                    {/* <Box flexDirection={"row"} justifyContent={'space-around'} w={Metrics.WIDTH*0.722} >
+                        <Text  fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color="#2E2E2E">
+                            مدة حجز</Text>
+                        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
+                             color={Colors.textZahry}  >
+                            {calclutDiff()}
+                        </Text>
+                    </Box> */}
+                </View>
+            
                 <View style={{width:Metrics.WIDTH*0.893}}>
                     {/* <Button bgColor={Colors.amin1Button1} size={'lg'} onPress={() => {
                         confirmReservisionTime() }}
@@ -764,14 +830,11 @@ return(
                         textStyle={{fontSize: 20}}
                         onPress={() =>confirmReservisionTime()}
                     />
-                                    
-
-                 </View>
-                
-               
+                </View>
             </Modal.Footer>
           </Modal.Content>
         </Modal>
+        </KeyboardAvoidingView>
       </Center>
                  
     </ScrollView>

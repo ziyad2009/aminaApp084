@@ -51,7 +51,7 @@ const Motherprofilw=(props)=>{
         }else{
           const  existLocation=JSON.parse(location)
           setlocation(existLocation.formatted)
-          console.log("cant get",existLocation)
+          console.log("Mother Locattiont",existLocation)
           setlat(existLocation.lat)
           setlon(existLocation.lon)
         }
@@ -108,7 +108,7 @@ const Motherprofilw=(props)=>{
         const location= await setItem.getItem('BS:Location') 
         const  existLocation=JSON.parse(location)
         
-        console.log("LOCATIO",existLocation)
+        console.log("LOCATION from Storage",existLocation)
         if(existLocation===null){
             console.log("no location exist?")
         }
@@ -138,7 +138,7 @@ const Motherprofilw=(props)=>{
         setmotherData(response.data)
         setLoding(false)
         const intialmotherdata=response.data.mother
-        console.log("test mother profile  Response",intialmotherdata.name   )
+        
          setmotherName(intialmotherdata.name)
          setmotherFamyly(intialmotherdata.displayname)
          setmotherId(intialmotherdata.idcard)
@@ -222,7 +222,7 @@ const Motherprofilw=(props)=>{
                 Alert.alert("تنبيه", "الرجاء تفعيل خدمة الموقع لكي نتمكن من خدمتك ")
                 return;
           }
-            console.log("LOCATIO",existLocation.lat)
+            console.log("LOCATIO",existLocation)
             
             const motherPhone= await setItem.getItem('BS:Phone');
             const  existPhone=JSON.parse(motherPhone)

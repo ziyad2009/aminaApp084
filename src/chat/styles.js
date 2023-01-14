@@ -169,8 +169,11 @@ export default StyleSheet.create({
    alignSelf:'flex-end'
   },
   submitButton: {
-    position: 'absolute',
-    right: 32,
+   // position: 'absolute',
+    //right: 10,
+    width:Metrics.WIDTH*0.1042,
+    height:Metrics.HEIGHT*0.05022,
+    backgroundColor:Colors.transparent
   },
   logo: {
     width: '50%',

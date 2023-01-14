@@ -16,7 +16,9 @@ import CustomButton from '../services/buttons/buttton';
 const Invoice=(props)=>{
     const[babseters,setbabyseters]=useState([])
     const[chld,setChld]=useState([])
+    const [setterdata,setsetterdata]=useState({})
     const[loading,setLoding]=useState(false)
+    const[loaddata,setloaddata]=useState(false)
    const[showModal,setShowModal]=useState(false)
    const[OK,SETOK]=useState(false)
    const [newData,setNewData]=useState([])
@@ -25,14 +27,31 @@ const Invoice=(props)=>{
     useEffect(()=>{
         // console.log("test props ConfitmScreen",JSON.parse(props.route.params.data1) )
          setbabyseters(props.route.params.data1)
+         //map childrens 
          setChld(props.route.params.data1)
 
 
     },[])
+
     useEffect(()=>{
          setLoding(true)
+         loadBabysetterdata(props.route.params.data1.settterowner)
       },[babseters,chld])
   
+
+      const loadBabysetterdata=async(id)=>{
+        const token = await setItem.getItem('BS:Token');
+        api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+        const response=await api.get(`/setter/${id}`).then((res)=>{
+            return res.data.setter
+        }).finally(()=>{setloaddata(true)}).catch(err=>{
+            console.log("ERORR get dsetter dat from invoice",err),setloaddata(false)
+        })
+        setsetterdata(response)
+        
+      }
+
+
 const handelREQ= async(id)=>{ 
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
@@ -74,8 +93,9 @@ const handelREQ= async(id)=>{
 
  
    const confirmRequest=async(item)=>{
-    console.log("start")
-    props.navigation.navigate('DDirctionMap',{data1:item})
+    console.log(item)
+    //move to maplocation of order and start service
+     props.navigation.navigate('DDirctionMap',{data1:item,setter:setterdata})
    }
 
    // canssel Request and change to statuse:"canceled"
@@ -153,7 +173,7 @@ const handelREQ= async(id)=>{
             <Box borderColor={'#00ABB9'} borderWidth='1' h={'1%'} />
             <HStack mt='4'>
             <Text style={styles.leftText}>اجمالي التكلفه </Text>
-             <Text style={styles.rightTex}> {(Number(0.15)* Number(babseters.totalprice)) + babseters.totalprice} </Text>
+             <Text style={styles.rightTex}>  {babseters.totalprice} </Text>
 
             </HStack>
             <HStack>
@@ -181,13 +201,13 @@ const handelREQ= async(id)=>{
             <Box alignItems={'center'} w={Metrics.WIDTH*0.8861}  ml='5' mr='4' mt={0} rounded='lg'>
                      {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
                         onPress={() => {confirmRequest(babseters) }} fontFamily={Fonts.type.light} fontSize={20}> موقع الحاضنه الان</Button> */}
-                        <CustomButton
+                       {loaddata? <CustomButton
                         buttonColor={Colors.AminaButtonNew}
                         title="موقع الحاضنه الان"
                         buttonStyle={{width: '88%', alignSelf: 'center'}}
                         textStyle={{fontSize: 20}}
                         onPress={() => confirmRequest(babseters) }
-                     />
+                     />:<Spinner size={'lg'} color={Colors.border}  style={{marginTop:22}}/>}
                 </Box>
                 {/* <Box alignItems={'center'} w={Metrics.WIDTH*0.401} ml='3' mr='4' mt={5} rounded='lg'>
                         <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'

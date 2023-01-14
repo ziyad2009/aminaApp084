@@ -2937,7 +2937,7 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-base64-js@^1.1.2, base64-js@^1.3.1, base64-js@^1.5.1:
+base64-js@^1.0.2, base64-js@^1.1.2, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
   resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
@@ -3037,6 +3037,14 @@ buffer-from@^1.0.0:
   version "1.1.2"
   resolved "https://registry.npmjs.org/buffer-from/-/buffer-from-1.1.2.tgz"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
+
+buffer@5.0.x:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.0.8.tgz#84daa52e7cf2fa8ce4195bc5cf0f7809e0930b24"
+  integrity sha512-xXvjQhVNz50v2nPeoOsNqWCLGfiv4ji/gXZM28jnVwdLJxH4mFyqgqCKfaK9zf1KUbG6zTkjLOy7ou+jSMarGA==
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
 
 buffer@^6.0.3:
   version "6.0.3"
@@ -3758,6 +3766,11 @@ electron-to-chromium@^1.4.84:
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.114.tgz"
   integrity sha512-gRwLpVYWHGbERPU6o8pKfR168V6enWEXzZc6zQNNXbgJ7UJna+9qzAIHY94+9KOv71D/CH+QebLA9pChD2q8zA==
 
+emitter-component@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/emitter-component/-/emitter-component-1.1.1.tgz#065e2dbed6959bf470679edabeaf7981d1003ab6"
+  integrity sha512-G+mpdiAySMuB7kesVRLuyvYRqDmshB7ReKEVuyBPkzQlmiDiLrt7hHHIy4Aff552bgknVN7B2/d3lzhGO5dvpQ==
+
 emittery@^0.7.1:
   version "0.7.2"
   resolved "https://registry.npmjs.org/emittery/-/emittery-0.7.2.tgz"
@@ -4133,6 +4146,11 @@ event-target-shim@^5.0.0, event-target-shim@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/event-target-shim/-/event-target-shim-5.0.1.tgz"
   integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
+
+events@1.1.x:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
+  integrity sha512-kEcvvCBByWXGnZy6JUlgAp2gBIUjfCAV6P6TgT1/aaQKcmuAEC4OZTV1I4EWQLz2gxZw76atuVyvHhTxvi0Flw==
 
 exec-sh@^0.3.2:
   version "0.3.6"
@@ -4741,7 +4759,7 @@ iconv-lite@0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-ieee754@^1.2.1:
+ieee754@^1.1.4, ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
@@ -7092,6 +7110,16 @@ qs@^6.9.4:
   dependencies:
     side-channel "^1.0.4"
 
+query-string@^6.1.0:
+  version "6.14.1"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.14.1.tgz#7ac2dca46da7f309449ba0f86b1fd28255b0c86a"
+  integrity sha512-XDxAeVmpfu1/6IjyT/gXHOl+S0vQ9owggJ30hhWKdHAsNPOcasn5o9BW0eejZqL2e4vMjhAxoW3jVHcD6mbcYw==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    filter-obj "^1.1.0"
+    split-on-first "^1.0.0"
+    strict-uri-encode "^2.0.0"
+
 query-string@^7.0.0:
   version "7.1.1"
   resolved "https://registry.npmjs.org/query-string/-/query-string-7.1.1.tgz"
@@ -7148,9 +7176,9 @@ react-devtools-core@^4.6.0:
     ws "^7"
 
 react-freeze@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/react-freeze/-/react-freeze-1.0.0.tgz"
-  integrity sha512-yQaiOqDmoKqks56LN9MTgY06O0qQHgV4FUrikH357DydArSZHQhl0BJFqGKIZoTqi8JizF9Dxhuk1FIZD6qCaw==
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-freeze/-/react-freeze-1.0.3.tgz#5e3ca90e682fed1d73a7cb50c2c7402b3e85618d"
+  integrity sha512-ZnXwLQnGzrDpHBHiC56TXFXvmolPeMjTn1UOm610M4EXGzbEDR7oOIyS2ZiItgbs6eZc4oU/a0hpk8PrcKvv5g==
 
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0":
   version "18.0.0"
@@ -7329,6 +7357,13 @@ react-native-mask-input@^1.2.1:
   resolved "https://registry.yarnpkg.com/react-native-mask-input/-/react-native-mask-input-1.2.1.tgz#2f01683844ded3693d0d845bd1beeb2b8367f2e2"
   integrity sha512-OsVKhdJjljWIt373CPmsyTAjynlMpQKPkz3UQJ0Y48ZTVQa8zyejb9nmwoe15Zvi0uC49RxggDRACgkUxOjt3w==
 
+react-native-open-maps@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-open-maps/-/react-native-open-maps-0.4.0.tgz#487425474e83ae7ad4f52d8e15970ea234420639"
+  integrity sha512-8YkRZRSN/p7W5qiBd5Ucie4I/BmYwCQQ6fYTH3C7+mgZxOY8CkNl1czpt8v8GltEluJT6wmdfQsC4xImnRyVVA==
+  dependencies:
+    query-string "^6.1.0"
+
 react-native-parsed-text@0.0.22:
   version "0.0.22"
   resolved "https://registry.npmjs.org/react-native-parsed-text/-/react-native-parsed-text-0.0.22.tgz"
@@ -7418,10 +7453,10 @@ react-native-safe-area-context@~3.0.7:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.0.7.tgz#0f53de7a30d626d82936000f3f6db374ecc4b800"
   integrity sha512-dqhRTlIFe5+P1yxitj0C9XVUxLqOmjomeqzUSSY8sNOWVjtIhEY/fl4ZKYpAVnktd8dt3zl13XmJTmRmy3d0uA==
 
-react-native-screens@^3.10.2:
-  version "3.13.1"
-  resolved "https://registry.npmjs.org/react-native-screens/-/react-native-screens-3.13.1.tgz"
-  integrity sha512-xcrnuUs0qUrGpc2gOTDY4VgHHADQwp80mwR1prU/Q0JqbZN5W3koLhuOsT6FkSRKjR5t40l+4LcjhHdpqRB2HA==
+react-native-screens@^3.18.2:
+  version "3.18.2"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.18.2.tgz#d7ab2d145258d3db9fa630fa5379dc4474117866"
+  integrity sha512-ANUEuvMUlsYJ1QKukEhzhfrvOUO9BVH9Nzg+6eWxpn3cfD/O83yPBOF8Mx6x5H/2+sMy+VS5x/chWOOo/U7QJw==
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
@@ -7495,18 +7530,30 @@ react-native-vector-icons@^9.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native-webview@^11.23.0:
-  version "11.23.0"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.23.0.tgz#603a584236da2e993906e6a094f165dcac3a1fdb"
-  integrity sha512-mGrgsMnYcQONvQy59xpBn87sKqkCsSkqIDRo+c2Ov4ISYl1j90wFBs+qViVJRWdoNHVuoCAZ4nZkJ65mhDpHhA==
+react-native-webview@^11.23.1, react-native-webview@^11.25.0:
+  version "11.25.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.25.0.tgz#fd2e0265224192d7381443cec732af56d6ca4d69"
+  integrity sha512-yq3con7vDQUQKAyl9a7pJaR3A1/cI0K2AeRhGugXfWQfdsne18pddJwQuOsc63khecipeCbB8pthCqw0UlsgVw==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native@0.64.3:
-  version "0.64.3"
-  resolved "https://registry.npmjs.org/react-native/-/react-native-0.64.3.tgz"
-  integrity sha512-2OEU74U0Ek1/WeBzPbg6XDsCfjF/9fhrNX/5TFgEiBKd5mNc9LOZ/OlMmkb7iues/ZZ/oc51SbEfLRQdcW0fVw==
+react-native-xml2js@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-xml2js/-/react-native-xml2js-1.0.3.tgz#7ec64263e04303174326710be3f4ed32d2e8b00b"
+  integrity sha512-1GxaGgz1VN0LM8XzHEqkmcqCWs7xwMazt6AAhdyoVxBvtLqf1pfIPS4KhJ+ZR1hDVv5qX8imEXL4nAwiKy+UnQ==
+  dependencies:
+    buffer "5.0.x"
+    events "1.1.x"
+    sax "0.6.x"
+    stream "0.0.x"
+    timers "0.1.x"
+    xmlbuilder "8.2.x"
+
+react-native@0.64.4:
+  version "0.64.4"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.64.4.tgz#f9870f6951378421881cc66f6b5a6451bef7254d"
+  integrity sha512-nxYt/NrTmGyW6+tOd+Hqp4O8uJ2LLZkN7ispMPDprAq7bwvLkF/GXmDQCZHAEyqXuhIztTtMX41KqFQ6UMCUJQ==
   dependencies:
     "@jest/create-cache-key-function" "^26.5.0"
     "@react-native-community/cli" "^5.0.1-alpha.1"
@@ -7563,6 +7610,11 @@ react-test-renderer@17.0.1:
     react-is "^17.0.1"
     react-shallow-renderer "^16.13.1"
     scheduler "^0.20.1"
+
+react-xml-parser@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/react-xml-parser/-/react-xml-parser-1.1.8.tgz#e0fd3a5aa3c6e50197eed72a05fe110a5df64307"
+  integrity sha512-yX9k9LNCRzzNnFWoyo9cWEjtor6n6VD0Uh7z1ww5rIP6h5vdhJKEmowsm9RumEJMRdr7akcT4mMBScpsz573qQ==
 
 react@17.0.1:
   version "17.0.1"
@@ -7818,6 +7870,14 @@ rimraf@~2.2.6:
   resolved "https://registry.npmjs.org/rimraf/-/rimraf-2.2.8.tgz"
   integrity sha1-5Dm+Kq7jJzIZUnMPmaiSnk/FBYI=
 
+rn-telr-sdk@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/rn-telr-sdk/-/rn-telr-sdk-1.0.9.tgz#787d90973a5496ff972b411862a6723b13318239"
+  integrity sha512-8uGin1VAPE1hkBo9XJtgssRoBjV9mmNV6lM6IYzF4S0WRs87jqjuZf8nhpul4MFP8ZzVKbsxqmYG0pHWkXaJuQ==
+  dependencies:
+    react-native-webview "^11.23.1"
+    react-xml-parser "^1.1.8"
+
 rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.npmjs.org/rsvp/-/rsvp-4.8.5.tgz"
@@ -7859,6 +7919,11 @@ sane@^4.0.3:
     micromatch "^3.1.4"
     minimist "^1.1.1"
     walker "~1.0.5"
+
+sax@0.6.x:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-0.6.1.tgz#563b19c7c1de892e09bfc4f2fc30e3c27f0952b9"
+  integrity sha512-8ip+qnRh7m8OEyvoM1JoSBzlrepp3ajVR8nqgrfTig+TewfyvTijl0am8/anFqgbcdz62ofEUKE1hHNDCdbeSQ==
 
 sax@^1.2.1:
   version "1.2.4"
@@ -8274,6 +8339,13 @@ stream-buffers@2.2.x:
   resolved "https://registry.npmjs.org/stream-buffers/-/stream-buffers-2.2.0.tgz"
   integrity sha1-kdX1Ew0c75bc+n9yaUUYh0HQnuQ=
 
+stream@0.0.x:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/stream/-/stream-0.0.2.tgz#7f5363f057f6592c5595f00bc80a27f5cec1f0ef"
+  integrity sha512-gCq3NDI2P35B2n6t76YJuOp7d6cN/C7Rt0577l91wllh0sY9ZBuw9KaSGqH/b0hzn3CWWJbpbW0W0WvQ1H/Q7g==
+  dependencies:
+    emitter-component "^1.1.1"
+
 strict-uri-encode@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz"
@@ -8546,6 +8618,11 @@ through2@^2.0.1:
   dependencies:
     readable-stream "~2.3.6"
     xtend "~4.0.1"
+
+timers@0.1.x:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/timers/-/timers-0.1.1.tgz#86ac5c78c1ee419694f35a58de4fd4183cfb9c1e"
+  integrity sha512-pkJC8uIP/gxDHxNQUBUbjHyl6oZfT+ofn7tbaHW+CFIUjI+Q2MBbHcx1JSBQfhDaTcO9bNg328q0i7Vk5PismQ==
 
 tinycolor2@^1.4.2:
   version "1.4.2"
@@ -9071,6 +9148,11 @@ xml-name-validator@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-3.0.0.tgz"
   integrity sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==
+
+xmlbuilder@8.2.x:
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-8.2.2.tgz#69248673410b4ba42e1a6136551d2922335aa773"
+  integrity sha512-eKRAFz04jghooy8muekqzo8uCSVNeyRedbuJrp0fovbLIi7wlsYtdUn3vBAAPq2Y3/0xMz2WMEUQ8yhVVO9Stw==
 
 xmlbuilder@^9.0.7:
   version "9.0.7"

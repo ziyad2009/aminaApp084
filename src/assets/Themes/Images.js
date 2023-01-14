@@ -16,7 +16,8 @@ const images = {
   notifaction: require("../images/notifaction.png"),
   offline: require("../images/switch-off.png"),
   online: require("../images/switch-on.png"),
- 
+  caricon: require("../images/car.png"),
+  golocation:require("../images/locationmoov.png")
  
 };
 

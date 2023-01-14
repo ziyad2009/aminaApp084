@@ -86,21 +86,27 @@ const Authbycode=({ route ,navigation})=>{
 
 
  
-      const onCodechange=(val)=>{
+const onCodechange=(val)=>{
         
         seterorrmesage(false)
         setonInputCompleted(val)
       }
+
+
+
       
      async function confirmCode (code) {
+      const usrId=route.params.id
        console.log("user id",code,"  ",usrId)
-        const usrId=route.params.id
-          loginbycoded(code,usrId).then((res)=>{
-            console.log("res",res)
+       
+      loginbycoded(code,usrId).then((res)=>{
+            console.log("test code RESPONSE",res.data)
           if(res.status===false){
+            console.log("code status false")
              return seterorrmesage(true)
           }
           if(res.status===true){
+            console.log("code status true")
             seterorrmesage(false)
             navigation.navigate('Profile')
          }

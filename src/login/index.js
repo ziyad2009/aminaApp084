@@ -7,6 +7,7 @@ import images from '../assets/Themes/Images';
 import  api from '../services/api'
 import  {UserContext} from '../services/UserContext';
 import CustomButton from '../services/buttons/buttton';
+import { Spinner } from 'native-base';
   
 
 const Singin=(props)=>{
@@ -18,6 +19,7 @@ const Singin=(props)=>{
     const[confirm,setConfirm]=useState(null);
     const[code,setcode]=useState("");
     const [valid, setValid] = useState(false);
+    const [loadform,setloadform]=useState(false) 
     const [showMessage, setShowMessage] = useState(false);
     const[phoneNo,setphoneNo]=useState("")
     const[erorrmesage,seterorrmesage]=useState(false)
@@ -35,7 +37,12 @@ const Singin=(props)=>{
     })
      
      useEffect(async()=>{
+     // GoScreen()
+     console.log("Start Go screen",regUser)
+     if(regUser){
+      setloadform(false)
       GoScreen()
+     }
       
      },[home,regUser])
       
@@ -49,15 +56,16 @@ const Singin=(props)=>{
           
 
      }
-     const loginByPhone=( )=>{
+     const loginByPhone=async ( )=>{
       //console.log("from login Start login by phone",phoneInput.current.state.number )
-      loginbyphone(`966${phoneInput.current.state.number}`).then((res)=>{
-        console.log("Respon frrom login phone",res)
+      setloadform(true)
+      await loginbyphone(`966${phoneInput.current.state.number}`).then((res)=>{
+        console.log("Respon DATA froo Function",res)
+        
       })
-      //test statuse code 
-      //console.log("ST code" ,statuscode)
-      setphoneNo(`966${phoneInput.current.state.number}`)
-      GoScreen()
+      
+      // setphoneNo(`966${phoneInput.current.state.number}`)
+      // GoScreen()
      }
 
      const GoScreen= async()=>{
@@ -127,7 +135,6 @@ const Singin=(props)=>{
         textStyle={{fontSize: 20}}
         onPress={()=> isValidNo()}
       />
-         
             
               <View style={{marginTop:14}}>
                   <Text style={{fontFamily:Fonts.type.sembold,fontSize:15,color:Colors.textZahry,fontWeight:"400"}}>بالتسجيل انتي توافقين على </Text>
@@ -143,6 +150,10 @@ const Singin=(props)=>{
                 {loading&&<View style={{marginTop:40}}>
                   <Text style={{fontFamily:Fonts.type.sembold,fontSize:15,fontWeight:"400",color:"red"}}>لحظات..</Text>
                 </View>}
+
+                <View style={{justifyContent:'center'}}>
+                  {loadform&&<Spinner size={'lg'} color={Colors.AminaButtonNew}   />}
+                </View>
                 
               </View>
               

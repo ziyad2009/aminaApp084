@@ -1,7 +1,7 @@
 
 import React,{useEffect,useState} from 'react';
 import {View,Image, ScrollView,Platform} from 'react-native'
-import { Box,Heading,Avatar,Text, VStack, HStack,TextArea, Spinner, Spacer,Button} from 'native-base';
+import { Box,Heading,Avatar,Text, VStack, HStack,TextArea,Stack, Spinner, Spacer,Button} from 'native-base';
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Feather from 'react-native-vector-icons/Feather';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -76,36 +76,46 @@ return(
         <Image source={Images.like1} resizeMode='contain'  style={{position:'absolute',left:150,bottom:3, width:Metrics.WIDTH*0.09922,backgroundColor:Colors.transparent}} />
         </VStack>
         <VStack alignItems={'center'}>
-            <Box flexDirection={'row'} justifyContent={'space-around'}  mt="2" >
-                <Text  fontFamily={Fonts.type.base} fontSize={18} fontWeight="medium">{babseters.displayname} </Text>
-                <Text fontFamily={Fonts.type.base} fontSize={18} fontWeight="light" >"{babseters.serviestype?babseters.serviestype:"-"}"</Text>
+            <Box flexDirection={'column'} justifyContent={'space-around'}  mt="1" >
+                <Text  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={22} textAlign='center'  fontWeight="medium"letterSpacing={1.5} >{babseters.displayname} </Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={15}  textAlign='center' fontWeight="light" >"{babseters.serviestype?babseters.serviestype:"-"}"</Text>
             </Box>
-            <Image source={Images.awsma} resizeMode="contain"  style={{width:Metrics.WIDTH*0.622,height:Metrics.HEIGHT*0.033,backgroundColor:Colors.transparent}} />
-        </VStack>   
+            
+        </VStack>  
+
+        <Stack flexDirection={'row'} width={Metrics.WIDTH}  justifyContent={'space-around'} alignItems='baseline'>
+      <VStack flexDirection={'column'} flex={1} alignItems='center'  mt={3}>
+        <Foundation name="dollar" size={40} color={Colors.AminaButtonNew} style={{ marginLeft: 3 }} />
+        <Text fontFamily={Platform.OS === 'android' ? Fonts.type.light : Fonts.type.base} fontSize={18} fontWeight="light" ml={3}>{babseters.price}ريال</Text>
+      </VStack>
+      <VStack flexDirection={'column'} flex={1} alignItems='center'  mt={3}>
+        <EvilIcons name="calendar" size={40} color={Colors.AminaButtonNew} />
+        <Text fontFamily={Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.base} fontSize={18} fontWeight='light'>{babseters.totalhours === undefined ? "0" : babseters.totalhours} ساعه عمل</Text>
+      </VStack>  
+
+      </Stack> 
       
       <HStack flexDirection={'column'}   ml='2'>
       <Heading textAlign={'left'}>
         <Text  fontFamily={Fonts.type.bold} fontSize={18} fontWeight="700"> عن {babseters.displayname} </Text>
         </Heading>
-      <TextArea    numberOfLines={4} placeholder="نبذه عن الحاضنه"    value={babseters.bio}
+      <TextArea    numberOfLines={4} placeholder="نبذه عن الحاضنه"    value={babseters.bio} isReadOnly={true}
          _dark={{
         placeholderTextColor: "gray.100"
       }}  w={'95%'} conte fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight={'light'} 
-          fontSize={10} textAlign={'right'}/>
+          fontSize={18} textAlign={'right'} flexWrap='wrap' />
       </HStack>
        
          <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={3} space='3'  >
           <EvilIcons name="location" size={28} color={'#00ABB9'} />
           <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={11} fontWeight='light'  mr='10' alignItems='flex-start'>{babseters.address} </Text>
          </VStack>
-         <VStack flexDirection={'row'} alignItems='baseline' ml={2} mt={4}>
-          <Foundation name="dollar" size={28} color={'#00ABB9'}  style={{marginLeft:3}}/>
-          <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light" ml={3}>{babseters.price} ريال- تكلفة الساعه الواحده</Text>
-         </VStack>
-         <VStack flexDirection={'row'} alignItems='flex-start' ml={2} mt={4}>
-          <EvilIcons name="calendar" size={30   } color={'#00ABB9'} />
-          <Text  fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontSize={15} fontWeight="light">{babseters.totalhours===undefined ?"0":babseters.hourstotal} ساعه عمل في التطبيق  </Text>
-         </VStack>
+
+         <Box mt={2} mb={1}>
+         <Image source={Images.awsma} resizeMode='contain' style={{ width: Metrics.WIDTH*0.9321 , height: Metrics.HEIGHT * 0.0453}} />
+         </Box>
+        
+          
         
         <View style={{ alignItems:'center',marginBottom:10,marginLeft:8, marginTop:8,width:Metrics.WIDTH*0.952,
           height:Metrics.HEIGHT*0.2381,backgroundColor:Colors.transparent}}>

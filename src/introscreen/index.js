@@ -40,7 +40,7 @@ const slides = [
     image: require('../assets/images/Aminahchar.png'),
     backgroundColor: '#22bcb5',
   }
-];
+]; 
 
 
 const IntroScreen =(props) => {

@@ -1,2 +1,2 @@
-export const PUBNUB_PUBLISH_KEY = "pub-c-a2dcb411-2ed7-434e-a7ed-7b8a9dff3f3e"
-export const PUBNUB_SUBSCRIBE_KEY = "sub-c-c88b86c6-9fe3-4393-8858-77eb520b82cd"
+export const PUBNUB_PUBLISH_KEY = "pub-c-e121b0c2-b7c2-40aa-b4d5-7a65b84a74f6"
+export const PUBNUB_SUBSCRIBE_KEY = "sub-c-6237bf6f-19f1-41fc-abbc-a58be53d073a"

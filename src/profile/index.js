@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
-import {View, Alert,ScrollView, Platform} from 'react-native'
+import {View, Alert,ScrollView, Platform,KeyboardAvoidingView} from 'react-native'
 import {Stack,Text,Input,Button,Select,CheckIcon,Spinner,HStack,Heading, Box,Modal,Center,Radio, VStack} from 'native-base'
 import styles from './styles'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
@@ -60,7 +60,7 @@ const Profile=(props)=>{
         const location= await setItem.getItem('BS:Location') 
         if (!location){
             console.log("cant get loccation")
-          setlocation('عنوان المنزل')
+            setlocation('عنوان المنزل')
         }else{
           const  existLocation=JSON.parse(location)
           setlocation(existLocation.formatted)
@@ -93,6 +93,7 @@ const Profile=(props)=>{
         const unsubscribe = props.navigation.addListener('focus',async () => {
             console.log("test event")
             const location= await setItem.getItem('BS:Location') 
+            console.log("test Location first time ")
             if (!location){
                 setlocation('عنوان المنزل')
               console.log("no location")
@@ -102,6 +103,7 @@ const Profile=(props)=>{
               setlocation(existLocation.formatted)
               setlat(existLocation.lat)
               setlon(existLocation.lon)
+              console.log("Mo location",existLocation)
             }
         });
     
@@ -110,7 +112,7 @@ const Profile=(props)=>{
 
 
     const profileChick=async()=>{
-      
+        console.log("start chick profiles")
         const token = await setItem.getItem('BS:Token'); 
         const location= await setItem.getItem('BS:Location') 
         const  existLocation=JSON.parse(location)
@@ -118,6 +120,7 @@ const Profile=(props)=>{
             //  Alert.alert("تنبيه", " لخدمة افضل الرجاء تحديد العنوان من مربع العنوان ")
             console.log("no location exist?")
         }
+        console.log("mother token?",token)
 
         api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
        const response= await api.get("/mothers/me").then((res)=>{
@@ -148,7 +151,7 @@ const Profile=(props)=>{
         }
         
         if (response.status===201){
-            console.log("mother Profile Ok===",response.alow)
+            console.log("mother Profile Ok==***=",response.alow)
            
         setTimeout(() => {
             console.log("mother Profile Goo ===")
@@ -164,6 +167,7 @@ const Profile=(props)=>{
      }
 
     const addMother=async()=>{
+        console.log("START ADD MOTTHER")
         setmsgerorr(!msgerorr)
         const location= await setItem.getItem('BS:Location') 
         const  existLocation=JSON.parse(location)
@@ -198,7 +202,7 @@ const Profile=(props)=>{
             }).catch(err=>{
                 if(err.message==="Request failed with status code 500"){
                     setmsgerorr(!msgerorr)
-                    setmsge('الرجاد التواصل مع الدعم الفني')
+                    setmsge('الرجاءالتاكد من المدخلات بشكل صحيح')
                 }
             })
             if(response==='undefined'){
@@ -279,13 +283,20 @@ const removeChiiled=async(val,name)=>{
         setOpen(!isopen)
         setOpen1(!isopen1)
     }
+    const keyboardVerticalOffset = Platform.OS === 'ios' ? 1 : 0
 return(
-    <ScrollView contentContainerStyle={{ backgroundColor:Colors.white,width:Metrics.WIDTH,alignItems:'flex-start',
-    flex:1,paddingTop:Platform.OS==='android'?30:83}} >
-        <View  style={{flexDirection:'column',alignItems:'flex-start' ,width:Metrics.WIDTH,marginRight:3}}> 
+    <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+             keyboardVerticalOffset={keyboardVerticalOffset}    >
+    <ScrollView 
+        contentContainerStyle={{ backgroundColor:Colors.transparent,width:Metrics.WIDTH ,alignItems:"center",height:Metrics.HEIGHT*0.990,
+         paddingTop:Platform.OS==='android'?30:83}} >
+        
+        <View  style={{ flexDirection:'column',alignItems:'flex-start' ,width:Metrics.WIDTH,marginRight:1}}> 
             { loding ?
                 <HStack  flexDirection={'column'} w='100%' alignItems={'flex-start'} ml='4'>
-                        <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-around',alignContent:'baseline',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
+                        <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-around',
+                                      alignContent:'baseline',marginLeft:Platform.OS==='android'?1:12,
+                                      marginBottom:Platform.OS==='android' ?3:2}}>
                             <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'   color={Colors.black} ml={'2'} >الاسم الاول</Text>
                         </View>
                     <Stack   w="88%"alignItems={'center'} >
@@ -308,7 +319,6 @@ return(
                     </Stack>
                     
                     <View style={{flexDirection:'row',alignItems:'flex-end',marginLeft:Platform.OS==='android'?1:12,marginBottom:Platform.OS==='android' ?3:2}}>
-                        
                         <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.black}  ml={'2'}  mt="2">العنوان</Text>
                     </View>
                 <Stack space={4} w="90%"  alignItems={'center'} >
@@ -338,22 +348,23 @@ return(
                 : 
                 <InstagramLoader active />}
         </View>
+      
          {/*end inputs */}  
 
 
         
-        {msgerorr?
-        <View style={{width:Metrics.WIDTH,alignItems:'center',alignContent:'space-around',marginTop:1}}>
+        {msgerorr&&
+        <View style={{width:Metrics.WIDTH,alignItems:'center',alignContent:'space-around',marginTop:3}}>
         <Text fontSize={18} color='error.500' fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base}>{msg}</Text>  
         </View>  
-        :null}
+        }
          
         
-        <View style={{
+        <View style={{backgroundColor:Colors.transparent,
              marginTop:Platform.OS==='android'?1:1,justifyContent:'center',alignItems:'center',
-            position:Platform.OS==='android'?"absolute":'absolute',bottom:Platform.OS==='android'?10:50}}>
+            position:Platform.OS==='android'?"absolute":'absolute',bottom:Platform.OS==='android'?10:22}}>
            { loding ?
-                    <View style={{ width:Metrics.WIDTH*0.943 }}>
+                    <View style={{ width:Metrics.WIDTH*0.910,alignItems:'center',justifyContent:'center' }}>
                     {/* <Button bgColor={Colors.amin1Button1} size={'lg'} onPress={() => 
                     addMother() }>اكمال التسجيل</Button> */}
                     < CustomButton
@@ -363,9 +374,12 @@ return(
                     buttonStyle={{width: '80%', alignSelf: 'center'}}
                     textStyle={{fontSize: 20}}
                     onPress={() => addMother()}
-                />
-            </View>:
-             <VStack   justifyContent="center" alignItems={'center'} alignSelf='center' ml={Platform.OS==='android'?20:10}> 
+                    />
+                </View>
+            
+            :
+
+             <VStack   justifyContent="center" alignItems={'center'} alignSelf='center'  > 
                 <Spinner accessibilityLabel="Loading posts"  color={Colors.AminaButtonNew} size={'lg'}/>
                 <Text color={Colors.textZahry} fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} fontSize='22' fontWeight={'extrabold'}>
                      جاري التوجيه للصفحه الرئيسية
@@ -459,6 +473,7 @@ return(
     </Center>
         
     </ScrollView >
+    </KeyboardAvoidingView>
 )
 }
 export default Profile;

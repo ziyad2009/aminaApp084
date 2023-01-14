@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,useContext} from 'react'
  
 import {
   SafeAreaView,
@@ -18,12 +18,20 @@ import DeviceInfo from 'react-native-device-info'
 import setItem from '../services/storage';
 import PubNub from 'pubnub'
 import {PubNubProvider} from 'pubnub-react'
- 
+import  {UserContext} from '../services/UserContext';
+import MaterialIcons from'react-native-vector-icons/MaterialIcons'
+
+
+
+
+
 //  The deviceId is required to initiate the PubNub object, this will be updated once
 //  the application launches with an ID based on the device's hardware (considering the
 //  platforms privacy rules).
-var deviceId = 'ChangeMe'
 
+
+let deviceId = "ChangeMe"
+ 
 //  This application hardcodes a single channel name for simplicity.  Typically you would use separate channels for each
 //  type of conversation, e.g. each 1:1 chat would have its own channel, named appropriately.
 const groupChatChannel = 'group_chat'
@@ -32,13 +40,16 @@ const groupChatChannel = 'group_chat'
 const pubnub = new PubNub({
   subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
   publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
-  uuid: 'ChangeMe',
+  uuid: "ChangeMe",
 })
 
-const PubNubChat = () => {
+const PubNubChat = (props) => {
   //  Note: Application does not look different in dark mode
   //const isDarkMode = useColorScheme() === 'dark'
-
+   
+  console.log( "test room from  form",props.room)
+  console.log( "test room from  form",props.username)
+  
   //  Application state is persisted through hooks
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState([])
@@ -49,6 +60,11 @@ const PubNubChat = () => {
   const [myFriendlyName, setMyFriendlyName] = useState('')
   const [friendlyNameEditable, setFriendlyNameEditable] = useState(false)
   const [friendlyNameButtonText, setFriendlyNameButtonText] = useState('تعديل')
+  const[changeName,setchangeName]=useState(false)
+
+  const {DeviceID,chatroom} = useContext(UserContext);
+
+  console.log( "test UUId from  form",DeviceID)
 
   //  This application is designed to unsubscribe from the channel when it goes to the background and re-subscribe
   //  when it comes to the foreground.  This is a fairly common design pattern.  In production, you would probably
@@ -57,43 +73,84 @@ const PubNubChat = () => {
   const handleChange = newState => {
     if (newState === 'active') {
       //  application is in the foreground
+      props.userstatuse("foreground")
+      console.log('application is in the foreground')
       if (deviceId === 'ChangeMe') {
         //  Not subscribing because device Id has not yet been set
+        console.log('device Id has not yet been set')
       } else {
         //  Subscribe to the pre-defined channel representing this chat group.  This will allow us to receive messages
         //  and presence events for the channel (what other users are in the room)
-        pubnub.subscribe({channels: [groupChatChannel], withPresence: true})
+        pubnub.subscribe({channels: [chatroom], withPresence: true})
       }
     } else if (newState == 'background') {
       //  application is in the background
       //  This getting started application is set up to unsubscribe from all channels when the app goes into the background.
       //  This is good to show the principles of presence but you don't need to do this in a production app if it does not fit your use case.
-      pubnub.unsubscribe({channels: [groupChatChannel]})
+      props.userstatuse("background")
+      console.log('application is in the background')
+      pubnub.unsubscribe({channels: [chatroom]})
     }
   }
+ 
+  const compleatchangename=()=>{
+     handleSaveFriendlyName2(props.username)
+  }
+  
 
+  useEffect(()=>{
+    setchangeName(true)
+
+    setTimeout(()=>{
+      console.log("change name ====")
+      // changeNmae()
+      // compleatchangename()
+    compleatchangename()
+      
+      
+    },5000)
+    
+    
+   // changeNmae()
+  },[ ])
+
+
+  // useEffect(()=>{
+    
+  //   compleatchangename() 
+  //   setchangeName(false)
+
+  //  // changeNmae()
+  // },[friendlyNameEditable])
   useEffect(() => {
-    async function getDeviceId () {
-      //  Create a device-specific DeviceId to represent this device and user, so PubNub knows who is connecting.
-      //  More info: https://support.pubnub.com/hc/en-us/articles/360051496532-How-do-I-set-the-UUID-
-      //  All Android IDs are user-resettable but are still appropriate for use here.
-      deviceId = await DeviceInfo.getUniqueId()
-      pubnub.setUUID(deviceId)
+          // async function getDeviceId () {
+          //   //  Create a device-specific DeviceId to represent this device and user, so PubNub knows who is connecting.
+          //   //  More info: https://support.pubnub.com/hc/en-us/articles/360051496532-How-do-I-set-the-UUID-
+          //   //  All Android IDs are user-resettable but are still appropriate for use here.
+          //   deviceId = await DeviceInfo.getUniqueId()
+          //   pubnub.setUUID(deviceId)
+          //   console.log("get uii di for mobaile",deviceId)
+          //   //  In order to receive object UUID events (in the addListener) it is required to set our
+          //   //  membership using the Object API.
+          //   pubnub.objects.setMemberships({
+          //     channels: [chatroom],
+          //   })
 
-      //  In order to receive object UUID events (in the addListener) it is required to set our
-      //  membership using the Object API.
-      pubnub.objects.setMemberships({
-        channels: [groupChatChannel],
-      })
+          //   //  There is logic in the presence listener to determine who is in the channel but
+          //   //  I am definitely here
+          //   addMember(deviceId)
 
-      //  There is logic in the presence listener to determine who is in the channel but
-      //  I am definitely here
-      addMember(deviceId)
-
-      //  Subscribe to the pre-defined channel representing this chat group.  This will allow us to receive messages
-      //  and presence events for the channel (what other users are in the room)
-      pubnub.subscribe({channels: [groupChatChannel], withPresence: true})
-    }
+          //   //  Subscribe to the pre-defined channel representing this chat group.  This will allow us to receive messages
+          //   //  and presence events for the channel (what other users are in the room)
+          //   pubnub.subscribe({channels: [chatroom], withPresence: true})
+          // }
+    //from me 
+    pubnub.setUUID(deviceId)
+    pubnub.objects.setMemberships({
+      channels: [chatroom],
+    })
+    addMember(deviceId)
+    pubnub.subscribe({channels: [chatroom], withPresence: true})
 
     //  You need to specify a Publish and Subscribe key when configuring PubNub on the device.
     if (
@@ -103,7 +160,7 @@ const PubNubChat = () => {
       setAppTitle('MISSING PUBNUB KEYS')
     }
 
-    getDeviceId()
+    //getDeviceId()
 
     const subscription = AppState.addEventListener('change', handleChange)
     if (pubnub) {
@@ -128,9 +185,11 @@ const PubNubChat = () => {
         presence: presenceMsg => {
           if (presenceMsg.action == 'join') {
             console.log("start join",presenceMsg)
+            props.userstatuse("join")
             addMember(presenceMsg.uuid)
           } else if (presenceMsg.action == 'leave') {
             console.log("start leave",presenceMsg.uuid)
+            props.userstatuse("leave")
             removeMember(presenceMsg.uuid)
           } else if (presenceMsg.action == 'interval') {
             //  'join' and 'leave' will work up to the ANNOUNCE_MAX setting (defaults to 20 users)
@@ -166,13 +225,13 @@ const PubNubChat = () => {
       //  but here we just load the 8 most recent messages
       pubnub
         .fetchMessages({
-          channels: [groupChatChannel],
+          channels: [chatroom],
           includeUUID: true,
           count: 8,
         })
         .then(historicalMessages => {
           var historicalMessagesArray =
-            historicalMessages['channels'][groupChatChannel]
+            historicalMessages['channels'][chatroom]
           for (var i = 0; i < historicalMessagesArray.length; i++) {
             var message = historicalMessagesArray[i]
             lookupMemberName(message.uuid)
@@ -192,7 +251,7 @@ const PubNubChat = () => {
       //  need to know EVERYONE in the room when the UI is first created.
       pubnub
         .hereNow({
-          channels: [groupChatChannel],
+          channels: [chatroom],
           includeUUIDs: true,
           function (status, response) {
             console.log("test response  herby",status, response);
@@ -201,7 +260,7 @@ const PubNubChat = () => {
         .then(devicesHereNow => {
           try {
             var occupants =
-              devicesHereNow['channels'][groupChatChannel]['occupants']
+              devicesHereNow['channels'][chatroom]['occupants']
 
             occupants.forEach(function (member, index) {
               addMember(occupants[index].uuid)
@@ -211,11 +270,15 @@ const PubNubChat = () => {
           }
         })
 
-      // return () => {
-      //   subscription.remove()
-      // }
+      return () => {
+        
+        subscription.remove()
+      }
     }
   }, [pubnub])
+
+
+
 
   const convertTimetoken = timetoken => {
     var date = new Date(Math.trunc(timetoken / 10000, 16))
@@ -292,7 +355,7 @@ const PubNubChat = () => {
    * Button handler for the Edit / Save friendly name button
    * Persist the friendly name in PubNub object storage (this is the master record)
    */
-  const handleSaveFriendlyName = async () => {
+  const handleSaveFriendlyName = async (values) => {
     if (friendlyNameEditable) {
       //  Save the current value
       try {
@@ -306,6 +369,7 @@ const PubNubChat = () => {
         }
           },
         })
+
       } catch (status) {
         console.log('Save friendly name status: ' + status)
       }
@@ -315,6 +379,28 @@ const PubNubChat = () => {
       setFriendlyNameButtonText('حفظ')
       setFriendlyNameEditable(true)
     }
+  }
+
+  //from me 
+  const handleSaveFriendlyName2 = async (values) => {
+    
+      //  Save the current value
+      try {
+        const result = await pubnub.objects.setUUIDMetadata({
+          data: {
+            name: values,
+            email: "johndoe@pubnub.com",
+            profileURL:'https://joeschmoe.io/api/v1/random',
+             custom: {
+            "nickname": "Mr. AminaUser"
+        }
+          },
+        })
+
+      } catch (status) {
+        console.log('Save friendly name status: ' + status)
+      }
+      
   }
 
   /**
@@ -329,14 +415,14 @@ const PubNubChat = () => {
     setInput('')
 
     // Publish our message to the channel `chat`
-    pubnub.publish({channel: groupChatChannel, message: input})
+    pubnub.publish({channel: chatroom, message: input})
   }
 
   return (
     <SafeAreaView style={styles.outerContainer}>
       <KeyboardAvoidingView
         style={styles.innerContainer}
-        behavior='height'
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.select({
           ios: 78,
           android: 20,
@@ -346,7 +432,7 @@ const PubNubChat = () => {
           Header to hold the current friendly name of the device along with other devices in the group chat
           The below logic will launch the settings activity when the option is selected
           */}
-        <View style={styles.topContainer}>
+        {/* <View style={styles.topContainer}>
           <Text style={styles.headingTopContainer}>{appTitle}</Text>
           <View style={styles.membersOnlineContainer}>
             <Text style={[styles.member, styles.highlight]}>
@@ -362,7 +448,7 @@ const PubNubChat = () => {
           </View>
 
           <Text style={[styles.textTopContainer, styles.highlight]}>
-            اسم العرض:
+            اسم المفضل للظهور في المحادثة:
           </Text>
           <View style={styles.friendlyNameEdit}>
           <View style={styles.saveFriendlyName}>
@@ -388,7 +474,7 @@ const PubNubChat = () => {
             />
             
           </View>
-        </View>
+        </View> */}
 
         {
           //  Only minor styling for the message view, a production app would look far superior to this!
@@ -485,7 +571,8 @@ const PubNubChat = () => {
             placeholder='Type your message here...'
           />
           <View style={styles.submitButton}>
-            <Button title='Send' onPress={handleSend} color='#33687B' />
+            <MaterialIcons name='send' size={33} color='#33687B'   onPress={handleSend} />
+            {/* <Button title='Send' onPress={handleSend} color='#33687B' /> */}
           </View>
         </View>
       </KeyboardAvoidingView>

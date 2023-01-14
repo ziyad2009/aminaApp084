@@ -167,7 +167,7 @@ const Mapscreen = ({ route ,navigation}) => {
       const latd= user_latitude
       const  lond= user_longitude
  
-      console.log('START NOW id',token) 
+      console.log('START NOW id',latd,lond) 
       
       try{ 
        // api.defaults.headers.Authorization = `Bearer ${token}`;
@@ -186,23 +186,7 @@ const Mapscreen = ({ route ,navigation}) => {
           console.log(' Erorr  Get location',err) 
         }
         navigation.goBack()
-       // const response =await api.post(`/motheraddres`,  {
-      //     lat:latd,
-      //     lon:lond,
         
-      // }).then((res)=>{
-      //     return res
-      // }).catch((error) => {
-      //     if(error.message='Request failed with status code 404'){
-      //         //setstatuscode(404)
-      //         console.log("404")
-      //     }
-      //     console.log("Erorr from location ",error)
-      // })
-      // console.log("test code result",response)
-
-      // await setItem.setItem('prevlocation',arraydata);
-
       
     }
     const prepareSreen=()=>{
@@ -228,7 +212,7 @@ const Mapscreen = ({ route ,navigation}) => {
     }
 
     const getMylocation=(value)=>{
-      //console.log("Map data",value)
+      console.log("Map data",value)
       setUserLatitude(value.latitude);
       setUserLongitude(value.longitude);
       setlatitudeDelta(value.latitudeDelta)
@@ -300,8 +284,8 @@ const Mapscreen = ({ route ,navigation}) => {
             </Modal.Header> 
             <Modal.Body alignItems={'center'} justifyContent='center' >
 
-            <Stack flexDirection={"column"} alignItems='flex-start'   w="95%" padding={2}   >
-              <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={22} fontWeight='bold' >
+            <Stack flexDirection={"column"} alignItems='flex-start'  w="95%" padding={2}   >
+              <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={22} fontWeight="medium" textAlign={"center"} >
                لكي نتمكن من خدمتك بشكل افضل سوف يتم حفظ موقعك بشكل دائم</Text>
             </Stack>
 

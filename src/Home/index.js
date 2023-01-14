@@ -1,5 +1,5 @@
 import React,{useContext,useEffect, useState,useRef,useMemo,useCallback} from 'react';
-import {View,Text,Image, TouchableOpacity, Platform ,PermissionsAndroid,ScrollView, Alert} from 'react-native';
+import {View,Text,Image, TouchableOpacity, Platform ,PermissionsAndroid,PlatformColor,RefreshControl, Alert} from 'react-native';
 import {Skeleton, StatusBar,VStack,Center, Box, Button ,FlatList, Stack} from 'native-base'
 import { UserContext } from '../services/UserContext';
 import api from '../services/api';
@@ -11,10 +11,12 @@ import {Rating,AirbnbRating} from 'react-native-ratings'
 import setItem from '../services/storage'
 import {URL_ws,URL} from '../services/links';
 import io from "socket.io-client";
+ 
 import BottomSheet, {
   BottomSheetView
 } from '@gorhom/bottom-sheet';
 import Sound from 'react-native-sound';
+import TelerPage from '../payment/telerpage';
 
  page=0
 
@@ -95,7 +97,7 @@ const Home=(props)=>{
     })
 
     socket.current.on("newnotifaction",(response)=>{
-       console.log("start read  Notifctions ",response)
+      // console.log("start read  Notifctions ",response)
       setnotifaction(response)
      // setItem.setItem("notifaction",response)
       //palysound()
@@ -104,14 +106,36 @@ const Home=(props)=>{
     ///
   },[])
 
-  //serch all setter by near location
-  useEffect( async() => {
-    setTimeout(() => {
-      console.log('start upddate seteeers array')
-      setterSerchall()
+  //serch all setter by near location if user refresh list 
+  useEffect( () => {
+    setTimeout( async() => {
+      const location = await setItem.getItem('BS:Location')
+      let existLocation = JSON.parse(location)
+      if (existLocation === null) {
+        requestPermissions()
+      } else {
+      const coordinates = [existLocation.lat, existLocation.lon]
+      setterSerchall(coordinates)
+      }
     }, 4000);
     
   }, [newSetter]);
+
+
+  //start load near setterr by location  
+  useEffect(async () => {
+    setloding2(true)
+    const location = await setItem.getItem('BS:Location')
+    let existLocation = JSON.parse(location)
+    if (existLocation === null) {
+      requestPermissions()
+    } else {
+      const coordinates = [existLocation.lat, existLocation.lon]
+      setterSerchall(coordinates)
+
+    }
+
+  }, []);
 
   useEffect(() => {
     ding.setVolume(1);
@@ -120,32 +144,6 @@ const Home=(props)=>{
     };
   }, []);
 
-
-  useEffect( async() => {
-    setloding2(true)
-    const location= await setItem.getItem('BS:Location') 
-    let  existLocation=JSON.parse(location)
-   if(existLocation===null){
-      requestPermissions()
-   }else{
-            console.log("test location3 ",existLocation)
-            const user = await setItem.getItem('BS:User');
-            const token = await setItem.getItem('BS:Token');
-            const  coordinates=[ existLocation.lat,existLocation.lon]
-            const limit=lemitsetters
-            const skip=itemnumber
-            api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
-            const response =await api.post(`setterlocationall?limit=${limit}&skip=${skip}`,{coordinates}).then((res)=>{
-                if(res.data){
-                setbabseters(res.data)
-                console.log("get ",coordinates)
-                
-                }
-              }).finally(()=> setloding2(false)).catch(err=>console.log("Erorr",err))
-
-   }
-   
-    }, []);
  
     useEffect(async()=>{
         getallservice()
@@ -173,44 +171,41 @@ const Home=(props)=>{
 
      
 
-    const fetchGeoPosition = async() => {
-      const user = await setItem.getItem('BS:User');
-      const token = await setItem.getItem('BS:Token');
-      Geolocation.getCurrentPosition(
-         async (position) =>   {
-         console.log(position);
-         
-         console.log('Location Accessed',position.coords)
-
-         const  coordinates=[ position.coords.latitude,position.coords.longitude]
-         api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
-         const response =await api.post('setterlocationall',{coordinates}).then((res)=>{
-            if(res.data){
-             setbabseters(res.data)
-             console.log("get ",coordinates)
-            
+  const fetchGeoPosition = async () => {
+    const user = await setItem.getItem('BS:User');
+    const token = await setItem.getItem('BS:Token');
+    const limit=30 
+    const skip=itemnumber
+    Geolocation.getCurrentPosition(
+      async (position) => {
+        const coordinates = [position.coords.latitude, position.coords.longitude]
+        setterSerchall()
+        api.defaults.headers.Authorization = (`Bearer ${JSON.parse(token)}`);
+        const response = await api.post(`setterlocationall?limit=${limit}&skip=${skip}`, { coordinates })
+          .then((res) => {
+            if (res.data) {
+              setbabseters(res.data)
             }
-           }).finally(()=> setloding2(false)).catch(err=>console.log("Erorr",err))
+          }).finally(() => setloding2(false))
+          .catch(err => console.log("Erorr", err))
 
-       },
-       (error) => {
-         // See error code charts below.
-         Alert.alert("تنبيه","الرجاء تفعيل خدمة الموقع  لديك")
-         console.log(error.code, error.message);
-       },
-       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-   );
+      },
+      (error) => {
+        // See error code charts below.
+        Alert.alert("تنبيه", "الرجاء تفعيل خدمة الموقع  لديك",error)
+        //console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
   }
 
   const  requestPermissions= async()=> {
-    console.log("ASk permmeesion ")
-    
     if (Platform.OS === 'ios') {
     const auth = await Geolocation.requestAuthorization("whenInUse");
     if(auth === "granted") {
        // do something if granted...
        console.log("user gtante from IOS")
-       console.log("start get locaton")
+      
          fetchGeoPosition()
     }}
     
@@ -250,56 +245,69 @@ const requestLocationaPermission = async () => {
   }
 };
 
-const setterSerchall=async ()=>{
-  const location= await setItem.getItem('BS:Location') 
-    let  existLocation=JSON.parse(location)
-   if(existLocation===null){
-    Alert.alert("يجب عليك تفعيل الموقع لأظهار الحاضنات الاقرب لديك")
-    return;
-   }else{
-            console.log("test is location! ",existLocation)
-            const user = await setItem.getItem('BS:User');
-            const token = await setItem.getItem('BS:Token');
-            const  coordinates=[ existLocation.lat,existLocation.lon]
-            const limit=30 
-            const skip=itemnumber
-            api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
-            const response =await api.post(`setterlocationall?limit=${limit}&skip=${skip}`,{coordinates}).then((res)=>{
-                if(res.data){
-                setbabseters(res.data)
-              }
-              }).finally(()=> setneswSetter(false)).catch(err=>console.log("Erorr",err))
+  const setterSerchall = async (coordinates) => {
+    console.log("test is location! from fuction ", coordinates)
+    const user = await setItem.getItem('BS:User');
+    const token = await setItem.getItem('BS:Token');
+    const limit = 30
+    const skip = itemnumber
+    api.defaults.headers.Authorization = (`Bearer ${JSON.parse(token)}`);
+    const response = await api.post(`setterlocationall?limit=${limit}&skip=${skip}`, { coordinates })
+      .then((res) => {
+        if (res.data) {
+          setbabseters(res.data)
+          setIsFetching(false)
+        }
+      })
+      .finally(() => setloding2(false))
+      .catch(err => console.log("Erorr", err))
 
-   }
-} 
+      return response
+  } 
     
-    const Item = ({ setterdata }) => (
-     
-    
-    <TouchableOpacity style={styles.item} onPress={()=>props.navigation.navigate('Shrtcutprofile',{data1:setterdata,settertTitle:setterdata.name}) }  >
-        <Image source={{uri:  `${URL}/users/${setterdata.owner}/avatar`}} resizeMode='center' style={styles.imagecross} />
-         <Text style={styles.title}>{setterdata.name}</Text>
-         <AirbnbRating
-         // onFinishRating={(e)=>ratingCompleted(e)}
-          style={{ paddingVertical: 1 ,backgroundColor:Colors.transparent}}
-          count={5}
-          //defaultRating={setterdata.rating ? Number(setterdata.rating)/5:0}
-          imageSize={20}
-          tintColor={"#E5E5E5"}
-          showRating={false}
-          size={8}
-          starContainerStyle={styles.ratingContainerStyle}
-          isDisabled 
-          />
-          <Text style={styles.title2}>{setterdata.mainservice}</Text>
+  const onRefresh = React.useCallback(async () => {
+    console.log("start refes")
+    setIsFetching(true);
+    const location = await setItem.getItem('BS:Location')
+    let existLocation = JSON.parse(location)
+    if (existLocation === null) {
+      requestPermissions()
+    } else{
+      const coordinates = [existLocation.lat, existLocation.lon]
+       setterSerchall(coordinates);
+    }
+   
+   
+  }, []);
+ 
 
-       
-      </TouchableOpacity>
-      
-    );
+  
+  const Item = ({ setterdata }) => (
+  
+    <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Shrtcutprofile', { data1: setterdata, settertTitle: setterdata.name })}  >
+      <Image source={{ uri: `${URL}/users/${setterdata.owner}/avatar` }} resizeMode='center' style={styles.imagecross} />
+      <Text style={styles.title}>{setterdata.name}</Text>
+      <AirbnbRating
+        // onFinishRating={(e)=>ratingCompleted(e)}
+        style={{ paddingVertical: 1, backgroundColor: Colors.transparent }}
+        count={5}
+        //defaultRating={setterdata.rating ? Number(setterdata.rating)/5:0}
+        imageSize={20}
+        tintColor={"#E5E5E5"}
+        showRating={false}
+        size={8}
+        starContainerStyle={styles.ratingContainerStyle}
+        isDisabled
+      />
+      <Text style={styles.title2}>{setterdata.mainservice}</Text>
 
-//maiservice data
-    const Req1=(val)=>{
+
+    </TouchableOpacity>
+
+  );
+
+//main service data
+const Req1=(val)=>{
 
       setchange(!change)
       console.log("service id ",val)
@@ -307,26 +315,25 @@ const setterSerchall=async ()=>{
          props.navigation.push('Fourm1',{productTitle: val.maineservice, serviceid:val._id ,serviceNmae:val.maineservice,orderId:val.order})
       }
     
-    }
-    const myItemSeparator = () => {
+}
+
+const myItemSeparator = () => {
       return (
         <View
          style={{ height: 1, backgroundColor: "gray", marginHorizontal:10 }}
         />
       );
-    };
+};
 
-    const palysound=()=>{
-      ding.setVolume(1)
-      ding.play(success => {
-        if (success) {
-          console.log('successfully finished playing');
-        } else {
-          console.log('playback failed due to audio decoding errors');
-        }
-      });
-
-     
+  const palysound = () => {
+    ding.setVolume(1)
+    ding.play(success => {
+      if (success) {
+        console.log('successfully finished playing');
+      } else {
+        console.log('playback failed due to audio decoding errors');
+      }
+    });
   }
     
 
@@ -367,11 +374,11 @@ return(
         })
         }
         {/* <Box>
-          <Button onPress={()=> props.navigation.navigate('Paymentint') }>chat</Button>
+          <Button onPress={()=> props.navigation.navigate('TelerPage') }>chat</Button>
         </Box> */}
-         {/* <Box>
-          <Button onPress={()=> palysound()  }>sound</Button>
-        </Box> */}
+         {/* <TouchableOpacity style={{backgroundColor:Colors.amin1Button1,width:100,height:100}} >
+          <TelerPage  />
+        </TouchableOpacity> */}
 
         </View>
         <View style={{alignItems:'flex-start' ,marginLeft:10}}>
@@ -399,8 +406,13 @@ return(
               
               ItemSeparatorComponent={myItemSeparator}
               horizontal={true}
-              // onRefresh={onRefresh}
-              //  refreshing={isFetching}
+               refreshControl={ 
+                <RefreshControl
+                  refreshing={isFetching}
+                  onRefresh={onRefresh}
+                  
+                />}
+                //refreshing={isFetching}
               onEndReachedThreshold={0.5}
               
               onEndReached={()=> setneswSetter(true)}

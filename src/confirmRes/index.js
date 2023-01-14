@@ -13,8 +13,9 @@ import {URL_ws,URL} from '../services/links';
 import {SocketIOClient,io} from "socket.io-client";
 import { sendNotifcation } from '../services/fucttions';
 import CustomButton from '../services/buttons/buttton';
+import TelerPage from '../payment/telerpage';
  
-
+ 
   
 let interval = null;
 
@@ -48,7 +49,7 @@ const ConfirmRes=(props)=>{
             onsole.log("Erorr",err)
             Alert.alert("تنبيه","غير قادر على جلب  بينات البروفايل")
         })
-        console.log("tets response",response)
+        console.log("tets response",response.mother.location.coordinates)
         setMother(response)
         
     },[])
@@ -89,7 +90,7 @@ const handelREQ= async(id)=>{
             setShowModal(false)
         }
         if(res.data.accepted&&res.data.statuse==='pending'){
-            Alert.alert("تنبيه","تم الموافقه على الطلب")
+           // Alert.alert("تنبيه","تم الموافقه على الطلب")
             clearInterval(interval)
             setShowModal(true)
         }
@@ -161,43 +162,16 @@ const handelREQ= async(id)=>{
         settterfaileid:babseters.settterfaileid,
         price:babseters.price,
         hours:babseters.hours,
-        totalprice:babseters.totalprice,
+        totalprice: babseters.totalprice ,
         totalhours:babseters.totalhours,
         rreservioninfo:babseters.rreservioninfo
     }).then((res)=>{
         console.log("Order",res.data)
         setNewData(res.data)
         SETOK(true)
-        const contentddata={titletxt:"اضافة طلب",contetntxt:"لقد تم اضافة الطلب"}
         sendNotif()
     }).catch(err=> console.log("Erorr:",err ))
-    
-//     const data={scurtycode:babseters.scurtycode,
-//         childe:babseters.childe,
-//         serviestype:babseters.serviestype,
-//         orderid:babseters.orderid,
-//         childeaccount:babseters.childeaccount,
-//         settterowner:babseters.settterowner,
-//         displayname:babseters.displayname,
-//         time:babseters.time,
-//         location:{coordinates:[coordinates.lat,coordinates.lon],"type":"Point"},
-//         settername:babseters.settername,
-//         mothername:mothernames,
-//         motherphone:motherPhone,
-//         address:coordinates.formatted,
-//         statuse:"processing",
-//         reson:"",
-//         read:false,
-//         start:babseters.start,
-//         end:babseters.end,
-//         potementdate:babseters.potementdate,
-//         settterfaileid:babseters.settterfaileid,
-//         price:babseters.price,
-//         hours:babseters.hours,
-//         totalprice:babseters.totalprice,
-//         totalhours:babseters.totalhours,
-//         rreservioninfo:babseters.rreservioninfo}
-//         console.log("test order",data)
+     
    }    
 
    const canselRequest=async()=>{
@@ -215,9 +189,11 @@ const handelREQ= async(id)=>{
 
    const paymentScreen=()=>{
     setShowModal(false)
-    props.navigation.navigate('PaymentForm',{data1:newData})
+    //props.navigation.navigate('PaymentForm',{data1:newData})
+    //props.navigation.navigate('PaymentForm',{data1:newData})
+    props.navigation.navigate('TelerPage',paymentdata={newData})
    }
-
+ 
    const sendNotif= ()=>{
     
     const data={
@@ -273,7 +249,8 @@ const handelREQ= async(id)=>{
 
         <VStack flexDirection={'row'} w={"full" } justifyContent='space-between'  mt='1' p={1}>
         <Text style={styles.leftText}>اجمالي التكلفه</Text>
-        <Text style={styles.rightTex}> {babseters.totalprice}</Text>
+        <Text style={styles.rightTex}> { (Number(0.15)* Number(babseters.totalprice) +Number(babseters.totalprice) )}</Text>
+       
         </VStack>
 
         <VStack flexDirection={'row'} w={"full" } justifyContent='space-between'  mt='1' p={1}>
@@ -345,6 +322,7 @@ const handelREQ= async(id)=>{
                 </Box>
                 
             </Center>}
+             
             
             
                      
@@ -356,14 +334,14 @@ const handelREQ= async(id)=>{
 <Modal isOpen={showModal} onClose={() => setShowModal(false)}
 borderColor={Colors.white}
 avoidKeyboard justifyContent="flex-end" bottom="4" >
-<Modal.Content width={Metrics.WIDTH } h={Metrics.HEIGHT*0.3552 }   >
+<Modal.Content width={Metrics.WIDTH } h={Metrics.HEIGHT*0.8552 }   >
  
 <Modal.Header>
-    
+<Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='bold' fontSize='33'  textAlign={'center'} > اشعار</Text>
 </Modal.Header>
-<Modal.Body alignItems={'center'} >
-<Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='bold' fontSize='2xl'  textAlign={'center'} >تمت الموافقة على طلبك</Text>
-<AntDesign name='checkcircleo' size={50} color={Colors.loginGreen} style={{ marginBottom:2}} />
+<Modal.Body alignItems={'center'} justifyContent='center' >
+<Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='bold' fontSize='33'  textAlign={'center'} >تمت الموافقة على طلبك</Text>
+<AntDesign name='checkcircleo' size={50} color={Colors.loginGreen} style={{ marginBottom:2,marginTop:7}} />
     
      
 </Modal.Body>
@@ -372,9 +350,14 @@ avoidKeyboard justifyContent="flex-end" bottom="4" >
 <Box alignItems={'center'} w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>
     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize='2xl' textAlign={'center'} mb={2}>اكمل الدفع من خلال</Text>
                 
-            <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-             onPress={() => paymentScreen()}> مدى</Button>
+            {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
+             onPress={() => paymentScreen()}> مدى</Button> */}
+             <Box backgroundColor={Colors.AminaButtonNew} size='lg' mb={1.5} w='full' h={"22%"}>
+          <Button onPress={()=> paymentScreen() }>مدى</Button>
+        </Box>
+             
     </Box> 
+   
    
 </Modal.Footer>
 </Modal.Content>

@@ -4,7 +4,8 @@ import api from '../services/api';
 import setItem from '../services/storage';
 import socketio from "socket.io-client";
 import { URL_ws, URL_ws_chat } from './links';
-
+import DeviceInfo from 'react-native-device-info';
+import deviceInfoModule from 'react-native-device-info';
 
 //export const SocketContext = React.createContext();
 
@@ -15,7 +16,7 @@ export const UserContext =React.createContext({})
   const SOKITIOSetter = socketio(URL_ws);
 
    
-
+   
  const  UserProvider= ({children})=> {
       const [user, setUser] = useState(null);
       const [token, setToken] = useState('');
@@ -27,7 +28,8 @@ export const UserContext =React.createContext({})
     const[home,sethome]=useState(false)
     const[errmsg,seterrmsg]=useState('')
     const[notifaction,setnotifaction]=useState(0)
-    
+    const [DeviceID,setDeviceId]=useState(0)
+    const[chatroom,setchatroom]=useState('')
       useEffect(() => {
          async function tryGetUser(){ 
             await setItem.removeItem('BS:User');
@@ -76,6 +78,20 @@ export const UserContext =React.createContext({})
         tryGetUser();
     }, [])
 
+    const diviceID= async()=>{
+        const DevId= await DeviceInfo.getUniqueId()
+        return DevId
+    }
+    diviceID().then((res)=>{
+         console.log("DIVICE IDD ==>", res)
+         setDeviceId(res)
+    })
+    
+    const Getchatoom=(val)=>{
+        setchatroom(val)
+        console.log("test oom name",val)
+    }
+
     const regestrationPhone= async(val)=>{
         console.log(`Contx  -start regester by ${val}`)
         const newresponse =await api.post(`/adduser`,
@@ -83,12 +99,12 @@ export const UserContext =React.createContext({})
             phone:val,
          }
          ).then((res)=>{
-            console.log("Data Regster",res)
+            console.log(" new Data Regster",res.data)
             
            
-        }).then((res)=>{
-            console.log("second res starrrrt")
-            loginbyphone(val)
+        }).finally(( )=>{
+            console.log("start login by new DATA***")
+            loginbyphonefirstTime(val)
         })
         .catch((error) => {
             if(error.message='Request failed with status code 404'){
@@ -101,29 +117,31 @@ export const UserContext =React.createContext({})
     }
 
 
-      const  loginbyphone =async(val)=>{
-         const response =await api.get(`/userphone/${val}`).then((res)=>{
-            
-             if( res.data.message==='User is not found!'){
-                 console.log(`Contx  -user  regester!  by ${res.data.message}`)
-                    regestrationPhone(val)
-              // return;
-            }
-            
-            // if(res.data.message==="User is not verify code!"){
-            // // if(!res.data.status&&res.data.verify){
-            //     console.log("   Contxt   Auth Code  ")
-            //     setRegUser(true)
-            //      setUser(response.data.user)
-            //     // sethome(true);
-            //     return res; 
-            // } 
-
-            // console.log("contxt test Data user OK",res)
-            //  homeScreen(res)
-            console.log("contxt test Data user OK++",res.data)
+    const loginbyphonefirstTime =async(val)=>{
+        await api.get(`/userphone/${val}`).then((res)=>{
             setstatuscode(res.status)
-           return homeScreen(res)
+            homeScreen(res,{new:true})
+        }).catch((error) => {
+         if(error.message='Request failed with status code 404'){
+            //setstatuscode(404)
+         }
+         console.log("Contex-Code Erorr",error)
+     }) 
+   
+       
+    }
+
+    const  loginbyphone =async(val)=>{
+            await api.get(`/userphone/${val}`).then((res)=>{
+            
+            if( res.data.message==='User is not found!'){
+                 return regestrationPhone(val)
+            }
+
+            setstatuscode(res.status)
+            homeScreen(res,{new:false})
+            
+            return  {data:res.data}
             
          }).catch((error) => {
              if(error.message='Request failed with status code 404'){
@@ -132,20 +150,33 @@ export const UserContext =React.createContext({})
              }
              console.log("Contex-Code Erorr",error)
          }) 
-       
-        //   if(response.role != "mather"){
-        //     throw(`You are not registered as , please enter with your correct user`);
-        // }
-       
-        
-
-           
+      
         }
 
-        const homeScreen= async(response)=>{
-            //console.log("Home screen",response)
+        const  newCode=async(user)=>{
+            const motherData = await setItem.getItem('BS:User');
+            const mother=JSON.parse(motherData)
+            const token= await setItem.getItem('BS:Token');
+            console.log("start send cod")
+            if(user.login===true){
+               return console.log("this user not accsept code")
+            }
+                api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+                 await api.post('/user/newcode', {
+                        id:  mother._id
+                        
+                      }).then((res)=>{
+                        console.log("new code send ",res.data)
+                      }).catch((err)=> console.log("Erorr ",err) )
+                      
+      
+           }
+      
+
+        const homeScreen= async(response,data)=>{
+             
             if(response){
-                console.log("Contxt  test respons Comtext",response)
+                console.log("Contxt  test respons Comtext",response.data)
                 api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
             
                 await setItem.removeItem('BS:User');
@@ -155,7 +186,12 @@ export const UserContext =React.createContext({})
                 await setItem.setItem('BS:Phone',JSON.stringify(response.data.user.phone));
                 setToken(response.data.token);
                 setUser(response.data.user);
+                console.log("user data pre load",response.data.token)
+                if(!data.new ){
+                    newCode(response.data.user)
+                }
                 setRegUser(true)
+                
                 // if(!response.data.user.verify){
                 //     setRegUser(true);
                 // }
@@ -178,7 +214,7 @@ export const UserContext =React.createContext({})
                  if(res.data.status===false){
                      console.log("code Erorr",res.data.status)
                      seterrmsg("الرجاء التاكد من الكود المرسل")
-                       setstatuscode(res.status)
+                     setstatuscode(res.status)
                      
                  }
                  if(res.data.status===true){
@@ -221,11 +257,14 @@ export const UserContext =React.createContext({})
             notifaction,
             SOKITIO,
             SOKITIOSetter,
+            DeviceID,
+            chatroom,
          loginbyphone,
          loginbycoded,
          sethome,
          ErorrMessage,
          setnotifaction,
+         Getchatoom
         
 
          

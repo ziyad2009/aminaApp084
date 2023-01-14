@@ -48,6 +48,8 @@ import PrivecyScreen from '../extrascreen/privcy';
 import AboutScreen from '../extrascreen/about';
 import Zoomphoto from '../Setterprofile/zoomphoto';
 import Ewallet from '../Wallet/ewalet';
+import TelerPage from '../payment/telerpage';
+import Attractionuser from '../map/attractionuser';
 
   
 
@@ -620,6 +622,15 @@ const StackNav = () => {
               )  
         },
       })}/>
+      <Stack.Screen name="Attractionuser" component={Attractionuser} 
+      options={({route,navigation})=>({
+        headerShown:false
+         
+         
+      })} />
+       <Stack.Screen name="TelerPage" component={TelerPage} />
+       
+       
       {/* <Stack.Screen name="Paymentint" component={Paymentint} /> */}
       </Stack.Navigator>
   );
