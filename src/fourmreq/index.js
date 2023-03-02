@@ -8,7 +8,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcons from 'react-native-vector-icons/Feather'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import timeslots from './timeslots';
-import { Colors ,Metrics, Fonts,Images} from '../assets/Themes/';
+import { Colors ,Metrics, Fonts,Images,fontPixel,pixelSizeHorizontal,pixelSizeVertical,widthPixel,heightPixel} from '../assets/Themes/';
 import moment from 'moment';
 import {URL_ws,URL} from '../services/links';
 import setItem from '../services/storage/'
@@ -16,15 +16,19 @@ import 'moment/locale/ar-sa';
 import { Rating,AirbnbRating } from 'react-native-ratings';
 import images from '../assets/Themes/Images';
 import CustomButton from '../services/buttons/buttton';
+ 
 import DatePicker from 'react-native-date-picker';
+import OutlaintButton from '../services/buttons/buttonsOutlain';
 
 let MOTHERARRAY=[]
-
+let HOURSWORK=0
+let slctslots=0
+let childrensArray=[]
 const Fourm1=(props)=>{
     const[loading,setloding]=useState(false);
     const [subservice,setsubservice]=useState([]);
     const [select,setselect]=useState(1)
-    const [serviestype, setserviestype] = React.useState("");
+    const [serviestype, setserviestype] = React.useState("حاضنة");
     const [mainservice, setmainservice] = React.useState("");
     const [location,setlocation]=useState('')
     const[babsetersData,setbabysetterData]=useState([])
@@ -40,10 +44,8 @@ const Fourm1=(props)=>{
     const[totalInminuts,settotalInminuts]=useState(0)
     const [reservion,setReservion]=useState("")
  
-    const[mother,setMother]=useState([])
-
     const[ResWay,setResWay]=useState(1)
-   const[numcolor,setnumcolor]=useState(0)
+   
 
     const [showModal, setShowModal] = useState(false);
     const[childeArray,settChiledArray]=useState([])
@@ -53,11 +55,13 @@ const Fourm1=(props)=>{
     const [date4, setDate4] = useState(new Date())
   const [open, setOpen] = useState(false)
   const [open2, setOpen2] = useState(false)
-    
+
+  const [resevButton, setresevButton] = useState(false)
+  const[hourswork,sethourswork]=useState(false)
 
 //Clender
    
-  const  onDateSelected=((event, value)=>{
+const  onDateSelected=((event, value)=>{
     //     const inputDate = selectedDate.toISOString();
 //     const outputDate = inputDate.split('T')[0];
 //    //setSelectedDate(outputDate);
@@ -134,70 +138,55 @@ if(Platform.OS==='ios'){
     }
     const BabyseterProfile=()=>{
         return(
-            <Box borderWidth=".3"  bgColor={Colors.white} borderColor="#00ABB9" borderRadius="sm"  pr="5" py="2" ml="3" mr="5"  width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.185}>
-              <HStack space={3} justifyContent='space-around' key={babsetersData._id}>
-                <Image  source={{ uri: `${URL}/users/${babsetersData.owner}/avatar`}} resizeMode='stretch' 
-                style={{width: Metrics.WIDTH*0.281, height: Metrics.HEIGHT*0.170,marginLeft:5,marginRight:20,borderBottomLeftRadius:10}} />
-                <Spacer />
-                
-                <VStack flexDirection={'column'}   alignItems={'flex-start'} >
-                  <Text  color= "#000000"
-                   fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" >
-                    {babsetersData.displayname}
-                  </Text>
-                  <Text color= "#000000"fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400"  mr={6}>
-                    {babsetersData.mainservice}
-                  </Text>
-                  <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
-                   <AirbnbRating
-                         selectedColor={Colors.TexTPink}
-                        //onFinishRating={(e)=>ratingCompleted(e)}
-                        style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
-                        ratingCount={5}
-                        imageSize={20}
-                        size={15}
-                        
-                        ratingBackgroundColor={"#BFD1D6"}
-                        ratingColor={"#F38193"}
-                        tintColor={"#FFFFFF"}
-                        showRating ={false}
-                        starContainerStyle={styles.ratingContainerStyle}
-                        isDisabled 
-                />
-                <Box>
-                   <Text color= "#000000" fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} >التقييم {babsetersData.rate ? Number(babsetersData.rate):0}</Text>
-                </Box>
-               
-                
-                </VStack>
-                  
-                <Box>
-                   <Text color= "#000000" >{babsetersData.hourstotal} ساعة عمل</Text>
-                </Box>
-                <Box>
-                <Text   color= "#000000" fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} >
-                  تكلفة الخدمه بالساعه {babsetersData.price} ريال
-                </Text>
-                <HStack backgroundColor={'amber.200'}>
-                
-                </HStack>
-               
-                </Box>
+        <Box flex={1} backgroundColor={Colors.white}  >
+            <Box  borderColor={Colors.veryLightGray} borderRadius={10} marginLeft={pixelSizeHorizontal(15)} marginTop={2}
+            paddingBottom={2} flexDirection={'row'} 
+            width={widthPixel(370)}   backgroundColor={Colors.white} >
+            <Box>
+                <Image source={{ uri: `${URL}/users/${babsetersData.owner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),
+                    marginTop:pixelSizeVertical(6),marginRight:pixelSizeHorizontal(10),borderRadius:10 }} />
+            </Box>
 
-                </VStack>
-                
-                <Spacer />
-                <TouchableOpacity onPress={()=>setlike(!like)}>
-                  <Image source={like? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
-                </TouchableOpacity>
+        <Box flexDirection={'column'}   width={widthPixel(228)} ml={pixelSizeHorizontal(20)}  marginTop={1} > 
+          <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
+            <Stack flexDirection={'row'} mt={1} ml={2} alignItems='baseline' width={widthPixel(220)} justifyContent='space-between' >
+              <Text  fontFamil={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(24)} color={Colors.newTextClr} >{babsetersData.displayname}</Text>
+              <Image source={Images.save} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
+             </Stack>
+          </Box> 
+        
+          <Box flexDirection={'row'} justifyContent="space-between">
+            <Stack flexDirection={'row'} >
+              <Text  fontFamil={Platform.OS==='android'?Fonts.type.light:Fonts.type.light} fontSize={fontPixel(12)} color={Colors.smolegrayColors} marginLeft={pixelSizeHorizontal(4)} >{babsetersData.mainservice ?babsetersData.mainservice : "-"}</Text>
+            </Stack>
+             
+            <Stack position={'relative'}    bottom={1} left={Platform.OS=='android'? 1: 0} mt={2} >
+              <Text fontFamil={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(10)} color={Colors.rmadytext} marginLeft={pixelSizeHorizontal(2)}  >حفظ  </Text>
+            </Stack>
+          </Box>
 
-                 
-                
-                
-              </HStack>
+          <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
+            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+              <Text  fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr}  >{babsetersData.price} ر.س/ساعة</Text>
+            </Stack>
+            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
+             <Text  fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr} >{babsetersData.rate}</Text>
+             <Image source={Images.starticon} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
+
+            </Stack>
+            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+            {hourswork && <Text fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.rmadytext}>{HOURSWORK} ساعه عمل</Text>}
               
+            </Stack>
+            
               
-            </Box> 
+          </Box>
+           
+          </Box>
+          
+          
+          </Box>
+          </Box>
 
         )
         
@@ -207,7 +196,7 @@ if(Platform.OS==='ios'){
 useEffect(async()=>{
    getasubservice()
    getMotherChiled()
-   getMotherData()
+   
    const location= await setItem.getItem('BS:Location') 
   if (!location){
     setlocation('...')
@@ -223,7 +212,8 @@ useEffect(async()=>{
 
 useEffect(()=>{
     console.log("test chiled",childeArray.length)
-},[childeArray])
+},[childrensArray])
+
 
 useEffect(  () => {
     const unsubscribe = props.navigation.addListener('focus',async () => {
@@ -243,150 +233,123 @@ useEffect(  () => {
     return unsubscribe;
   }, []);
 
-const getasubservice=async()=>{
-    setloding(true)
-    const id=props.route.params.serviceid
-     setmainservice(props.route.params.serviceNmae)
-   const  orderid=props.route.params.orderId
-   console.log("result order",orderid)
+    const getasubservice = async () => {
+        setloding(true)
+        const id = props.route.params.serviceid
+        setmainservice(props.route.params.serviceNmae)
+        const orderid = props.route.params.orderId
 
-   switch  (orderid) {
-    
-    case 1:
-        //console.log("result",response.data)
-    const response =await api.get(`/subcategories/${id}`).then((res)=>{
-        // const data=res.sort(function(a, b){return b - a});
-         // setsubservice(res.data.sort( function(x,y){
-         //     return x.order - y.order;
-         // }))
-         setsubservice(res.data)
-         setloding(false)
-         setResWay(1)
-         console.log("case1",)
-         return res;
-         
-     }).catch((error) => {
-         if(error.message='Request failed with status code 404'){
-           //  console.log(error)
-         //return  setstatuscode(404)
-         }
-     }) 
-        break;
+        switch (orderid) {
 
-    case 2:
-        console.log("case2",)
-        setsubservice([])
-        setloding(false)
-        setResWay(2)
-        break;
+            case 1:
+                //get sub service from id o f maine service for babtsetter
+                const response = await api.get(`/subcategories/${id}`).then((res) => {
 
-    case 3:
-     console.log("result data",props.route.params.data1)
-     console.log("case3",)
-     setbabysetterData(props.route.params.data1)
-     setloding(false)
-     setResWay(3)
-    break
-   
-    default:
-        break;
-   }
+                    setsubservice(res.data)
+                    setloding(false)
+                    setResWay(1)
+                    console.log("case1",)
+                    return res;
 
-    
+                }).catch((error) => {
+                    if (error) {
+                        console.log("Eror from  get sub servic".error)
+                    }
+                })
+                break;
 
-    //   if(response.role != "mather"){
-    //     throw(`You are not registered as , please enter with your correct user`);
-    // }
-   
+            case 2:
+                //clear sub service from id o f maine service for Home babtsetter
+                console.log("case2",)
+                setsubservice([])
+                setloding(false)
+                setResWay(2)
+                break;
 
-}
+            case 3:
+                //profile setter=> Fourm1 
+                console.log("result data", props.route.params.data1)
+                console.log("case3",)
+                setbabysetterData(props.route.params.data1)
+                readWorkhours(props.route.params.data1.owner)
+                setloding(false)
+                setResWay(3)
+                break
+
+            default:
+                break;
+        }
+    }
+
+    const readWorkhours = async (id) => {
+        console.log("tttt",id)
+        const response = await api.get(`allorderbysetterworkhours/${id}`).then((res) => {
+        console.log(res.data[0].totalhours)
+          HOURSWORK = res.data[0].totalhours
+
+        }).finally(() => sethourswork(true)).catch((err) => {
+        HOURSWORK = 0
+        
+        })
+        return response
+    }
 
   
- const confirmReservisionTime=()=>{
-    const startShiftTime = moment(time, 'DD-MM-YYYY hh:mm:ss');
-    const endShiftTime = moment(time2, 'DD-MM-YYYY hh:mm:ss');
-    if (startShiftTime.isAfter(endShiftTime)){
-        endShiftTime.add(1, 'days');
-      }
-    
-    const duration = moment.duration(endShiftTime.diff(startShiftTime));
-    
-    // console.log('as hours: ' + duration.asHours(), 'as minutes: ' + duration.asMinutes());
-    // console.log('hours: ' + duration.hours(), 'minutes: ' + duration.minutes());
-    setReservion(`${duration.asHours()} and ${duration.asMinutes()}`)
-    settotalInminuts(duration.asMinutes())
-    
-   const extraMinuts= Math.floor((duration%3600)/60)
-    
-    if(extraMinuts >= 1){
-      return  Alert.alert("تنبيه","يجب ان تكون الفتره فقط ساعات كامله من دون دقائق اضافية ")
+    const confirmReservisionTime = () => {
 
-    }else{
-        modelShow()
-    }
-     
-    }
+        const startShiftTime = moment(time, 'DD-MM-YYYY hh:mm:ss');
+        const endShiftTime = moment(time2, 'DD-MM-YYYY hh:mm:ss');
+        if (startShiftTime.isAfter(endShiftTime)) {
+            endShiftTime.add(1, 'days');
+        }
 
-    const getMotherData= async()=>{
-        const token = await setItem.getItem('BS:Token');
-        api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
-        const response= await api.get("/mothers/me").then((res)=>{
-            return res.data
-        }).catch((err)=>{
-            onsole.log("Erorr",err)
-            Alert.alert("تنبيه","غير قادر على جلب  بينات البروفايل")
-        })
-        console.log("tets response",response)
-        setMother(response)
+        const duration = moment.duration(endShiftTime.diff(startShiftTime));
+
+        // console.log('as hours: ' + duration.asHours(), 'as minutes: ' + duration.asMinutes());
+        // console.log('hours: ' + duration.hours(), 'minutes: ' + duration.minutes());
+        setReservion(`${duration.asHours()} and ${duration.asMinutes()}`)
+        settotalInminuts(duration.asMinutes())
+
+        const extraMinuts = Math.floor((duration % 3600) / 60)
+
+        if (extraMinuts >= 1) {
+            return Alert.alert("تنبيه", "يجب ان تكون الفتره فقط ساعات كامله من دون دقائق اضافية ")
+
+        } else {
+            modelShow()
+        }
+
     }
 
     
     const getMotherChiled= async()=>{ 
-    const user = await setItem.getItem('BS:User');
-    const token = await setItem.getItem('BS:Token');
-    api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-    const response =await api.get(`/mother/childe`).then((res)=>{
-       return res.data
-    })     
-    console.log("Start______ chiled",response)
-    setmothersh(response)
-}
-
-const calclutDiff=()=>{ 
-const startShiftTime = moment(time, 'hh:mm:ss');
-const endShiftTime = moment(time2, 'hh:mm:ss');
-
-if (startShiftTime.isAfter(endShiftTime)){
-    endShiftTime.add(1, 'days');
-  }
-
-const duration = moment.duration(endShiftTime.diff(startShiftTime)) ;
-
-// console.log('as hours: ' + duration.asHours(), 'as minutes: ' + duration.asMinutes());
- console.log('hours: ' +Math.floor(duration.asHours()), 'minutes: ' );
- 
-// return (`${duration.hours()}  hours:  ${duration.minutes()} minutes: ` );
-return(
-    <Box alignItems={'flex-end'} flexDirection='row' ml={5} backgroundColor={'amber.200'} >
-        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' >{Math.floor(duration.asHours()) } ساعات </Text>
-        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' >{ Math.floor(duration.minutes())==="59"?"0": Math.floor(duration.minutes())  } دقائق </Text>
-    </Box>
-)
-}   
- 
-const addOrRemove = (item) => {
-    const {_id,name}=item
-    const exists = childeArray.includes(item)
-    if (exists) {
-        return  settChiledArray(childeArray.filter(item => item.name !== name))
+        const user = await setItem.getItem('BS:User');
+        const token = await setItem.getItem('BS:Token');
+        api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+        const response =await api.get(`/mother/childe`).then((res)=>{
+        return res.data
+        })     
+        setmothersh(response)
     }
-    else if (!exists){
-        const result = childeArray
-        return result.push(item)
+ 
+    const addOrRemove = (item) => {
+        
+        const { _id, name } = item
+        const exists = childeArray.includes(item)
+        if (exists) {
+            childrensArray = childeArray.filter(item => item.name !== name)
+            console.log("test Item lenght",childeArray.length)
+            return settChiledArray(childeArray.filter(item => item.name !== name))
+        }
+        else if (!exists) {
+            childrensArray.push(item)
+            const result = childeArray
+            console.log("test Item lenght",childeArray.length)
+            return result.push(item)
+        }
+       
     }
-
-  }
-
+//direct to next screen
   const ConfirmScreen=async()=>{
     const location= await setItem.getItem('BS:Location') 
     const coordinates=JSON.parse(location)
@@ -395,446 +358,417 @@ const addOrRemove = (item) => {
     }
    switch (ResWay){
     case 1:
-        console.log("screen",1)
+        console.log("move to screen",1)
         Request()
 
     break;
     case 2:
-        console.log("screen",2)
+        console.log("move to screen",2)
         Request()
     break;
     case 3:
-        console.log("screen",3)
+        console.log("move to screen",3)
         QiuqRREQUEST()
     break;
    }
   }
 
-  const Request=async()=>{
-    
-    const token = await setItem.getItem('BS:Token');
-    const location= await setItem.getItem('BS:Location') 
-    const coordinates=JSON.parse(location)
-   
-    const timeresult=`${time} الى ${time}`
-    if(totalInminuts<1  || childeArray.length < 1 ){
-        console.log("account",totalInminuts,"=",childeArray.length < 1)
-        return Alert.alert("تنبيه","الرجاء تحديد الاطفال او تحديد موعد الخدمة")
-     }
-    
-    const requestData={
-        serviestype:serviestype,
-        mainservice:mainservice,
-        childe:childeArray,
-        childeaccount:childeArray.length,
-        time:timeresult,
-        
-        statuse:"processing",
-        reson:"",
-        read:false,
-        start:time,
-        end:time2,
-        potementdate:date,
-        hours:totalInminuts,
-        reservioninfo:reservion
+    const Request = async () => {
+
+        const token = await setItem.getItem('BS:Token');
+        const location = await setItem.getItem('BS:Location')
+        const playeridUUid = await setItem.getItem('BS:playerid');
+
+        const playerid = JSON.parse(playeridUUid)
+        const coordinates = JSON.parse(location)
+
+        const timeresult = `${time} الى ${time}`
+        if (totalInminuts < 1 || childeArray.length < 1) {
+            console.log("account", totalInminuts, "=", childeArray.length < 1)
+            return Alert.alert("تنبيه", "الرجاء تحديد الاطفال او تحديد موعد الخدمة")
+        }
+       console.log("test player id",playerid)
+        const requestData = {
+            serviestype: mainservice==="حضانة منزلية"?"":serviestype,
+            mainservice: mainservice,
+            childe: childrensArray,
+            childeaccount: childeArray.length,
+            time: timeresult,
+            motherplayerid: playerid,
+            statuse: "processing",
+            reson: "",
+            read: false,
+            start: time,
+            end: time2,
+            potementdate: date,
+            hours: totalInminuts,
+            reservioninfo: reservion
+        }
+        //move to babyseters list screens
+        props.navigation.navigate('Babysetesrs', { setterdata: JSON.stringify(requestData) });
+
+
     }
-    props.navigation.navigate('Babysetesrs', {setterdata :JSON.stringify(requestData)});
-    // api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-    // await api.post("/mother/order",{
-    //     serviestype:serviestype,
-    //     scurtycode:0,
-    //     childe:childeArray,
-    //     childeaccount:childeArray.length,
-    //     settterowner:"",
-    //     time:timeresult,
-    //     location: {
-    //         type: "Point",
-    //         coordinates: [
-    //             coordinates.lat,
-    //             coordinates.lon
-    //         ]
-    //     },
-    //     settername:"sona",
-    //     statuse:"processing",
-    //     reson:"",
-    //     read:false,
-    //     start:time,
-    //     end:time2,
-    //     potementdate:date,
-    //     settterowner:"62484b139f11d603923e0a2e",
-    //     settterfaileid:"62484c66b4888f03a8fe8ad6",
-    //     price:0,
-    //     hours:totalInminuts,
-    //     totalprice:0,
-    //     totalhours:0,
-    //     rreservioninfo:reservion
-    // }).then((res)=>{
-    //     console.log("Order",res)
-    //    props.navigation.navigate('Babysetesrs', {setterdata :JSON.stringify(res)});
-    // }).catch(err=> console.log("Erorr:",err ))
 
+    //quiq reservition
+    const QiuqRREQUEST = async () => {
+        const token = await setItem.getItem('BS:Token');
+        const location = await setItem.getItem('BS:Location')
+        const playeridUUid = await setItem.getItem('BS:playerid');
+        const playerid = JSON.parse(playeridUUid)
+        const coordinates = JSON.parse(location)
+        //configer player id 
+        const timeresult = `${time} الى ${time}`
 
-}
-//qiuq reservition
-const QiuqRREQUEST=async()=>{
+        const num = totalInminuts;
+        const hours = (num / 60);
+        const rhours = Math.floor(hours);
+        const minutes = (hours - rhours) * 60;
+        const rminutes = Math.round(minutes);
+        // console.log( num + " minutes = " + rhours + " hour(s) and " + rminutes + " minute(s).")
+        const totPrice = Number(rhours * babsetersData.price)
+        const securenumber = Math.floor(1000 + Math.random() * 9000);
+        //create Randoom Id for new recorde
+        const orderid = Math.floor(1000 + Math.random() * 90000);
 
-    
-    const token = await setItem.getItem('BS:Token');
-    const location= await setItem.getItem('BS:Location') 
-    const coordinates=JSON.parse(location)
-    
-    const timeresult=`${time} الى ${time}`
-
-     
-    const  num = totalInminuts;
-    const  hours = (num / 60);
-    const  rhours = Math.floor(hours);
-    const  minutes = (hours - rhours) * 60;
-    const  rminutes = Math.round(minutes);
-    console.log( num + " minutes = " + rhours + " hour(s) and " + rminutes + " minute(s).")
-    const totPrice=Number(rhours*babsetersData.price)
-    const securenumber =  Math.floor(1000 + Math.random() * 9000);
-    const orderid= Math.floor(1000 + Math.random() * 90000);
-    
-    if(totalInminuts<1  || childeArray.length < 1 ){
-        return Alert.alert("تنبيه","الرجاء تحديد موعد  الخدمه و عدد الاطفال")
-     }
-    
-   
-    
-
-    const babseters={
-        scurtycode:securenumber,
-        childe:childeArray,
-        serviestype:babsetersData.mainservice,
-        orderid:orderid,
-        childeaccount:childeArray.length,
-        settterowner:babsetersData.owner,
-        displayname:babsetersData.displayname,
-        time:timeresult,
-         
-        settername:babsetersData.name,
+        if (totalInminuts < 1 || childeArray.length < 1) {
+            return Alert.alert("تنبيه", "الرجاء تحديد موعد  الخدمه و عدد الاطفال")
+        }
+        console.log("test player id",playerid)
         
-        statuse:"processing",
-        reson:"",
-        read:false,
-        start:time,
-        end:time2,
-        potementdate:date,
-        settterfaileid:babsetersData._id,
-        price:babsetersData.price,
-        hours:totalInminuts,
-        totalprice:totPrice,
-        totalhours:rhours,
-        rreservioninfo:reservion
+        const babseters = {
+            scurtycode: securenumber,
+            childe: childrensArray,
+            serviestype: babsetersData.mainservice,
+            orderid: orderid,
+            childeaccount: childeArray.length,
+            settterowner: babsetersData.owner,
+            displayname: babsetersData.displayname,
+            time: timeresult,
+            motherplayerid: playerid,
+            setterplayerid: babsetersData.playerid,
+            settername: babsetersData.name,
+            statuse: "processing",
+            reson: "",
+            read: false,
+            start: time,
+            end: time2,
+            potementdate: date,
+            settterfaileid: babsetersData._id,
+            address:babsetersData.address,
+            price: babsetersData.price,
+            hours: totalInminuts,
+            totalprice: totPrice,
+            totalhours: rhours,
+            rreservioninfo: reservion
+        }
+        props.navigation.navigate('ConfirmRes', { data1: JSON.stringify(babseters) })
     }
-    console.log("tets items**",babseters)
-    props.navigation.navigate('ConfirmRes',{data1:JSON.stringify(babseters)})
-}
-const extraTime=(time,num,index)=>{
-    
-    console.log("test extr",time,"and number",num)
-   const poitmenttime= moment(time) 
-   const endpoitmentime= moment(poitmenttime).add(num,'hour')
-   setTime2(endpoitmentime)
-   setnumcolor(index)
-   console.log("test new time",moment(endpoitmentime).format('hh:mm') )
-   console.log("test new INDEX",index )
-}
+
+
+    const extraTime = (time, num, index) => {
+        const poitmenttime = moment(time)
+        const endpoitmentime = moment(poitmenttime).add(num, 'hour')
+        setTime2(endpoitmentime)
+        slctslots = index
+        setresevButton(true)
+    }
   
+
+
+
 return(
-    <ScrollView contentContainerStyle={{backgroundColor:Colors.white,flex:1} }>
-    <View style={{marginTop: Platform.OS==='android'? Metrics.HEIGHT*0.0941: Metrics.HEIGHT*0.1301,backgroundColor:Colors.white}}>
-        {!loading?
+    <ScrollView contentContainerStyle={{backgroundColor:Colors.AminabackgroundColor,flex:1} }>
+        <Box style={{marginTop: Platform.OS==='android'? Metrics.HEIGHT*0.0941: Metrics.HEIGHT*0.1301,backgroundColor:Colors.white}}>
+            {/* {!loading?
         <FlatList
-        data={subservice}
-        keyExtractor={(item, index) => item + index}
-        renderItem={({ item ,index}) => <Item title={item} i={index} />}
-        style={{marginLeft:11,marginRight:11,backgroundColor:Colors.AminaButtonNew}}
-        horizontal={true}
+            data={subservice}
+            keyExtractor={(item, index) => item + index}
+            renderItem={({ item ,index}) => <Item title={item} i={index} />}
+            style={{marginLeft:11,marginRight:11,backgroundColor:Colors.AminaButtonNew}}
+            horizontal={true}
         />:
-        <View><Spinner accessibilityLabel="جاري تحميل البيانات" size="lg"  color={Colors.loginBlue}/></View>}
-    </View>
+        <View><Spinner accessibilityLabel="جاري تحميل البيانات" size="lg"  color={Colors.loginBlue}/></View>} */}
+        </Box>
+        
+        <Box flexDirection={'row'} alignItems={'center'} height={'141'} width="90%" marginLeft={pixelSizeHorizontal(22)} marginRight={pixelSizeHorizontal(22)} backgroundColor={Colors.bannerColor} marginTop={pixelSizeVertical(4)} borderRadius={20}>
+            {/* <Text style={{ paddingTop: 20, fontWeight: Platform.OS === 'android' ? "300" : "700", fontFamily: Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.base, fontSize: 22, marginLeft: 5, marginBottom: 2 }} >اختر الخدمة</Text>
+            <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.light : Fonts.type.light, fontSize: 18, marginBottom: 10 }}>الرجاء اختيار نوع الخدمه والبدء بانشاء طلبك</Text> */}
+            <Box   flex={2}>
+            <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(24),textAlign:'left',color:"#F5F5F5",marginLeft:pixelSizeHorizontal(23),padding:7} }>أمينة على أطفالك</Text> 
+            </Box>
+            <Image source={Images.motherbanner} style={{height:141,flex:1.2,backgroundColor:Colors.transparent,marginRight:pixelSizeHorizontal(22) }} resizeMode='cover'  />
+        </Box>
     
-    <View>
-        {babsetersData._id && ResWay && <BabyseterProfile/>}
-    </View>
-        
-        
-        <View style={styles.framView}>
-                <View style={{justifyContent:'space-between',flexDirection:'row',padding:3}}>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'  color={Colors.blacktxt} 
-                        fontSize={18} ml="5" mt="1" textAlign='left'>اختر طفلك</Text>
-                </View>
-                <View style={styles.splite}/>
+        {/* <Box backgroundColor={'red.100'}>
+            {babsetersData._id && ResWay && <BabyseterProfile/>}
+        </Box> */}
+    
+        {babsetersData._id && ResWay &&
+            <Box size={'lg'}   w={"100%"} h={"14%"}>
+            <BabyseterProfile/>  </Box>}
+  
+    <View style={styles.framView}>
+        <Box justifyContent={'space-between'} flexDirection='row'  width={widthPixel(375)}  mt={2} >
+            <Stack  flexDirection='row' justifyContent='center' alignItems={'center'}>
+                <Image source={Images.babyface} style={{width:widthPixel(17) ,height:heightPixel(17)}} resizeMode='contain'/>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium}   color={Colors.greentext}
+                fontSize={fontPixel(12)} ml="1"  textAlign='right'>اختر طفلك</Text>
+            </Stack>
+            <Stack  alignItems='baseline' flexDirection={'row'}     >
+                <Image source={Images.chiled} style={{width:widthPixel(17) ,height:heightPixel(17)}} resizeMode='contain'/>
+                <Text style={{marginLeft:5}}> {childrensArray.length}</Text>
+                <Text  fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} fontSize={fontPixel(12)} mr={1}
+                >طفل</Text>
+            </Stack>
+        </Box>
+        <Box flexDirection={'row'}  >
                 {motherch.map((nme,index)=>{
-                   return(  
-                  
-                    <View  style={{justifyContent:'space-between',flexDirection:'row',width:Metrics.WIDTH*0.822,marginLeft:10}} key={nme._id}>
-                    <Text  fontFamily={Fonts.type.light} fontWeight='600'  color={Colors.blacktxt} fontSize={15} ml="5" textAlign='center'>{nme.name}</Text>
-                    <View style={{alignItems:'stretch',flexDirection:"row"}}>
-                   <Text style={styles.leftText}>{nme.diseasses}</Text>
-                    <Checkbox value="test"  size='sm'  onChange={()=> addOrRemove(motherch[index]) } accessibilityLabel="This is a dummy checkbox"/>
-                    </View>
-                    </View>
-                    
+                   return(
+                   <Box   flexDirection='column' ml={pixelSizeHorizontal(5)} key={nme._id}>
+                        <Stack alignItems={'center'} justifyContent='center'   >
+                                {/* <Text style={styles.leftText}>{nme.diseasses}</Text> */}
+                            <Checkbox value="test"   size={'sm'} borderRadius={50} onChange={()=> addOrRemove(motherch[index]) } accessibilityLabel="This is a dummy checkbox" colorScheme='lightBlue' />
+                        </Stack>
+                        <Stack alignItems={'center'} justifyContent='center' mt={2} >
+                            <Text  fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} fontSize={fontPixel(14)} 
+                                color={Colors.blacktxt}   textAlign='center'>{nme.name}</Text>
+                        </Stack>
+                    </Box>
                    )
                 })}
-                <View style={styles.splite}/>
-                <View style={{justifyContent:'space-between',alignItems:'baseline',flexDirection:'row',width:Metrics.WIDTH*0.878,paddingBottom:4}} >
-                       <Text fontFamily={Fonts.type.light} fontWeight='600'  color={Colors.blacktxt} fontSize={14} ml="5" textAlign='center'>عدد الاطفال</Text>
-                       <View style={{flexDirection:'row'}}>
-                        <Text style={{marginRight:5}}> {childeArray.length}</Text>
-                       <Text  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                               fontSize={14} mr={5}> اطفال</Text>
-                       </View>
-                </View>
-                </View> 
-                <View style={styles.framView}>
-                    <View style={{justifyContent:'space-between',flexDirection:'row',width:Metrics.WIDTH*0.822,marginLeft:10,alignContent:"baseline"}}>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'   color={Colors.blacktxt} 
-                          fontSize={15} ml="5" mt="2" textAlign='left'>اختر موعد الخدمة</Text>
-                    <EvilIcons name="pencil" size={33} color={Colors.textZahry} onPress={()=>setShowModal(true)}   />
-                    </View>
-                    <View style={styles.splite}/>
-                    <View style={{flexDirection:'row' ,marginBottom:10  ,alignItems:'baseline'}}>
-                    <Feather name="clock" size={24}  color={Colors.textZahry} style={styles.icon}
-                            onPress={()=>setShowModal(true)}  />
-                    <View style={styles.timeView}>
-                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >{moment(time).format("hh:mm a")}</Text>
-                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >/</Text>
-                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >{moment(time2).format("hh:mm a")}</Text>
-                    </View> 
-                     <View style={styles.datapicker}>
-                        <Feather name="calendar" size={24}  color={Colors.textZahry}  style={styles.icon}
-                                onPress={()=>setShowModal(true)} />
-                      
-                        <Text fontFamily={Fonts.type.medium}   fontSize={15} fontWeight="400" ml="1">{moment(date).format('LL')}</Text>
-                        </View> 
-                    </View>
+
+        </Box>
+        
+                
+    </View> 
+    <View style={styles.framView}>
+        <Box justifyContent={'space-between'} flexDirection='column'  width={widthPixel(375)}  mt={3} >
+            <Box justifyContent={'space-between'} flexDirection='row'    >
+                <Stack alignItems={'baseline'} flexDirection='row' justifyContent={'space-around'} ml={2} >
+                    <Image source={images.calender} style={{width:widthPixel(13),height:heightPixel(14)}}  />
+                                    {/* <EvilIcons name="pencil" size={33} color={Colors.textZahry} }   /> */}
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'   color={Colors.greentext} 
+                                fontSize={fontPixel(12)} ml={2} textAlign='left'>اختر موعد الخدمة</Text>
+                </Stack>
+                <Stack mr={3}>
+                    <TouchableOpacity onPress={()=>setShowModal(true)}   >
+                        <Image source={images.pin} style={{width:widthPixel(16),height:heightPixel(16)}}  />
+                            {/* <EvilIcons name="pencil" size={33} color={Colors.textZahry} }   /> */}
+                    </TouchableOpacity>
+                </Stack>
+            </Box>
+            <Box flexDirection={'row'} mb={10} ml={22} alignItems={'baseline'}>
+                <Image source={images.clock} style={{width:widthPixel(12),height:heightPixel(12)}}  />
+                <Stack  flexDirection={"row"} width={widthPixel(100)} ml={17} >
+                    <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >{moment(time).format("hh:mm a")}</Text>
+                    <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >/</Text>
+                    <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >{moment(time2).format("hh:mm a")}</Text>
+                </Stack> 
+                <Stack   flexDirection={"row"}   alignItems={'baseline'} >
+                    <Image source={images.clenderblack} style={{width:widthPixel(13),height:heightPixel(14),marginLeft:55}}  />
+                    <Text fontFamily={Fonts.type.medium}   fontSize={15} fontWeight="400" ml={17}>{moment(date).format('LL')}</Text>
+                </Stack> 
+            </Box>
+        </Box>
+                    
                     
 
-                </View>
+    </View>
                 {/* 00000000 */}
-
-                <View style={styles.framView}>
-                    <View style={{justifyContent:'space-between',flexDirection:'row',width:Metrics.WIDTH*0.822,marginLeft:10}}>
-                        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'  color={Colors.blacktxt} 
-                              fontSize={15} ml="5" mt="2" textAlign='left'>الموقع
-                        </Text>
-                        
-                    </View>
-                    <View style={styles.splite}/>
-                    <View style={{flexDirection:'row',marginLeft:3 ,justifyContent:'space-around',marginBottom:2,marginTop:5,alignItems:'baseline'}}>
-                        
-                        <View style={styles.mapTextView}>
-                            <Text fontFamily={Fonts.type.aminafonts} textAlign='left' fontSize={12} color="#2E2E2E" >{location}</Text>
-                            <EvilIcons name="pencil" size={33} color={Colors.textZahry} onPress={()=>props.navigation.push("Mapscreen")}   />
-                        </View> 
-                        
-
-                        
-                    </View>
-                        <TouchableOpacity onPress={()=>props.navigation.push("Mapscreen")} style={styles.mapTextView}>
-                            <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} color="#2E2E2E" >اضف هنا عنوان جديد</Text>
-                        </TouchableOpacity> 
-                    </View>
-                  
-
-                    <View style={{flexDirection:'row-reverse',width:Metrics.WIDTH*0.8716,height:Metrics.HEIGHT*0.087,justifyContent:'space-around',marginLeft:20,marginTop:10
-                                ,position:'absolute',bottom:10}}>
-                    < TouchableOpacity onPress={()=>ConfirmScreen()}   
-                            style={styles.endButton}>
-                    <Text fontFamily={Fonts.type.light} fontWeight="400" color={Colors.AmonaButtontext} fontSize="18" mt="3" justifyContent={'space-around'}>التالي</Text>
+    <View style={styles.framView}>
+            <Box justifyContent={'space-between'} flexDirection='column'  width={widthPixel(375)}  mt={3} >
+            <Box justifyContent={'space-between'} flexDirection='row'>
+                <Stack flexDirection={'row'} ml={2} alignItems='baseline'>
+                    <Image source={images.location} style={{width:widthPixel(13),height:heightPixel(14)}}  />
+                   
+                    <Text fontFamily={Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium}  color={Colors.greentext}
+                        fontSize={fontPixel(12)} ml="1" mt="2" textAlign='left'>الموقع</Text>
+                </Stack>
+                <Stack flexDirection={'row'} mr={2} alignItems='baseline' justifyContent={'space-between'}>
+                    <Text fontFamily={Platform.OS === 'android'? Fonts.type.medium : Fonts.type.medium}  color={Colors.textZahry}
+                        fontSize={fontPixel(12)} ml="1" mr={2} mt="2" textAlign='left'>اضف عنوان جديد</Text>
+                    <TouchableOpacity  onPress={() => props.navigation.push("Mapscreen")}>
+                        <Image source={images.pin} style={{width:widthPixel(13),height:heightPixel(14)}}  />
                     </TouchableOpacity>
-                    < TouchableOpacity onPress={()=> props.navigation.goBack() }   
-                            style={styles.endButton2}>
-                    <Text fontFamily={Fonts.type.light} fontWeight="400" color={Colors.AmonaButtontext} fontSize="18" mt="3" justifyContent={'space-around'} >السابق</Text>
-                    </TouchableOpacity>
-                     
-                    </View>
-
-
-        <Center>
-            <KeyboardAvoidingView behavior={Platform.OS==='android'?'height':"padding"}>
-            <Modal  isOpen={showModal} onClose={() => setShowModal(false)}
-            borderColor={Colors.white} 
-            avoidKeyboard justifyContent="flex-end" bottom="4">
-            <Modal.Content width={Metrics.WIDTH*0.9711}  h={Metrics.HEIGHT*0.6922} backgroundColor='white'>
+                </Stack>
+            </Box>
+            <Box flexDirection={'row'} justifyContent='space-around' ml={1}  mt={pixelSizeVertical(5)}  alignItems={'baseline'}>
+                <Stack  >
+                    <Text fontFamily={Fonts.type.aminafonts} textAlign='left' fontSize={12} color={Colors.newTextClr} >{location}</Text>
+                </Stack>
+            </Box>
+            </Box>
+        </View>
+       
+    <Box flexDirection='row' width={widthPixel(388)} height={heightPixel(100)} justifyContent='space-around' alignItems={'center'} ml={'3'} mt={4}
+            position='absolute' bottom={10} >
+        <OutlaintButton
+            buttonColor={Colors.transparent}
+            title="السابق"
+            titleColor={Colors.greentext}
+            buttonStyle={{width: '44%', alignSelf: 'center',borderRadius:15}}  
+            textStyle={{fontSize:fontPixel(16) }}  
+            onPress={()=> props.navigation.goBack()}
+        />
+        <CustomButton
+            buttonColor={Colors.textZahry}
+            title="التالي"
+            buttonStyle={{width: '44%', alignSelf: 'center',borderRadius:15}}                       
+            textStyle={{fontSize:fontPixel(16) }}
+            onPress={() =>ConfirmScreen()}
+        />
+        
+    </Box>
+    
+     <Center>
+         
+        <Modal  isOpen={showModal} onClose={() => setShowModal(false)}
+                borderColor={Colors.white} backgroundColor={Colors.transparent}
+                avoidKeyboard justifyContent="flex-end" bottom="4">
+            <Modal.Content width={Metrics.WIDTH }  height={heightPixel(646)} backgroundColor={Colors.AminabackgroundColor}>
             <Modal.CloseButton />
-            <Modal.Header backgroundColor={Colors.AminaButtonNew}>
-                    <View>
-                        <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={18} fontWeight="400"
-                            textAlign={'center'} color='white'>حددي وقت الخدمة</Text>
-                    </View>
-            </Modal.Header>
-            <Modal.Body>
-                <Box alignItems={'center'} w='100%' mt={1}  >
-                    <Heading fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize='18' fontWeight={Platform.OS==='android'?"bold":'400'} marginTop={7}  >
-                        حددي موعد الخدمة وعدد الساعات التي ترغبينها
-                    </Heading>
-                </Box>
-                <View style={{justifyContent:'center',flexDirection:'row',marginLeft:1 ,marginTop:5}}>
-                    <Stack   w="66%"  alignItems="center" marginTop={5} flexDirection='row' textAlign={'center'} >
-                        <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={18} fontWeight="400" mr={1} >اليوم</Text>
-                    {datePicker ? (
-                        <DateTimePicker
-                            value={date}
-                            mode={'date'}
-                            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                            is24Hour={false}
-                            dateFormat={"day month year"}
-                            onChange={onDateSelected}
-                            style={styles.datePicker}
-                        />):(<Input isReadOnly={true} h={Metrics.HEIGHT*0.0682} textAlign={'center'}  value={moment(date).format("LL")}
-                            fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                            w={{base: Platform.OS==='android'? "75%":"80%" , md: "15%" }}   onPressIn={()=>setDatePicker(!datePicker)}
-                            borderColor={Colors.black} fontSize={'lg'}  
-                            InputLeftElement={<Icon as={ !datePicker && (<Feather name="calendar"  onPress={()=>setDatePicker(!datePicker)}/>  ) }
-                            size={'lg'} ml="4"   color={Colors.textZahry} />}
-                            color={Colors.blacktxt}  placeholder="تاريخ الخدمة" /> 
-                         )}
-                    </Stack>
-                    
-                    <Box flexDirection={'row'} ml={Platform.OS==='android'?1:1}   marginTop={3} alignItems={'center'} >
-                            <TouchableOpacity  onPress={()=>setOpen(true)} style={{width:Platform.OS==='android'?Metrics.WIDTH*0.231:Metrics.WIDTH*0.311,justifyContent:Platform.OS==='android'?'flex-start':'space-around',  marginTop:5, flexDirection:'row'  }}   >
-                                {/* <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
-                                    fontSize={15} fontWeight="400"    color={Colors.black}  
-                                    w={Platform.OS==='android'? "26%": "22%"} >الوقت</Text> */}
-                                <Input 
-                                    h={Metrics.HEIGHT*0.0682} isReadOnly={true}  textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'}
-                                    value={moment(time).format("LT") }
-                                    fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                                    w={{base:Platform.OS==='android'?"95":"80%",md: "20%"}}   onPressIn={()=> setOpen(true)}
-                                    InputLeftElement={<Icon as={ (<Feather name="clock"   onPress={()=>setOpen(true)} />   )} 
-                                    size={Platform.OS==='android'?'lg':'lg'} ml="2"   color={Colors.textZahry}/>} 
-                                    color={Colors.blacktxt}  />
-                                    <DatePicker
-                                        mode='time'
-                                        modal
-                                        theme='light'
-                                        minuteInterval={30}
-                                        open={open}
-                                        date={time}
-                                        onConfirm={(date) => {
-                                            setTime(date)
-                                            setOpen(false)
-                                         }}
-                                        onCancel={() => {
-                                        setOpen(false)
-                                        }}
-                                    />
-                            </TouchableOpacity>
+            <Modal.Body flexDirection={'column'}  height={heightPixel(400)} >
+                <View style={{justifyContent:'space-around',marginLeft:1 ,marginTop:10 }}>
+                    <Box flexDirection={'row'}  mt={10} justifyContent='space-around'>
+                        <Stack  backgroundColor={Colors.textZahry}  w={Platform.OS==='android'? widthPixel(170):widthPixel(190)}
+                            borderRadius={15}    h={heightPixel(65)} alignItems='center'   mr={19} flexDirection='row'  justifyContent={'center'} >
+                            <Image source={images.yellowpin} style={{width:widthPixel(16),height:heightPixel(16),marginRight:7}}  />
+                            {datePicker ? (
+                            <DateTimePicker
+                                value={date}
+                                mode={'date'}
+                                display={Platform.OS === 'ios' ? 'compact' : 'default'}
+                                is24Hour={false}
+                                dateFormat={"day month year"}
+                                onChange={onDateSelected}
+                                style={styles.datePicker}
+                            />):(
+                                <TouchableOpacity onPress={ ()=>setDatePicker(!datePicker)}>
+                                    <Text fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} color={Colors.goldText} >
+                                        {moment(date).format("dddd")}  {moment(date).format(" LL")}</Text>
+                                </TouchableOpacity>
                             
-                            {/* <TouchableOpacity   onPressIn={()=> setOpen2(true)} style={{width:Platform.OS==='android'?Metrics.WIDTH*0.391:Metrics.WIDTH*0.423,justifyContent:Platform.OS==='android'?'flex-start':'space-around',  marginTop:5, flexDirection:'row'  }}   >
-                                <Text  fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base}
-                                        fontSize={15} fontWeight="400"  mt={4} color={Colors.red}
-                                         w={Platform.OS==='android'? "26%": "20%"} >الى</Text>
-                                    
-                                <Input 
-                                     h={Metrics.HEIGHT*0.0682} isReadOnly={true} textAlign={'right'} borderColor={Colors.blacktxt} fontSize={'md'} value={moment(time2).format("LT")}
-                                     w={{ base:Platform.OS==='android'?"95":"75%",md: "20%"}}  onPressIn={()=> setOpen2(true)  }
-                                    fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'
-                                    InputLeftElement={<Icon as={<Feather name="clock" onPress={()=>setOpen2(true) }/>} color={Colors.textZahry} size={Platform.OS==='android'?'sm':'lg'} ml="4" />} 
-                                    color={Colors.blacktxt} />
-                                <DatePicker
-                                        mode='time'
-                                        modal
-                                        theme='light'
-                                        minuteInterval={40}
-                                        open={open2}
-                                        date={time2}
-                                        onConfirm={(date) => {
-                                            setTime2(date)
-                                            setOpen2(false)
-                                         }}
-                                        onCancel={() => {
-                                        setOpen2(false)
-                                        }}
-                                    />
-                                    
-                            </TouchableOpacity> */}
-                        </Box>
+                                // <Input isReadOnly={true} h={heightPixel(22)} textAlign={'right'}  value={moment(date).format("LLLL")}
+                                //     fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} tintColor='amber.100'
+                                //     w={Platform.OS==='android'?60:158}   onPressIn={()=>setDatePicker(!datePicker)}
+                                //     borderColor={Colors.black} fontSize={fontPixel(16)} font   bgColor={Colors.textZahry}
+                                //     // InputLeftElement={<Icon as={ !datePicker && (<Feather name="calendar"  onPress={()=>setDatePicker(!datePicker)}/>  ) }
+                                //     // size={'lg'} ml="4"   color={Colors.textZahry} />}
+                                //        placeholder="تاريخ الخدمة" /> 
+                            )}
+                        </Stack>
                         
+                        <Stack backgroundColor={Colors.textZahry} flexDirection={'row'} ml={Platform.OS==='android'?1:1}  w={Platform.OS==='android'? widthPixel(130):widthPixel(150)}
+                            borderRadius={15}     h={heightPixel(65)} alignItems='center'  justifyContent={'center'}   >
+                            <TouchableOpacity  onPress={()=>setOpen(true)} style={{width:Platform.OS==='android'? widthPixel(130):widthPixel(89) ,height:heightPixel(30),justifyContent:Platform.OS==='android'?'center':'center',alignItems:'center', flexDirection:'row'  }}   >
+                                <Image source={images.yellowpin} style={{width:widthPixel(16),height:heightPixel(16),marginRight:7}}  />
+                                <Text fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} color={Colors.goldText}
+                                        textAlign={'center'} fontSize={fontPixel(16)} backgroundColor='warning.700' >
+                                        {moment(time).format("LT A")} </Text>
+                                <DatePicker
+                                mode='time'
+                                modal
+                                theme='light'
+                                minuteInterval={30}
+                                open={open}
+                                date={time}
+                                onConfirm={(date) => {setTime(date) 
+                                            setOpen(false)}}
+                                onCancel={() => {setOpen(false)}}
+                                />
+                                </TouchableOpacity>
+                        </Stack>
+                    </Box>
                 </View>
-                <View style={{marginTop:20,alignItems:'center'}}>
-                    
-                    <Box flexDirection={'column'} mt={5}>
-                   <Stack alignItems={'center'} >
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize='18' fontWeight={Platform.OS==='android'?"bold":'400'} >
-                        عدد ساعات الخدمة
-                    </Text>
-                   </Stack>
-                   <Stack  flexDirection={'row'}>
-                   {timeslots.map((slot,index)=>{
-                        return(
-                            <TouchableOpacity onPress={()=>extraTime(time,slot.time,index) }
-                            style={{flexDirection:"column", backgroundColor:Colors.amin1Button1,alignItems:'center',padding:2,
-                                    borderTopEndRadius:10,borderBottomStartRadius:20,width:Metrics.WIDTH*0.1192,height:Metrics.HEIGHT*0.0732,marginLeft:10}}    key={slot.id}>
-                            <Text fontFamily={Fonts.type.aminafonts} fontSize={18} color={numcolor===index? Colors.bloodOrange:Colors.white} fontWeight='400' textAlign={'center'}  backgroundColor={Colors.banner} >{slot.time} </Text>
-                            <Text fontFamily={Fonts.type.aminafonts} fontSize={14} color={numcolor===index? Colors.bloodOrange:Colors.white} fontWeight='400' textAlign={'center'}>
+
+                <View style={{marginTop:Platform.OS==='android'?16:pixelSizeVertical(30) ,width:widthPixel(370),height:heightPixel(113),backgroundColor:Colors.AminabackgroundColor}}>
+                    <Box flexDirection={'column'}  >
+                        <Stack   alignItems={'flex-start'} width={widthPixel(370)}>
+                            <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(16)}
+                                textAlign='right' >
+                                عدد ساعات الخدمة
+                            </Text>
+                        </Stack>
+                        <Stack  flexDirection={'row'}   alignItems='center'  justifyContent={'space-around'} mr={Platform.OS==='android'?8:1} >
+                                {timeslots.map((slot,index)=>{
+                                return(
+                                
+                                    <Box key={slot.id} backgroundColor={slctslots===index? "#F38193":Colors.white} borderRadius='md'  alignItems={'center'} justifyContent='center'
+                                            w={widthPixel(10)} height={heightPixel(40)} ml={Platform.OS==='android'?pixelSizeVertical(18): pixelSizeVertical(2)} mr={pixelSizeVertical(3)} mt={pixelSizeHorizontal(28)}  >
+                                        <TouchableOpacity  key={slot.id} style={{width:widthPixel(33),height:heightPixel(36),justifyContent:'center',alignItems:'center' }}   onPress={()=>extraTime(time,slot.time,index) } >
+                                            <Text alignSelf={'center'} fontSize={fontPixel(15)} color={"#000000"}>{slot.time}</Text>
+                                        </TouchableOpacity>
+                                        
+                                    </Box>
+                               
+                                )
+                            })}
+                                {/* {timeslots.map((slot,index)=>{
+                                    return(
+                                <TouchableOpacity onPress={()=>extraTime(time,slot.time,index) }
+                                        style={{flexDirection:"column", backgroundColor:Colors.amin1Button1,alignItems:'center',padding:2,
+                                        borderTopEndRadius:10,borderBottomStartRadius:20,width:Metrics.WIDTH*0.1192,height:Metrics.HEIGHT*0.0732,marginLeft:10}}    key={slot.id}>
+                                    <Text fontFamily={Fonts.type.aminafonts} fontSize={18} color={numcolor===index? Colors.bloodOrange:Colors.white} fontWeight='400' textAlign={'center'}  backgroundColor={Colors.banner} >{slot.time} </Text>
+                                    <Text fontFamily={Fonts.type.aminafonts} fontSize={14} color={numcolor===index? Colors.bloodOrange:Colors.white} fontWeight='400' textAlign={'center'}>
                                     {slot.time.toString() === "2" ? "ساعة ":"ساعات"}</Text>
-                            </TouchableOpacity>
-                        )
-                    })}
+                                </TouchableOpacity>
+                                )
+                    })} */}
                    </Stack>
                 </Box>
                 </View>
             </Modal.Body>
             
-            <Modal.Footer alignItems={'center'} justifyContent='space-around'>
-                <View style={{flexDirection:'column' ,marginBottom:3,alignItems:'center'}}>
-                    <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} alignItems={'center'} fontWeight={Platform.OS==='android'?"bold":'400'}
-                     color="#2E2E2E">
-                       تفاصيل موعد الخدمة</Text>
-                <Box flexDirection={"row"} justifyContent='space-around'   w={Metrics.WIDTH*0.722}>
-                    <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color="#2E2E2E" alignItems={'flex-start'}>
-                        تاريخ الخدمة</Text>
-                    <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color="#2E2E2E" alignItems={'flex-end'}>
-                      {moment(date).format('LL')}</Text>
+            <Modal.Footer alignItems={'center'} justifyContent='space-around'  backgroundColor={Colors.AminabackgroundColor} height={Metrics.HEIGHT*0.281}>
+                <Box  flexDirection={'column'} marginBottom={3} alignItems={'center'}>
+                    <Stack alignItems={'center'}>
+                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium} alignItems={'center'} color={Colors.newTextClr}
+                            textAlign='center'>
+                            تفاصيل  الخدمة </Text>
+                    </Stack> 
+                    <Box flexDirection={'row'} justifyContent='space-around' width={widthPixel(388)} mt={7}>
+                        <Stack flexDirection={"row"} >
+                            <Image source={images.clenderblack} style={{width:widthPixel(16),height:heightPixel(16),marginRight:8}}  />
+                            <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.newTextClr} alignItems={'flex-end'}>
+                                {moment(date).format('dddd')}</Text>
+                            <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.newTextClr} alignItems={'flex-end'}>
+                                {moment(date).format('LL')}</Text>
+                        </Stack>
+                        <Stack flexDirection={'row'} >
+                            <Stack flexDirection={'row'}>
+                                <Image source={images.clock} style={{width:widthPixel(16),height:heightPixel(16),marginRight:8}}  />
+                                <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium} color={Colors.newTextClr} alignItems={'flex-end'}>
+                                    {moment(time).format('hh:mm a')}</Text>
+                            </Stack>
+                            <Stack flexDirection={'row'}   >
+                                <Image source={images.clockred} style={{width:widthPixel(16),height:heightPixel(16),marginLeft:8}}  />
+                                <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium} color={Colors.newTextClr} marginLeft={2}> 
+                                {moment(time2).format('hh:mm a')}</Text>
+                            </Stack>
+                        </Stack>
+                    </Box>
                 </Box>
-
-                <Box flexDirection={"row"} justifyContent={'space-around'} w={Metrics.WIDTH*0.722}>
-                    <Box alignItems={'flex-start'}>
-                         <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color="#2E2E2E" alignItems={'flex-start'} >
-                            تتم خدمتك من</Text>
-                    </Box>
-                    
-                        <Box justifyContent={'space-around'} flexDirection='row'>
-                            <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.darktext} alignItems={'flex-end'}>
-                                {moment(time).format('hh:mm a')}</Text>
-                            <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.darktext} >الى</Text>
-                            <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.darktext}>
-                            {moment(time2).format('hh:mm a')}</Text>
-                        </Box>
-                    </Box>
-
-                    {/* <Box flexDirection={"row"} justifyContent={'space-around'} w={Metrics.WIDTH*0.722} >
-                        <Text  fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color="#2E2E2E">
-                            مدة حجز</Text>
-                        <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' 
-                             color={Colors.textZahry}  >
-                            {calclutDiff()}
-                        </Text>
-                    </Box> */}
-                </View>
             
-                <View style={{width:Metrics.WIDTH*0.893}}>
-                    {/* <Button bgColor={Colors.amin1Button1} size={'lg'} onPress={() => {
-                        confirmReservisionTime() }}
-                    > تم</Button> */}
-                     <CustomButton
-                        buttonColor={Colors.AminaButtonNew}
-                        title="تم"
-                        buttonStyle={{width: '90%', alignSelf: 'center'}}
+                <Box width={widthPixel(388)} alignItems={'center'} mt={20}>
+                   
+                     {resevButton?<CustomButton
+                        buttonColor={Colors.textZahry}
+                        title="تاكيد الطلب"
+                        buttonStyle={{width: '90%', alignSelf: 'center',borderRadius:15 }}
                         textStyle={{fontSize: 20}}
                         onPress={() =>confirmReservisionTime()}
-                    />
-                </View>
+                    />:
+                    <Box width={"80%"} height={'24%'} alignItems='center' mt={3} flexDirection={'row'} backgroundColor={Colors.transparent}>
+                        <EvilIcons name='exclamation' color={Colors.blacktxt} size={26} style={{marginRight:10,marginLeft:10}}/>
+                        <Text  color={Colors.textZahry}  >لاكمال الحجز حددي ساعات الخدمة</Text>
+                    </Box>}
+                     
+                </Box>
             </Modal.Footer>
           </Modal.Content>
         </Modal>
-        </KeyboardAvoidingView>
+         
       </Center>
                  
     </ScrollView>
@@ -1079,3 +1013,76 @@ export default Fourm1;
 
  </View>
 </View> */}
+
+
+
+
+
+
+//////profile seettet 
+
+
+            // <Box borderWidth=".3"  bgColor={Colors.white} borderColor="#00ABB9" borderRadius="sm"  pr="5" py="2" ml="3" mr="5"  width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.185}>
+            //   <HStack space={3} justifyContent='space-around' key={babsetersData._id}>
+            //     <Image  source={{ uri: `${URL}/users/${babsetersData.owner}/avatar`}} resizeMode='stretch' 
+            //     style={{width: Metrics.WIDTH*0.261, height: Metrics.HEIGHT*0.140,marginLeft:5,marginRight:20,borderBottomLeftRadius:10}} />
+            //     <Spacer />
+                
+            //     <VStack flexDirection={'column'}   alignItems={'flex-start'} >
+            //       <Text  color= "#000000"
+            //        fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" >
+            //         {babsetersData.displayname}
+            //       </Text>
+            //       <Text color= "#000000"fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400"  mr={6}>
+            //         {babsetersData.mainservice}
+            //       </Text>
+            //       <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
+            //        <AirbnbRating
+            //              selectedColor={Colors.TexTPink}
+            //             //onFinishRating={(e)=>ratingCompleted(e)}
+            //             style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
+            //             ratingCount={5}
+            //             imageSize={20}
+            //             size={15}
+                        
+            //             ratingBackgroundColor={"#BFD1D6"}
+            //             ratingColor={"#F38193"}
+            //             tintColor={"#FFFFFF"}
+            //             showRating ={false}
+            //             starContainerStyle={styles.ratingContainerStyle}
+            //             isDisabled 
+            //     />
+            //     <Box>
+            //        <Text color= "#000000" fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} >التقييم {babsetersData.rate ? Math.floor(babsetersData.rate):0}</Text>
+            //     </Box>
+               
+                
+            //     </VStack>
+                  
+            //     <Box>
+            //       {hourswork&& <Text color= "#000000" >{HOURSWORK} ساعة عمل</Text>}
+            //     </Box>
+            //     <Box>
+            //     <Text   color= "#000000" fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} >
+            //       تكلفة الخدمه بالساعه {babsetersData.price} ريال
+            //     </Text>
+            //     <HStack backgroundColor={'amber.200'}>
+                
+            //     </HStack>
+               
+            //     </Box>
+
+            //     </VStack>
+                
+            //     <Spacer />
+            //     <TouchableOpacity onPress={()=>setlike(!like)}>
+            //       <Image source={like? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
+            //     </TouchableOpacity>
+
+                 
+                
+                
+            //   </HStack>
+              
+              
+            // </Box> 

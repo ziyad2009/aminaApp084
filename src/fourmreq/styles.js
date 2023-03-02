@@ -1,7 +1,7 @@
 
  
 import {StyleSheet,I18nManager, Platform} from 'react-native'
-import { Metrics,Colors, Fonts } from '../assets/Themes';
+import { Metrics,Colors, Fonts, widthPixel, heightPixel } from '../assets/Themes';
 
 const styles = StyleSheet.create({
     container: {
@@ -34,13 +34,15 @@ const styles = StyleSheet.create({
     },
     framView:{
         flexDirection:'column' ,
-         marginLeft:11,
-         marginRight:11,
-         borderColor:"#214F5E",
-         borderWidth:1,
-         marginTop:10,
+         marginLeft:20,
+         marginRight:20,
+         borderColor:Colors.white,
+         borderWidth:.2,
+         marginTop:15,
          alignItems:'flex-start',
-         backgroundColor:Colors.white
+         backgroundColor:Colors.white,
+         width:widthPixel(380),
+         height:heightPixel(100)
     },
     datapicker:{
 
@@ -265,9 +267,10 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: Metrics.WIDTH* 0.817,
-    height: Metrics.HEIGHT*0.1921,
+    width: Metrics.WIDTH ,
+    height: Metrics.HEIGHT*0.3921,
     display: 'flex',
+    backgroundColor:Colors.transparent
     
   },
  

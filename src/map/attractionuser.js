@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Geolocation from 'react-native-geolocation-service';
 import { StyleSheet, View, PermissionsAndroid,Image, Platform ,AppState, TouchableOpacity} from 'react-native'
-import { Metrics, Colors, Fonts, Images } from "../assets/Themes/"
+import { Metrics, Colors, Fonts, Images, heightPixel, widthPixel } from "../assets/Themes/"
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { Box, Button, Spinner ,Stack,Text} from "native-base";
@@ -336,7 +336,7 @@ const Attractionuser = (props) => {
     }
 
       
-      <Box position={'absolute'} bottom={1}  flexDirection='row' backgroundColor={Colors.AminaButtonNew} borderRadius={22}
+      <Box position={'absolute'} bottom={1}  flexDirection='row' backgroundColor={Colors.AminaPinkButton} borderRadius={22}
             justifyContent='space-around'  
             height={Metrics.HEIGHT*0.08211} width={Metrics.WIDTH*0.93473} marginLeft={2} marginRight={2}>
 
@@ -348,7 +348,7 @@ const Attractionuser = (props) => {
        
 
         <Stack borderColor={'black'}  marginTop={4} flexDirection={'row'}   >
-          <Image source={Images.caricon} resizeMode='contain' style={{height:50,width:50 }}/>
+          <Image source={Images.caricon2} resizeMode='contain' style={{height:heightPixel(22),width:widthPixel(22) }}  />
             <Stack flexDirection={'row'} marginTop={2}>
             <Text fontFamily={Fonts.type.medium} fontSize={Fonts.moderateScale(12)} color={Number(Distance)<=2 ?Colors.bloodOrange:Colors.white}  >  {Distance} km  </Text>
             <Text fontFamily={Fonts.type.medium} fontSize={Fonts.moderateScale(12)} color={Colors.white}  >  {Time} min</Text>

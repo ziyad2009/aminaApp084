@@ -1,13 +1,13 @@
 import React, { useState ,useEffect,useRef,useContext} from 'react';
 import PhoneInput from "react-native-phone-number-input";
 import styles from "./styles";
-import { Images,Colors ,ApplicationStyles, Metrics, Fonts} from "../assets/Themes/";
-import { View ,Image,Text,TouchableOpacity,Platform} from 'react-native';
+import { Images,Colors ,ApplicationStyles, Metrics, Fonts, fontPixel, pixelSizeVertical} from "../assets/Themes/";
+import { View ,Image,TouchableOpacity,Platform} from 'react-native';
 import images from '../assets/Themes/Images';
 import  api from '../services/api'
 import  {UserContext} from '../services/UserContext';
 import CustomButton from '../services/buttons/buttton';
-import { Spinner } from 'native-base';
+import { Spinner, Stack ,Text} from 'native-base';
   
 
 const Singin=(props)=>{
@@ -48,18 +48,21 @@ const Singin=(props)=>{
       
 
      const isValidNo = async()=>{
+      const number = phoneInput.current.state.number.replace( /^0/gi, '');
       const checkValid = phoneInput.current?.isValidNumber(value);
               setShowMessage(true);
               setValid(checkValid ? checkValid : false);
-              checkValid ? loginByPhone(`966${phoneInput.current.state.number}`):null;
-              setphoneNo(`966${phoneInput.current.state.number}`)
+              
+              checkValid ? loginByPhone(`966${number}`):null;
+              setphoneNo(`966${number}`)
           
 
      }
      const loginByPhone=async ( )=>{
       //console.log("from login Start login by phone",phoneInput.current.state.number )
+      const number = phoneInput.current.state.number.replace( /^0/gi, '');
       setloadform(true)
-      await loginbyphone(`966${phoneInput.current.state.number}`).then((res)=>{
+      await loginbyphone(`966${number}`).then((res)=>{
         console.log("Respon DATA froo Function",res)
         
       })
@@ -70,7 +73,7 @@ const Singin=(props)=>{
 
      const GoScreen= async()=>{
        //navigation.navigate('AuthScreen', {'role' : role});
-       console.log("Start Go screen")
+       
        try{
         const userdata= await user
         console.log("User Data not store ",regUser)
@@ -94,13 +97,19 @@ const Singin=(props)=>{
     
      
     
-        return(
+    return(
     <View style={{ alignItems:'center',backgroundColor:Colors.white ,flex:1}}>
         <Image source={images.aminamainlogo} resizeMode='contain'
             style={ styles.mainlogo} />
          
-
+        <Stack mt={pixelSizeVertical(53)}>
+        <Text fontFamily={Fonts.type.medium} fontSize={fontPixel(24)} color={"#214F5E"}>تطبيق أمينة</Text>
+        </Stack>
          <View style={styles.inputFieldSec} >
+
+        <Stack alignItems={'flex-start'}   width={"80%"}>
+          <Text fontFamily={Fonts.type.regular} fontSize={fontPixel(14)} color={"#2E2E2E"}>رقم الجوال</Text>
+        </Stack>
         <PhoneInput
             ref={phoneInput}
             defaultValue={value}
@@ -108,37 +117,38 @@ const Singin=(props)=>{
             keyboardType="phone-pad"
             layout='second'
             onChangeText={(text) => {
-              setValue(text);
+              const value = text.replace( /^0/gi, '');
+              console.log('zeroo',value)
+              setValue(value);
+             
             }}
             onChangeFormattedText={(text) => {
               setFormattedValue(text);
             }}
-            placeholder="ادخل رقم الجوال" 
+            placeholder="5xxxxxxxx" 
              textContainerStyle={{backgroundColor:Colors.white,marginTop:2}}
-             textInputStyle={{}}
-           // textInputStyle={Platform.OS==='ios'?{ fontWeight:"200",fontFamily:Fonts.type.base,color:Colors.blacktxt}:
-             //               {fontSize:20, height:Metrics.HEIGHT*0.0626,backgroundColor:Colors.white,fontWeight:"200",}}
-            // containerStyle={{marginTop:20}}
+             textInputStyle={{fontSize:Platform.OS==='android'?18: 20}}
             containerStyle={{ backgroundColor:Colors.white ,alignContent:'flex-end'}} 
             withDarkTheme
             withShadow
             autoFocus
+            
           />
          
            
         </View>
         <CustomButton
-        
+        buttonColor={Colors.textZahry}
         titleColor={Colors.white}
         title="تسجيل الدخول"
-        buttonStyle={{width: '80%', alignSelf: 'center'}}
-        textStyle={{fontSize: 20}}
+        buttonStyle={{width: '80%', alignSelf: 'center',borderRadius:10}}
+        textStyle={{fontFamily:Fonts.type.medium,fontSize:fontPixel(16)}}
         onPress={()=> isValidNo()}
       />
             
               <View style={{marginTop:14}}>
-                  <Text style={{fontFamily:Fonts.type.sembold,fontSize:15,color:Colors.textZahry,fontWeight:"400"}}>بالتسجيل انتي توافقين على </Text>
-                  <Text style={{fontFamily:Fonts.type.sembold,fontSize:15,color:Colors.textZahry,fontWeight:"400"}}> شروط واحكام تطبيق امينة</Text>
+                  <Text  fontFamily={Fonts.type.regular} fontSize={fontPixel(14)} color={Colors.newTextClr} >بالتسجيل انتي توافقين على شروط واحكام تطبيق امينة </Text>
+                   
               </View>
 
               {erorrmesage && <View style={{marginTop:40}}>

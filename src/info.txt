@@ -5,3 +5,62 @@ https://github.com/Agontuk/react-native-geolocation-service
  npx react-native link 
 
  
+ solve proplem of onsignal
+ @guilhermecampossilva9 Your post saved me alot of headache, as it seems to have solved this.
+
+Notes:
+
+I'm using Version 4.5.0 of One Signal React Native and 0.66.4 RN.
+My app was crashing immediately after launch on the simulator
+I was getting a dyld__abort_with_payload error
+I went to my main target and then to General > Frameworks, Libraries, and Embedded Content
+Here OneSignalNotificationServiceExtension.appex was already present.
+I needed to add:
+OneSignalCore.xcframework - Embed & Sign
+OneSignalOutcomes.xcframework - Embed & Sign
+The OneSignal folks should probably be adding this to their react-native setup documentation found here.
+
+
+/// got sign in problem when using xcode 14+
+Thanks for the information, it helped me to put together a solution for App Center.
+
+This one will automatically grab the team identifier and projects:
+
+post_install do |installer|
+  # Run the React-Native post install
+  react_native_post_install(installer, :mac_catalyst_enabled => false)
+  __apply_Xcode_12_5_M1_post_install_workaround(installer)
+
+  # Get the development team id from the main project
+  dev_team_id = ""
+  project = installer.aggregate_targets[0].user_project
+  project.targets.each do |target|
+    target.build_configurations.each do |config|
+      if dev_team_id.empty? and !config.build_settings['DEVELOPMENT_TEAM'].nil?
+        dev_team_id = config.build_settings['DEVELOPMENT_TEAM']
+      end
+    end
+  end
+
+  # Reconfigure the pods, update deployment target and signing settings
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      if target.respond_to?(:product_type) and target.product_type == 'com.apple.product-type.bundle'
+        config.build_settings['DEVELOPMENT_TEAM'] = dev_team_id
+        config.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Distribution';
+        config.build_settings['CODE_SIGN_STYLE'] = 'Manual';
+      end if
+
+      config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+    end
+  end
+end
+Note: I also remove the deployment target from the Pods projects to prevent a few warnings, but you can remove that line if you want. It is not relevant for this issue.
+
+
+
+
+Key	Token	
+Server key	AAAAgYPBdmY:APA91bH4G-BPhJtdqHUdRU-l4LCLQuHNKDG0aDifhliuVIzXhPGevHxk9fOPJtEzPOy7Wm5xBsBM_imtVQE-i0c0WubazPGmDFVU-fRf2SznJ6gTIMpEOXiaIBjR9wRDEyDhPtxmFePY	
+Sender ID
+556261275238

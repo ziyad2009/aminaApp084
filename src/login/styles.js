@@ -7,7 +7,7 @@ inputFieldSec: {
     height: Metrics.HEIGHT * 0.0950,
     justifyContent: "flex-end",
     alignItems: "center",
-    marginTop:Metrics.HEIGHT*0.0852
+    marginTop:Metrics.HEIGHT*0.0252
   },
   mainlogo:{
     alignItems:'center',

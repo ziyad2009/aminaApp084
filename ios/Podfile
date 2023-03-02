@@ -10,6 +10,11 @@ rn_maps_path = '../node_modules/react-native-maps'
 pod 'react-native-google-maps', :path => rn_maps_path
 pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
+#React native Permisions 
+permissions_path = '../node_modules/react-native-permissions/ios'
+
+pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+
   config = use_native_modules!
 
   use_react_native!(
@@ -32,5 +37,37 @@ pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-
   
   post_install do |installer|
     react_native_post_install(installer)
+      ################### ADD THE FOLLOWING #########################
+      # Run the React-Native post install
+           
+          # Get the development team id from the main project
+          dev_team_id = ""
+          project = installer.aggregate_targets[0].user_project
+          project.targets.each do |target|
+            target.build_configurations.each do |config|
+              if dev_team_id.empty? and !config.build_settings['DEVELOPMENT_TEAM'].nil?
+                dev_team_id = config.build_settings['DEVELOPMENT_TEAM']
+              end
+            end
+          end
+
+          # Reconfigure the pods, update deployment target and signing settings
+          installer.pods_project.targets.each do |target|
+            target.build_configurations.each do |config|
+              if target.respond_to?(:product_type) and target.product_type == 'com.apple.product-type.bundle'
+                config.build_settings['DEVELOPMENT_TEAM'] = dev_team_id
+                config.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Distribution';
+                config.build_settings['CODE_SIGN_STYLE'] = 'Manual';
+              end if
+
+              config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+            end
+          end
+    ########
   end
+
+end
+
+target 'OneSignalNotificationServiceExtension' do
+  pod 'OneSignalXCFramework', '>= 3.0', '< 4.0'
 end

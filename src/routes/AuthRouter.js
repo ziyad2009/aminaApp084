@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View ,Text,Image,StyleSheet,Platform,TouchableHighlight} from 'react-native'
+import {View ,Text,Image,StyleSheet,Platform,TouchableOpacity} from 'react-native'
 import {Box,VStack,Badge, HStack} from 'native-base'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -38,7 +38,7 @@ import FinleScreeen from '../workscreen/FinleScreeen';
 import SearchScreen from '../SearchScreen';
 //import Paymentint from '../payment/test';
  import PubNubChat from '../chat/pupnup'
-import { Metrics,Colors,Fonts,Images } from '../assets/Themes/';
+import { Metrics,Colors,Fonts,Images, widthPixel, heightPixel } from '../assets/Themes/';
 import UserProvider from '../services/UserContext';
 import { NavigationContext } from '@react-navigation/native';
 import Logo from '../assets/images/Asset1.svg'; 
@@ -71,21 +71,28 @@ const HeaderBackButton =(nav)=> {
 return(
   <View style={{ marginRight:2,flexDirection:'row',justifyContent:'flex-start'}}>
     
-    <View >
-      <Badge // bg="red.400" 
-       colorScheme="danger" rounded="30"   mb={-4} mr={-4}   zIndex={1}
-       onPress={()=> navigation.navigate('Notifactionscreen') }
-        variant="solid" alignSelf="flex-end" _text={{
-        fontSize: 7
-      }} >
+    <View  style={{flexDirection:'row',justifyContent:'space-around'}}>
+      <Box>
+        <Badge // bg="red.400" 
+            colorScheme="danger" rounded="30"   mb={-4} mr={-4}   zIndex={1}
+            onPress={()=> navigation.navigate('Notifactionscreen') }
+            variant="solid" alignSelf="flex-end" _text={{
+            fontSize: 7
+            }} >
           {notifaction}
         </Badge>
         <Ionicons name="notifications" size={25} color={"#F5F5F5"} style={{marginLeft:3}} onPress={()=> navigation.navigate('Notifactionscreen') } /> 
+      </Box>
+      
+      <Box>
+        {/* <Ionicons name="search" size={22} color={"#F5F5F5"} style={{marginLeft:20}} onPress={ ()=>navigation.navigate('SearchScreen')} />  */}
+        <Ionicons name="mail" size={22} color={"#F5F5F5"} style={{marginLeft:15}} onPress={ ()=>console.log("mail")} /> 
+      </Box>
+      
       
     </View>
+     
     
-    <Ionicons name="search" size={22} color={"#F5F5F5"} style={{marginLeft:20}} onPress={ ()=>navigation.navigate('SearchScreen')} /> 
-    <Ionicons name="mail" size={22} color={"#F5F5F5"} style={{marginLeft:15}} onPress={ ()=>console.log("mail")} /> 
     
   </View>
    
@@ -455,13 +462,13 @@ const StackNav = () => {
        <Stack.Screen name="Ewallet" component={Ewallet} />
        <Stack.Screen name="PubNubChat" component={PubNubChat} 
         options={({route,navigation})=>({
-         
+          title:"الدفع",
           headerTitle: Platform.OS==='android'? "المحادثه":"",
           headerTransparent: true,
            headerStyle:{
              backgroundColor:Colors.hederup,
           },
-          headerBackTitle:"المحادثه",
+          headerBackTitle:"الدفع",
           // headerBackImageSource:Images.backButton,
           headerBackTitleStyle:{
             fontFamily:Fonts.type.medium,
@@ -472,9 +479,19 @@ const StackNav = () => {
            
         })} />
       <Stack.Screen name="PaymentForm" component={PaymentForm} 
-      options={({route,navigation})=>({
-        headerShown:false,
-         
+       options={({route,navigation})=>({
+        headerTitle: Platform.OS==='android'? "المحادثه":"",
+        headerStyle:{
+          backgroundColor:Colors.AminaButtonNew,
+        },
+        headerBackVisible:false,
+        headerLargeTitleShadowVisible:true,
+        headerTintColor:"#F5F5F5",
+        headerRight:()=>{
+          return(
+              <HeaderBackButton  val={navigation}/>
+              )  
+        },
       })}/>
 
       <Stack.Screen name='Invoice' component={Invoice} 
@@ -650,28 +667,32 @@ const StackNav = () => {
           
           let Iconname;
           if(route.name ==="Home"){
-            Iconname="home";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677668600/aminaicon/homeicon1_vre4ns.png";
             size=focused?28:22 ;
-            color=focused? Colors.AminaButtonNew:"#9191A4"
+            color=focused? Colors.AminabackgroundColor:Colors.transparent
           }else if (route.name ==="Favourite"){
-            Iconname="hearto";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677679812/aminaicon/fav2_cb9chw.png";
             size=focused?28:22;
-            color=focused? Colors.AminaButtonNew:"#9191A4"
+            color=focused? Colors.AminabackgroundColor:Colors.transparent
           }else if(route.name ==="Request"){
-            Iconname="filetext1";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677668600/aminaicon/requesticon_jzqvsg.png";
             size=focused?28:22;
-             color=focused? Colors.AminaButtonNew:"#9191A4"
+             color=focused? Colors.AminabackgroundColor:Colors.transparent
           }else if(route.name ==="Wallet"){
-            Iconname="creditcard";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677668600/aminaicon/acountlogo_r1ydbr.png";
             size=focused?28:22;
-             color=focused? Colors.AminaButtonNew:"#9191A4"
+             color=focused? Colors.AminabackgroundColor:Colors.transparent 
           }else if(route.name==="Notification"){
-            Iconname="notification";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677668600/aminaicon/notifactiion_km9yin.svg";
             size=focused?28:22;
-             color=focused? Colors.AminaButtonNew:"#9191A4"
+             color=focused? Colors.AminabackgroundColor:Colors.transparent
           }
           return(
-            <AntDesign name={Iconname} size={size} color={color} />
+            // <AntDesign name={Iconname} size={size} color={color} />
+             
+              <Image source={{uri:Iconname} } style={{width:widthPixel(Platform.OS==='android'?27:15),height:heightPixel(Platform.OS==='android'?30:20),backgroundColor:color }} resizeMode='contain' />
+           
+            
           )
           
         },

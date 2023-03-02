@@ -3,6 +3,7 @@ const images = {
   women: require("../images/women.png"),
   introimage:require("../images/Aminahchar.png"),
   MainLogo: require("../images/MainLogo.png"),
+  MainLogo1: require("../images/MainLogo1.jpeg"),
   MainLogo3: require("../images/MainLogo3.png"),
   caption1: require("../images/caption1.png"),
   caption2: require("../images/caption2.png"),
@@ -17,8 +18,59 @@ const images = {
   offline: require("../images/switch-off.png"),
   online: require("../images/switch-on.png"),
   caricon: require("../images/car.png"),
-  golocation:require("../images/locationmoov.png")
- 
+  golocation:require("../images/locationmoov.png"),
+  priceicon:require("../images/priceicon.png"),
+  erorricon:require("../images/erorricon.png"),
+  wowimage:require("../images/woow.png"),
+  canselorder:require("../images/canselorder.png"),
+  motherbanner:require("../images/motherbanner.png"),
+  bannerbackgrounf:require("../images/bannerbackground.png"),
+  homeicon:require("../images/homeicon.png"),
+  babyicon:require("../images/babyicon.png"),
+  note:require("../images/note.png"),
+  starticon:require("../images/starticon.png"),
+  babyface:require("../images/babyface.png"),
+   chiled:require("../images/chiled.png"),
+   calender:require("../images/calender.png"),
+   pin:require("../images/pin.png"),
+   clock:require("../images/clock.png"),
+   clockred:require("../images/clockred.png"),
+   clenderblack:require("../images/clenderblack.png"),
+   location:require("../images/location.png"),
+   yellowpin:require("../images/yellowpin.png"),
+   cirtfcate:require("../images/cirtfcate.png"),
+   girl:require("../images/girl.png"),
+   price:require("../images/price.png"),
+   mastercard:require("../images/mastercard.png"),
+   applepay:require("../images/applepay.png"),
+   clockgreen:require("../images/clockgreen.png"),
+   clandergreen:require("../images/clandergreen.png"),
+   save:require("../images/save.png"),
+   caricon2:require("../images/caricon.png"),
+   locationblack:require("../images/locationblack.png"),
+   pinkysendbutton:require("../images/pinkysendbutton.png"),
+   mothericon:require("../images/mothericon.png"),
+   babysettericon:require("../images/babysettericon.png"),
+   homeicon2:require("../images/homeicon1.png"),
+   requesticon:require("../images/requesticon.png"),
+   acountlogo:require("../images/acountlogo.png"),
+   helpicon:require("../images/helpicon.png"),
+   notifactiion:require("../images/notifactiion.png"),
+   samilogo:require("../images/samilogo.jpeg"),
+   
+    
+   
+   
+
+   
+
+
+   
+
+   
+   
+
+   
 };
 
 export default images;

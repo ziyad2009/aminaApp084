@@ -34,8 +34,8 @@ export const UserContext =React.createContext({})
          async function tryGetUser(){ 
             await setItem.removeItem('BS:User');
             await setItem.removeItem('BS:Token');
-           // await setItem.removeItem('BS:Location');
-           //await setItem.removeItem('on:like');
+        //    await setItem.removeItem('BS:Location');
+        //    await setItem.removeItem('on:like');
           
             const user = await setItem.getItem('BS:User');
             const token = await setItem.getItem('BS:Token');
@@ -176,7 +176,7 @@ export const UserContext =React.createContext({})
         const homeScreen= async(response,data)=>{
              
             if(response){
-                console.log("Contxt  test respons Comtext",response.data)
+                console.log("Contxt  test respons Comtext",response.data.token)
                 api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
             
                 await setItem.removeItem('BS:User');

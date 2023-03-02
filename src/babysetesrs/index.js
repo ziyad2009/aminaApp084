@@ -2,13 +2,13 @@
 
 import React,{useEffect,useState} from 'react';
 import {View,Image, TouchableOpacity,Platform, Alert} from 'react-native'
-import {FlatList,Box,Heading,Avatar,Text,VStack,HStack,Spacer, Button,Spinner} from 'native-base';
+import {FlatList,Box,Heading,Avatar,Text,VStack,HStack,Spacer,Stack, Button,Spinner} from 'native-base';
 import SocketIOClient from "socket.io-client";
 import setItem from '../services/storage';
 import api from '../services/api';
 import {Rating} from 'react-native-ratings' 
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import { Colors,Fonts ,Metrics,Images} from '../assets/Themes';
+import { Colors,Fonts ,Metrics,Images,fontPixel,heightPixel,widthPixel,pixelSizeHorizontal,pixelSizeVertical} from '../assets/Themes';
 import styles from './styles';
 import images from '../assets/Themes/Images';
 import {URL_ws,URL} from '../services/links';
@@ -25,8 +25,9 @@ const [favoriteList, setFavoriteList] = useState([]);
 const [page,setpage]=useState(0)
 const  [loadrate,setloadrate]=useState(false)
 const[ratedata,setratedata]=useState([])
-useEffect( ()=>{
 
+
+useEffect( ()=>{
   console.log("Pre ====Data ==== Babysetter==========" )
   getDate()
    
@@ -190,40 +191,44 @@ console.log("DATA for serche serveses",data)
   const ConfimSetterData=(item)=>{
     const prevReservion= JSON.parse(props.route.params.setterdata)
     const  num = prevReservion.hours;
-    const  hours = (num / 60);
+    const  hours = (num / 60); //convert minutes to hours
     const  rhours = Math.floor(hours);
-    const  minutes = (hours - rhours) * 60;
-    const  rminutes = Math.round(minutes);
-    console.log( num + " minutes = " + rhours + " hour(s) and " + rminutes + " minute(s).")
+    // const  minutes = (hours - rhours) * 60;
+    // const  rminutes = Math.round(minutes);
+   // console.log( num + " minutes = " + rhours + " hour(s) and " + rminutes + " minute(s).")
     const totPrice=Number(rhours*item.price)
     const securenumber =  Math.floor(1000 + Math.random() * 9000);
     const orderid= Math.floor(1000 + Math.random() * 90000);
-    console.log("securenumber",prevReservion)
+    //console.log("securenumber",rhours)
      
     
-     
+    //move new data and merag with old data
     const newOrder={
       ...prevReservion,
      // serviestype:item.service, 
       scurtycode:securenumber,
-       orderid:orderid,
-       serviestype:item.mainservice,
+      orderid:orderid,
+      serviestype:item.mainservice,
       settername:item.name,
       imagesInWork:item.imagesInWork,
       displayname:item.displayname,
       address:item.address,
-      statuse:"processing",
-      reson:"",
+      statuse:"processing", 
+      reson:"", 
       read:false,
       settterowner:item.owner,
       price:item.price,
       settterfaileid:item._id,
       totalprice:totPrice,
       totalhours:rhours,
-      bio:item.bio
+      bio:item.bio,
+      rate:item.rate,
+      certificate:item.certificate,
+      setterplayerid:item.playerid
+
     }
-    console.log("Babysetesrs Final data=",item)
-    props.navigation.navigate('BabysetesrsProfile',{data1:newOrder,settertTitle: item.displayname})
+    console.log("Babysetesrs Final data=",item.playerid)
+     props.navigation.navigate('BabysetesrsProfile',{data1:newOrder,settertTitle: item.displayname})
     
   }
 
@@ -262,88 +267,82 @@ console.log("DATA for serche serveses",data)
   }
    
 return(
-<Box backgroundColor={Colors.red}  mt={Platform.OS==='android'?66:94} flex={1}>
+<Box backgroundColor={Colors.AminabackgroundColor}  mt={Platform.OS==='android'?66:94} flex={1}>
        
       {loading?<Box>
         <Spinner size={'lg'} color={Colors.bloodOrange}/>
 
       </Box>:
-      <FlatList data={babseters} renderItem={({item ,index}) => (<Box key={index} borderWidth=".5"  bgColor={Colors.white} borderRightColor="#00ABB9" borderLeftColor="#00ABB9" borderTopColor="#00ABB9" borderRadius='sm'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.243}>
-              <HStack alignItems={'center'} justifyContent='space-around' >
-                <Image  source={{ uri: `${URL}/users/${item.owner}/avatar`}} resizeMode='contain' 
-                style={{width: Metrics.WIDTH*0.280, height: Metrics.HEIGHT*0.1870,marginLeft:5,marginRight:20,borderRadius:70}} />
-                <Spacer />
-                
-                <VStack flexDirection={'column'}    alignItems={'flex-start'} >
-                  <Text  color= "#000000"
-                    fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='bold' fontSize={18}>
-                    {item.displayname}
-                  </Text>
-                    <VStack flexDirection={'row'} justifyContent='space-around' alignItems={'baseline'} >
-                      <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} mr={6}>
-                        {item.mainservice}
-                      </Text>
-                      <Box>
-                      { calcDistance(item.location) }
-                      </Box>
-                    </VStack>
-                    
-                    <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
-                      <Rating
-                      type='custom'
-                      //onFinishRating={(e)=>ratingCompleted(e)}
-                      style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
-                      readonly={true}
-                     
-                      ratingCount={5}
-                      startingValue={item.rate ? Number(item.rate)/5:0}
-                     // ratingCount={item.rate ? Number(item.rate)/5:0}
-                      imageSize={20}
-                      ratingBackgroundColor={"#BFD1D6"}
-                      ratingColor={"#F38193"}
-                      tintColor={"#FFFFFF"}
-                      showRating ={false}
-                      starContainerStyle={styles.ratingContainerStyle}
-                    
-                  isDisabled 
-                />
-                <Box>
-                   <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base}
-                    fontWeight="thin" fontSize={15}>التقييم {item.rate ? Math.floor(item.rate):0}</Text>
-                </Box>
-               
-                
-                </VStack>
-                  
-                <Box>
-                   <Text color= "#000000" fontFamily={Fonts.type.aminafonts} fontWeight="thin" fontSize={15} ml={1}>{item.hourstotal} ساعة عمل</Text>
-                </Box>
-                <Box>
-                <Text   color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} >
-                  تكلفة الخدمه بالساعه {item.price} ريال
-                </Text>
-                 
-                 
-                 
-                <HStack backgroundColor={'amber.200'}>
-                
-                </HStack>
-               
-                </Box>
+      <FlatList data={babseters} renderItem={({item ,index}) => (
+        <Box key={index}  borderColor={"#FFFFFF"} marginLeft={pixelSizeHorizontal(15)} marginTop={ 21}   paddingBottom={2} flexDirection={'row'} 
+            width={widthPixel(388)} height={heightPixel(129)}  >
+        <Box>
+          <Image source={{ uri: `${URL}/users/${item.owner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),
+           marginTop:pixelSizeVertical(6),marginRight:pixelSizeHorizontal(10),borderRadius:10 }} />
+        </Box>
 
-                </VStack>
+        <Box flexDirection={'column'}   width={Metrics.WIDTH*0.560} ml={pixelSizeHorizontal(20)} backgroundColor={Colors.transparent} marginTop={3} > 
+        <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
+          <Stack flexDirection={'row'} justifyContent='space-around' >
+            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(16),color:Colors.newTextClr }}>{item.name}</Text>
+            <Text  style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),color:"#FB5353",marginLeft:pixelSizeHorizontal(4) }} >{item.mainservice}</Text>
+          </Stack>
+          <TouchableOpacity   onPress={()=>ifExists(item._id)?onRemoveFavorite(item._id): savedataTofav(item) }>
+                  <Image source={ifExists(item._id)? images.like1:images.like} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'  />
+          </TouchableOpacity>
                 
-                <Spacer />
+        </Box> 
+        
+        <Box flexDirection={'row'} justifyContent="space-between">
+            <Stack flexDirection={'row'} >
+              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.hourstotal}</Text>
+              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr ,marginLeft:pixelSizeHorizontal(2)}}>ساعة عمل</Text>
+            </Stack>
+            <Stack>
+               {calcDistance(item.location) }
+            </Stack>
+            <Stack position={'relative'} bottom={1} >
+              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium,fontSize:fontPixel(10),color:Colors.rmadytext ,marginLeft:pixelSizeHorizontal(2)} }>حفظ  </Text>
+            </Stack>
+            
+            
+          </Box>
+
+          <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
+            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.price} ر.س/ساعة</Text>
+            </Stack>
+            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
+             <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.rate}</Text>
+             <Image source={Images.starticon} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
+
+            </Stack>
+           
+            <TouchableOpacity onPress={() => ConfimSetterData(item) }>
+              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.AminaPinkButton} flexDirection='row' >
+              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>احجزي الان</Text>
+              </Stack>
+            </TouchableOpacity>
+            
+              {/* <AirbnbRating
+              // onFinishRating={(e)=>ratingCompleted(e)}
+              style={{ paddingVertical: 1, backgroundColor: Colors.transparent }}
+              count={5}
+              //defaultRating={setterdata.rating ? Number(setterdata.rating)/5:0}
+              imageSize={20}
+              tintColor={"#E5E5E5"}
+              showRating={false}
+              size={8}  
+              starContainerStyle={styles.ratingContainerStyle}
+              isDisabled /> */}
+          </Box>
+
                
-                <TouchableOpacity   onPress={()=>ifExists(item._id)?onRemoveFavorite(item._id): savedataTofav(item) }>
-                  <Image source={ifExists(item._id)? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
-                
-                </TouchableOpacity>
                 
                 
                 
-              </HStack>
-              <TouchableOpacity style={{
+                 
+              {/* <TouchableOpacity style={{
                 marginTop: 30,
                 backgroundColor:"#F38193",
                 height: 48,
@@ -357,9 +356,10 @@ return(
                       fontWeight: Platform.OS==='android'? '400':'500',
                       fontFamily:Platform.OS==='android'?Fonts.type.light:Fonts.type.base,}}>
                     احجز الان </Text>
-                 </TouchableOpacity>
-              
-            </Box>)
+                 </TouchableOpacity> */}
+              </Box>
+            </Box>
+            )
             
           }
           onEndReachedThreshold={0.5}
@@ -372,3 +372,105 @@ return(
 )}
 export default Babysetesrs;
 
+
+
+// <FlatList data={babseters} renderItem={({item ,index}) => (<Box key={index} borderWidth=".5"  bgColor={Colors.white} borderRightColor="#00ABB9" borderLeftColor="#00ABB9" borderTopColor="#00ABB9" borderRadius='sm'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.243}>
+// <HStack alignItems={'center'} justifyContent='space-around' >
+//   <Image  source={{ uri: `${URL}/users/${item.owner}/avatar`}} resizeMode='contain' 
+//   style={{width: Metrics.WIDTH*0.280, height: Metrics.HEIGHT*0.1870,marginLeft:5,marginRight:20,borderRadius:70}} />
+//   <Spacer />
+  
+//   <VStack flexDirection={'column'}    alignItems={'flex-start'} >
+//     <Text  color= "#000000"
+//       fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='bold' fontSize={18}>
+//       {item.displayname}
+//     </Text>
+//       <VStack flexDirection={'row'} justifyContent='space-around' alignItems={'baseline'} >
+//         <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} mr={6}>
+//           {item.mainservice}
+//         </Text>
+//         <Box>
+//         { calcDistance(item.location) }
+//         </Box>
+//       </VStack>
+      
+//       <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
+//         <Rating
+//         type='custom'
+//         //onFinishRating={(e)=>ratingCompleted(e)}
+//         style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
+//         readonly={true}
+       
+//         ratingCount={5}
+//         startingValue={item.rate ? Number(item.rate)/5:0}
+//        // ratingCount={item.rate ? Number(item.rate)/5:0}
+//         imageSize={20}
+//         ratingBackgroundColor={"#BFD1D6"}
+//         ratingColor={"#F38193"}
+//         tintColor={"#FFFFFF"}
+//         showRating ={false}
+//         starContainerStyle={styles.ratingContainerStyle}
+      
+//     isDisabled 
+//   />
+//   <Box>
+//      <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base}
+//       fontWeight="thin" fontSize={15}>التقييم {item.rate ? Math.floor(item.rate):0}</Text>
+//   </Box>
+ 
+  
+//   </VStack>
+    
+//   <Box>
+//      <Text color= "#000000" fontFamily={Fonts.type.aminafonts} fontWeight="thin" fontSize={15} ml={1}>{item.hourstotal} ساعة عمل</Text>
+//   </Box>
+//   <Box>
+//   <Text   color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} >
+//     تكلفة الخدمه بالساعه {item.price} ريال
+//   </Text>
+   
+   
+   
+//   <HStack backgroundColor={'amber.200'}>
+  
+//   </HStack>
+ 
+//   </Box>
+
+//   </VStack>
+  
+//   <Spacer />
+ 
+//   <TouchableOpacity   onPress={()=>ifExists(item._id)?onRemoveFavorite(item._id): savedataTofav(item) }>
+//     <Image source={ifExists(item._id)? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
+  
+//   </TouchableOpacity>
+  
+  
+  
+// </HStack>
+// <TouchableOpacity style={{
+//   marginTop: 30,
+//   backgroundColor:"#F38193",
+//   height: 48,
+//   width:Metrics.WIDTH*0.950,
+//   borderBottomLeftRadius:25,
+//   alignItems: 'center',
+//   justifyContent: 'center',
+//   marginTop: 1 }}
+//    onPress={() => ConfimSetterData(item) }>
+//   <Text  style={{ color:'#fff',letterSpacing:1.5,color: '#fff',fontSize: 16,
+//         fontWeight: Platform.OS==='android'? '400':'500',
+//         fontFamily:Platform.OS==='android'?Fonts.type.light:Fonts.type.base,}}>
+//       احجز الان </Text>
+//    </TouchableOpacity>
+
+// </Box>)
+
+// }
+// onEndReachedThreshold={0.5}
+// onEndReached={()=> setpage(page+1)}
+// keyExtractor={item => item.id} />}
+
+
+// </Box>

@@ -1,15 +1,14 @@
 import React,{useEffect,useState,useRef} from 'react';
 import {View,Image, Platform} from 'react-native'
-import {FlatList,Box,Heading,Avatar,Text,VStack,HStack,Spacer, Button,Spinner,Modal,Center} from 'native-base';
+import {FlatList,Box,Stack,Avatar,Text,VStack,HStack,Spacer, Button,Spinner,Modal,Center} from 'native-base';
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import { Colors,Fonts ,Metrics,Images} from '../assets/Themes';
+import { Colors,Fonts ,Metrics,Images,fontPixel,widthPixel,heightPixel,pixelSizeHorizontal,pixelSizeVertical} from '../assets/Themes';
 import styles from './styles';
  import moment from 'moment'
 import CircularProgress from 'react-native-circular-progress-indicator'
 import setItem from '../services/storage';
 import api from '../services/api';
 import {URL_ws,URL} from '../services/links';
-import QRCode from 'react-native-qrcode-svg';
 import CustomButton from '../services/buttons/buttton';
  
 
@@ -20,11 +19,14 @@ const Invoice=(props)=>{
     const[loading,setLoding]=useState(false)
     const[loaddata,setloaddata]=useState(false)
    const[showModal,setShowModal]=useState(false)
+   const [userinfo,setuserinfo]=useState([])
+ 
    const[OK,SETOK]=useState(false)
    const [newData,setNewData]=useState([])
    const[messageExpirationTimeMS,setmessageExpirationTimeMS]=useState(0)
  
     useEffect(()=>{
+        console.log("test use efevct 1111")
         // console.log("test props ConfitmScreen",JSON.parse(props.route.params.data1) )
          setbabyseters(props.route.params.data1)
          //map childrens 
@@ -33,21 +35,35 @@ const Invoice=(props)=>{
 
     },[])
 
-    useEffect(()=>{
+    useEffect(async()=>{
+       console.log("test use efevct2222")
          setLoding(true)
-         loadBabysetterdata(props.route.params.data1.settterowner)
-      },[babseters,chld])
+        
+         const token = await setItem.getItem('BS:Token');
+      
+        api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+        const response= await api.get("/mothers/me").then((res)=>{
+            return res.data
+        }).finally(()=>  loadBabysetterdata(props.route.params.data1.settterowner) )
+        //)
+        console.log("123-",response)
+        //get mother info
+        setuserinfo(response)
+
+      },[])
   
 
       const loadBabysetterdata=async(id)=>{
+        console.log("startt load data")
         const token = await setItem.getItem('BS:Token');
         api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
         const response=await api.get(`/setter/${id}`).then((res)=>{
-            return res.data.setter
-        }).finally(()=>{setloaddata(true)}).catch(err=>{
+            console.log("test RESPONSe",res.data.setter)
+            setsetterdata(res.data.setter)
+        }).finally(()=>setloaddata(false)).catch(err=>{
             console.log("ERORR get dsetter dat from invoice",err),setloaddata(false)
         })
-        setsetterdata(response)
+       
         
       }
 
@@ -111,117 +127,144 @@ const handelREQ= async(id)=>{
     
    }
  
+   
+const showCode=(value)=>{
+    setShowModal(!showModal)
+}
+  
+const modelShow=()=>{
+    setShowModal(!showModal)
+     //console.log("time1",moment(time1).format('HH:MM a'))
+ }
+
+ const ReternScreeen=()=>{
+    setShowModal(!showModal)
+    props.navigation.navigate('WorkScreen',{data1:babseters,motherinfo:userinfo.mother.displayname})
+    
+   }
 
 
     return(
 
-    <VStack mt={Platform.OS==='android'?30: 70}> 
-    <HStack borderColor={"#00ABB9"} borderWidth='1' flexDirection={'column'}  justifyContent='center' mt='10' ml='3' p={3} w={Metrics.WIDTH*0.928} >
-        <VStack  flexDirection={'row'} justifyContent='space-between' mt={2} mb={1}>
-        <Text style={[styles.mainTex,{textAlign:'left'}]}  >ملخص الطلب</Text>
-        <HStack>
-            <Text style={styles.mainTex}>رقم الطلب</Text>
-             <Text style={styles.mainTex}>{babseters.orderid}</Text>
-            <Text style={styles.mainTex}>:</Text>
-        </HStack>
+    <View style={{ flex:1,marginTop:Platform.OS==='android'?30: 70,backgroundColor:Colors.AminabackgroundColor ,flexDirection:'column'}} > 
+    <Box borderColor={'gray.100'} backgroundColor='white' borderWidth='1' flexDirection={'column'}  justifyContent='space-around' mt='10' ml='3' p={3} w={Metrics.WIDTH*0.928} >
+        <Box alignItems={'center'} justifyContent={'center'}   flexDirection={'row'}>
+            <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
+                <Image source={Images.girl} style={{width:widthPixel(16),height:heightPixel(20)}} resizeMode='contain'/>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} fontSize={fontPixel(16)}  ml={3}  > {babseters.settername}</Text>
+            </Stack>   
+            <Stack   flex={2} justifyContent='flex-end' flexDirection={'row'}>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr}>رقم الطلب</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr} ml={2} >{babseters.orderid}</Text>
+            </Stack>
+        </Box>
+        <Box flexDirection={'row'} alignItems='flex-start' mt={2}  >
+            <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
+                <Image source={Images.calender} style={{width:widthPixel(16),height:heightPixel(20)}} resizeMode='contain'/>
+            <Stack>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}> {moment(babseters.potementdate).format('LL')}</Text>
+            </Stack>
+            </Stack> 
+        </Box>
+        <Box flexDirection={'row'} alignItems='flex-start' mt={2}  >
+            <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
+                <Image source={Images.clock} style={{width:widthPixel(16),height:heightPixel(20)}} resizeMode='contain'/>
+            <Stack>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{moment(babseters.start).format('hh:mm a')} "الى "{moment(babseters.end).format('hh:mm a')}</Text>
+            </Stack>
+            </Stack>
         
-        </VStack>
-        <Box borderColor={'#00ABB9'} borderWidth='1' h={'1%'} />
-        
-        
-        <HStack flexDirection={'column'} alignItems='flex-start' mt={2}  >
-            <VStack flexDirection={'row'} w={"full" } justifyContent='space-between'  mt='1' p={1}  >
-                <Text style={styles.leftText}>اسم الجليسه</Text>
-                 <Text  textAlign={'left'} style={styles.rightTex}  > {babseters.settername}</Text>
-            </VStack>
-            <VStack flexDirection={'row'} w={"full" } justifyContent='space-between'  mt='1' p={1} >
-                <Text  style={styles.leftText}>اليوم</Text>
-                <Text  style={styles.rightTex}> {moment(babseters.potementdate).format('LL')}</Text>
-                 
-            </VStack>
-            <VStack flexDirection={'row'} w={"full" } justifyContent='space-between'  mt='1' p={1}>
-            <Text style={styles.leftText}>الوقت</Text>
-                <Text style={styles.rightTex}>{moment(babseters.start).format('hh:mm a')} "الى "{moment(babseters.end).format('hh:mm a')}</Text>
-            </VStack>
-        
-        
-        </HStack>
-
-        
-
-        <VStack flexDirection={'row'} w={"full" } justifyContent='space-between'  mt='1' p={1}>
-        <Text style={styles.leftText}>عدد االاطفال</Text>
-        <Text style={styles.rightTex}> {babseters.childeaccount}</Text>
-        </VStack>
-
-        <VStack flexDirection={'row'} w={"full" } justifyContent='space-between'  mt='1' p={1}>
-        <Text style={styles.leftText}>اسماء الاطفال</Text>
-            {loading ?<Box>
-            {chld.childe.map((item)=>{
-                return(
-                <Box key={item._id} flexDirection='row' justifyContent={'space-around'}>
-                        <Text style={[styles.rightTex,{ width:Metrics.WIDTH*0.242,fontSize:14}]}> {item.name}</Text>
-                        <Text style={[styles.rightTex,{ width:Metrics.WIDTH*0.242,fontSize:14}]}> * {item.diseasses}</Text>
-                        </Box>
-                )
-            })  }
-            </Box>:null }
-        
-        </VStack>
-        
-        <VStack flexDirection={'column'} w={"full" } justifyContent='space-between'  mt='1' p={1}>
-            <Box borderColor={'#00ABB9'} borderWidth='1' h={'1%'} />
-            <HStack mt='4'>
-            <Text style={styles.leftText}>اجمالي التكلفه </Text>
-             <Text style={styles.rightTex}>  {babseters.totalprice} </Text>
-
-            </HStack>
-            <HStack>
-            <QRCode
-                value="3ddd3b267df85f9739b107389c544d80"
-                color={Colors.AminaButtonNew}
-             />
-             <Box alignItems={'flex-start'} ml={3} flexWrap='wrap'  w={Metrics.WIDTH*0.555}>
-                <Text   fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} letterSpacing='1.5' fontSize={Platform.OS==='android'?"14":"md"} textAlign="left" >لبداء الخدمه الرجاء ادخال رقم الكود  من قبل الحاضنه لبداءالخدمه  </Text>
+        </Box>
+        <Box flexDirection={'row'} alignItems='flex-start' mt={2}>
+            <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
+                <Image source={Images.chiled} style={{width:widthPixel(16),height:heightPixel(20)}} resizeMode='contain'/>
+            <Stack>
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.childeaccount}طفل</Text>
+            </Stack>
                 
-                {/* <Text   fontFamily={Fonts.type.base}  letterSpacing='1' fontSize='md'>  من قبل الحاضنه لبداءالخدمه </Text> */}
-             </Box>
+            </Stack> 
+        </Box>
 
-            </HStack>
+        <Box flexDirection={'row'} alignItems='flex-start' mt={2}>
+            <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
+                <Image source={Images.chiled} style={{width:widthPixel(16),height:heightPixel(20)}} resizeMode='contain'/>
+            <Stack>
+                {loading ?<Box flexDirection={'row'} >
+                {chld.childe.map((item,index)=>{
+                    return(
+                    <Box key={item._id} flexDirection='row' justifyContent={'space-around'}>
+                         {index >=1 && <Text> - </Text>}
+                            <Text  fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}> {item.name} </Text>
+                            </Box>
+                    )
+                })  }
+                
+                </Box>:null }
+            </Stack>
+            </Stack> 
+        </Box>
+        <Box flexDirection={'row'} alignItems='flex-start' mt={2}>
+            <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
+                <Image source={Images.location} style={{width:widthPixel(16),height:heightPixel(20)}} resizeMode='contain'/>
+            <Stack>
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={ Colors.newTextClr}  ml={3}>{babseters.address}</Text>
+            </Stack>
+                
+            </Stack> 
+        </Box>
+
+        <Box alignItems={'center'} mt={'15'} mb={4}>
+            <Stack borderTopColor={'light.100'} borderWidth={1} width={widthPixel(314)} mt={2} />
+        </Box>
+         
+        <Box flexDirection={'row'} alignItems='flex-start' mt={2}>
+            <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
+                <Image source={Images.price} style={{width:widthPixel(16),height:heightPixel(20)}} resizeMode='contain'/>
+            <Stack>
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.price} ريال</Text>
+            </Stack>
+                
+            </Stack> 
+        </Box>
+    </Box>
+     
+    {loaddata?<Spinner size={'lg'} color={Colors.border} animating={loaddata}  style={{marginTop:22}}/>:
+     <Box flexDirection={'row'} justifyContent='space-around' mt={4}>
+        <Button bgColor={"#F5F5F5"}  width={widthPixel(170)} borderColor={Colors.text} borderRadius={7} onPress={()=>confirmRequest(babseters)}>
+            <Text  fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr}>موقع الحاضنه الان</Text>
+        </Button>
+        <Button bgColor={Colors.AminaPinkButton}  width={widthPixel(170)} borderColor={Colors.text} borderRadius={7} onPress={()=>showCode(babseters)}>
+            <Text  fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr}>كود الطلب</Text>
+        </Button>
+     </Box>
+    
+    
+    }
+    <Center>
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)} height={'72'} backgroundColor='white' position={'absolute'} bottom={0} >
+        <Modal.Content width={Metrics.WIDTH } alignItems={'center'}  justifyContent='center'  >
             
-        
-        </VStack>
-
-        </HStack>
-        <VStack flexDirection={'row'}>
+            <Modal.Body alignItems={'center'}  justifyContent='center' mt={1} borderColor='white'>
+                <Text    fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr} textAlign={'center'} > الرجاء مشاركة كود الطلب لبداء الخدمة</Text>
+                <Stack borderColor={Colors.text} borderWidth={.2} backgroundColor={'#F5F5F5'} padding={2} alignItems='center' justifyContent={'center'} borderRadius={'md'} mt={5} >
+                    <Text   fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(20)} color={Colors.newTextClr} letterSpacing={2} textAlign={'center'} >{babseters.scurtycode}</Text>
+                </Stack>
+                <Box alignItems={'center'} w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>   
+                    <CustomButton
+                        buttonColor={Colors.AminaPinkButton}
+                        title="بداء الخدمة"
+                        buttonStyle={{width: '90%', alignSelf: 'center',borderRadius:10}}
+                        textStyle={{fontSize: 15}}
+                        onPress={()  =>  ReternScreeen() }
+                      />
+                </Box> 
+            </Modal.Body>
              
-                
-            
-            <Center alignItems={'center'}>
-            <Box alignItems={'center'} w={Metrics.WIDTH*0.8861}  ml='5' mr='4' mt={0} rounded='lg'>
-                     {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-                        onPress={() => {confirmRequest(babseters) }} fontFamily={Fonts.type.light} fontSize={20}> موقع الحاضنه الان</Button> */}
-                       {loaddata? <CustomButton
-                        buttonColor={Colors.AminaButtonNew}
-                        title="موقع الحاضنه الان"
-                        buttonStyle={{width: '88%', alignSelf: 'center'}}
-                        textStyle={{fontSize: 20}}
-                        onPress={() => confirmRequest(babseters) }
-                     />:<Spinner size={'lg'} color={Colors.border}  style={{marginTop:22}}/>}
-                </Box>
-                {/* <Box alignItems={'center'} w={Metrics.WIDTH*0.401} ml='3' mr='4' mt={5} rounded='lg'>
-                        <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-                            onPress={() => {canselRequest(babseters) }}> الغاء الطلب</Button>
-                </Box> */}
-            </Center>
-            
-            
-                     
-            
-        </VStack>
+</Modal.Content>
+</Modal>
+</Center>
 
-
-        </VStack>
+        </View>
         
     )
 

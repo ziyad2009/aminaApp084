@@ -1,5 +1,5 @@
 import {Platform, StyleSheet} from 'react-native'
-import  {Colors,Fonts,Metrics} from '../assets/Themes/'
+import  {Colors,Fonts,heightPixel,Metrics} from '../assets/Themes/'
 export default StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
@@ -20,7 +20,7 @@ export default StyleSheet.create({
   outerContainer: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#d6dce4',
+    backgroundColor: Colors.white,
   },
   innerContainer: {
     width: '100%',
@@ -67,14 +67,14 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#d6dce4',
+    backgroundColor: Colors.AminabackgroundColor,
   },
   messageContainerThem: {
     flexDirection: 'row',
     marginTop: 12,
     width: '100%',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#FEEBEB',
     padding: 8,
     paddingLeft: 16,
     paddingRight: 16,
@@ -87,7 +87,7 @@ export default StyleSheet.create({
     marginTop: 12,
     width: '100%',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#00ABB9',
     padding: 8,
     paddingLeft: 16,
     paddingRight: 16,
@@ -106,7 +106,7 @@ export default StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: Colors.black,
-    fontFamily:Fonts.type.base,
+    fontFamily:Fonts.type.regular,
     margin:8
   },
   messageTimetoken: {
@@ -125,7 +125,7 @@ export default StyleSheet.create({
     marginRight: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(51, 104, 123, 1)',
+    backgroundColor:Colors.transparent,
   },
   avatarMe: {
     width: 38,
@@ -135,7 +135,7 @@ export default StyleSheet.create({
     marginLeft: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(151, 204, 223, 1)',
+    backgroundColor: Colors.transparent,
   },
   avatarNone: {
     display: 'none',
@@ -146,15 +146,15 @@ export default StyleSheet.create({
     alignItems: 'center',
     padding: 8,
     height: 80,
-    backgroundColor: '#d6dce4',
+    backgroundColor:Colors.white,
   },
   textInput: {
     flex: 1,
-    backgroundColor: '#fff',
-    
+    backgroundColor: '#F9F9F9',
     color: 'rgba(0, 0, 0, 1)',
     borderRadius: 4,
-    padding: 16,
+    padding: 6,
+    height:heightPixel(48),
     elevation: 2,
   },
   textInputFriendlyName: {

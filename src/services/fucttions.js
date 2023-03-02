@@ -16,13 +16,14 @@ import  {UserContext} from '../services/UserContext';
 
 export const sendNotifcation= async(data)=>{
   
-    console.log("test data",data)
+    console.log("start send notifcation",data)
     const token = await setItem.getItem('BS:Token');
     const motherData = await setItem.getItem('BS:User');
+    
     const mother=JSON.parse(motherData)
     const randoID =  Math.floor(1000 + Math.random() * 9000);
-    console.log("test nother Id",mother._id)
-    console.log("test recever id ",data.receiver)
+    
+    console.log("test notifcation sender UUId",data.playerid)
 
     const motheerId=mother._id
     const username=mother.phone.toString()
@@ -31,7 +32,7 @@ export const sendNotifcation= async(data)=>{
 
     api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
         try {
-          await api.post("notfications",{
+          await api.post("setternotfications",{
               "id":randoID,
               "sender":mother._id,
               "receiver":data.receiver,
@@ -40,8 +41,10 @@ export const sendNotifcation= async(data)=>{
               "is_read":false ,
               "phone":mother.phone,
               "title":data.title,
-              "orderid":data.orderid
-      }).then((res)=>{console.log("Notifcations",res.data)}).catch(err=>console.log("ERorr from notifaction",err))
+              "orderid":data.orderid,
+              "playerid":data.playerid
+      }).then((res)=>{console.log("Notifcations",res.data)})
+      .catch(err=>console.log("ERorr from notifaction",err))
 
         } catch (error) {
           console.log("ERorr from notifaction",error)

@@ -57,7 +57,8 @@ const colors = {
   aorang: "BA5B4F",
   awhite: "F5F5F5",
   //amina
-  AminabackgroundColor: "#ffff",
+  //AminabackgroundColor: "#ffff",E5E5E5E5E5E5
+  AminabackgroundColor: "#FFFAFA",
   amin1Button1:'#00ABB9',
   AmonaButtontext:'#F5F5F5',
   AminaButtonNew:'#00ABB9',
@@ -67,6 +68,20 @@ const colors = {
   Milky:"#fcebd2",
   hederup:'#00ABB9',
   BottomColor:'#00CBB9',
+  AminaPinkButton:"#F38193",
+  infotextbackground:"#FCEBD2",
+  newTextClr:"#000000",
+  enabledButton:"#F5F5F5",
+  backgroundimage:"#FEEBEB",
+  bannerColor:"#F38193",
+  rmadytext:"#B7B7B7",
+  smolegrayColors:"#585858",
+  pinkystack:"#EFEEFF",
+  yellowstack:"#FFF8E5",
+  greentext:"#00ABB9",
+  goldText:"#FCEBD2"
+
+  
 }
 
 export default colors

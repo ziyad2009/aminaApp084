@@ -27,11 +27,11 @@ const styles = StyleSheet.create({
         height:Metrics.HEIGHT*0.0361
     },
     loginButton:{
-        backgroundColor:Colors.amin1Button1,
+        backgroundColor:Colors.textZahry,
         alignItems:'center',
         alignContent:'center',
-        width:Metrics.WIDTH*0.800,
-        height:Metrics.HEIGHT*0.0740,
+        width:Metrics.WIDTH*0.900,
+        height:Metrics.HEIGHT*0.0640,
         marginTop:20,
         padding:3,
         //marginRight:Metrics.WIDTH*0.9
@@ -52,5 +52,9 @@ const styles = StyleSheet.create({
       fontWeight:"400",
       color:"#2E2E2E"
     },
+    codecontiner:{
+      direction:'ltr',
+       
+    }
 })
 export default styles;

@@ -1,15 +1,16 @@
 
-import {StyleSheet,I18nManager} from 'react-native'
+import {StyleSheet,I18nManager, Platform} from 'react-native'
 import { Metrics,Colors, Fonts } from '../assets/Themes';
 
 const styles = StyleSheet.create({
     wrapper: {
-      backgroundColor:Colors.white,
+      backgroundColor:Colors.AminabackgroundColor,
      
        marginBottom:2,
-       marginTop:20,
+       marginTop:Platform.OS==='android'?1: 20,
       // marginHorizontal:30,
-        alignItems:'center'
+        alignItems:'center',
+        
     },
   slide1: {
     

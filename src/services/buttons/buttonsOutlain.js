@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
   title: {
     color:Colors.blacktxt,
     fontSize: 16,
-    fontFamily:Platform.OS==='android'?Fonts.type.light:Fonts.type.base
+    fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium
   },
 });

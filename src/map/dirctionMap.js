@@ -9,7 +9,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment' 
- import {Metrics,Colors,Fonts,Images} from '../assets/Themes/'
+ import {Metrics,Colors,Fonts,Images, widthPixel, fontPixel, heightPixel} from '../assets/Themes/'
  import Geolocation  from 'react-native-geolocation-service';
  import setItem from '../services/storage/'
 import {URL } from '../services/links';
@@ -17,7 +17,9 @@ import api from '../services/api';
 import CustomButton from '../services/buttons/buttton';
 import openMap from 'react-native-open-maps';
 import { set } from 'lodash';
-import { toArray } from 'lodash';
+import CountdownTimer from '../workscreen/CountdownTimer';
+import images from '../assets/Themes/Images';
+ 
 const GOOGLE_MAPS_APIKEY = "AIzaSyBtKLEuD_50bKofX67ZV2hfLWvjPaY3aac";
 
 
@@ -275,7 +277,7 @@ const GOOGLE_MAPS_APIKEY = "AIzaSyBtKLEuD_50bKofX67ZV2hfLWvjPaY3aac";
 
   
   const ReternScreeen=()=>{
-    //props.navigation.popToTop()
+    props.navigation.goBack()
     // var ss= moment(babysetter.start).diff( moment(), 'minutes')
     // console.log("test hours" ,moment(babysetter.start).format('hh:mm a') )
     // if(ss<= 60 || ss <= 0){
@@ -285,13 +287,13 @@ const GOOGLE_MAPS_APIKEY = "AIzaSyBtKLEuD_50bKofX67ZV2hfLWvjPaY3aac";
     // }else{
     //   Alert.alert("تنبيه","لايمكن بداء الخدمه ال قبل الموعد بساعه")
     // }
-    props.navigation.navigate('WorkScreen',{data1:babysetter,motherinfo:userinfo.mother.displayname})
+    //props.navigation.navigate('WorkScreen',{data1:babysetter,motherinfo:userinfo.mother.displayname})
     
    }
 
    const showCode=(value)=>{
     modelShow()
-    console.log("Test codde",value.scurtycode)
+    
     SetSecurtyCode(value.scurtycode)
    }
 
@@ -341,8 +343,37 @@ const GotoOpenMap = async (cords, label='نقطة الوصول') => {
 
 return(
     <View style={styles.container2}>
-     {getlocatin?
-     <MapView
+      <Box  width={widthPixel(388)}  height={heightPixel(456)} backgroundColor={'white'} ml={2} mt={'24'} >
+       {/* infoboxe */}
+        <Box flexDirection='row' justifyContent='space-between'   mb={7} >
+          <Box flexDirection={'row'}   width={widthPixel(260)}  >s
+            <Image  source={{uri:`${URL}/users/${babysetter.settterowner}/avatar`}}
+              style={{width:70 ,height:70,marginRight:2}} />
+            <Stack flexDirection={'column'} alignItems='flex-start' ml={3} >
+              <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr}  mt="3">{babysetter.settername}</Text>
+              <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={"#FB5353"} >{babysetter.serviestype}</Text>
+            </Stack>
+          </Box>
+          
+          <Box  flexDirection={'row'} >
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr} mt={3} >رقم الطلب</Text>
+              <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr} mt={3}  >{ORDERID}</Text>
+            {/* <Feather name='mail'  color={"#00ABB9"}  onPress={ props.navigation.navigate('Attractionuser',{data1:babysetter,motherinfo:userinfo.mother.displayname}) } size={28} style={{margin:2}}/> */}
+            {/* <Feather name='mail'  color={"#00ABB9"}  onPress={ ()=> console.log("test") } size={28} style={{margin:2}}/> */}
+            
+            {/* <TouchableOpacity style={{ marginRight: 22 }} onPress={()=>GotoOpenMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude }) }>
+              <Image source={Images.golocation} style={{ width: 44, height: 44 }} resizeMode='contain' />
+            </TouchableOpacity > */}
+            
+            {/* <FontAwesome name='location-arrow'  color={"#00ABB9"}  onPress={ ()=> GotoOpenMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude }) } size={28} style={{margin:2}}/> 
+            <AntDesign name='car' color={"#00ABB9"} size={28} style={{ margin: 2 }}
+              onPress={() => goLocation()} /> */}
+          </Box>
+
+      </Box>
+      
+      {getlocatin?
+    <MapView
      style={styles.map}
       ref={mapRef}
       provider={PROVIDER_GOOGLE} 
@@ -426,114 +457,90 @@ return(
      </Box>
      
     }
-     
-        
+    </Box>
+
+    <Box flexDirection={"column"} alignItems="baseline" mt={5} mb={4}>
+      {babysetter.serviestype==="حضانة منزلية"?
+      <Stack>
+        <TouchableOpacity onPress={()=>getlocatin(true)}>
+          <Stack flexDirection={'row'} alignItems='baseline'>
+            <Image  source={images.locationblack} style={{width:11 ,height:16,marginRight:2}} />
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr} ml={3} >للتوجه للحاضنة المنزلية</Text>
+          </Stack>
+        </TouchableOpacity>
+      </Stack>:
+      <Stack>
+        <TouchableOpacity onPress={()=> setShowModal(true)}>
+          <Stack flexDirection={'row'} alignItems='baseline'>
+            <Image  source={images.caricon2} style={{width:20 ,height:20,marginRight:2}} />
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr} ml={3} >لمعرفة الوقت المقدر لوصول الحاضنة</Text>
+          </Stack>
+        </TouchableOpacity>
+      </Stack>}
       
-      
-       
-       <View style={{width:Metrics.WIDTH*0.633}} >
-        <Box    flexDirection='row'  mt={4} mb={1}  >
-
-       <HStack justifyContent='flex-start' w={Metrics.WIDTH*0.718}  >
-        <Avatar bg='white' source={{
-             uri:`${URL}/users/${babysetter.settterowner}/avatar` }}
-            ml='5' size={'lg'} />
-             
-            <HStack flexDirection={'column'} alignItems='flex-start' ml={4}    >
-            <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={22} fontWeight='bold'  mt="3">{babysetter.settername}</Text>
-            <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={18} fontWeight='light'>{babysetter.serviestype}</Text>
-            <VStack flexDirection={'row'}>
-            <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={18} fontWeight='light'>رقم الطلب</Text>
-            <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={18} fontWeight='light' ml={3} >{ORDERID}</Text>
-            </VStack>
-            </HStack>
-
-            <Spacer />
-        </HStack> 
-       
-       
-        <Box w={"33%"} flexDirection={'row'} justifyContent='space-between'  >
-          {/* <Feather name='mail'  color={"#00ABB9"}  onPress={ props.navigation.navigate('Attractionuser',{data1:babysetter,motherinfo:userinfo.mother.displayname}) } size={28} style={{margin:2}}/> */}
-          {/* <Feather name='mail'  color={"#00ABB9"}  onPress={ ()=> console.log("test") } size={28} style={{margin:2}}/> */}
-           <FontAwesome name='location-arrow'  color={"#00ABB9"}  onPress={ ()=> GotoOpenMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude }) } size={28} style={{margin:2}}/> 
-          {/* <TouchableOpacity style={{ marginRight: 22 }} onPress={()=>GotoOpenMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude }) }>
-            <Image source={Images.golocation} style={{ width: 44, height: 44 }} resizeMode='contain' />
-          </TouchableOpacity > */}
-          <AntDesign name='car' color={"#00ABB9"} size={28} style={{ margin: 2 }}
-            onPress={() => goLocation()} />
-
-        </Box>
-
+      <HStack background={'#214F5E'}  borderRadius={10} 
+            mr="3" ml='3' w={widthPixel(356)} h={Metrics.HEIGHT*0.0131} mt={5} /> 
+            
       </Box>
-        
-        <Box flexDirection={'row'} alignItems="baseline" mt={2} mb={3}>
-          <Text ml="2">{moment(babysetter.start).format("hh:mm a")}</Text>
-          <HStack background={'#00ABB9'}  borderRadius={10} 
-            mr="3" ml='3' w={Metrics.WIDTH*0.6531} h={Metrics.HEIGHT*0.0131} mt={5} /> 
-            <Text>{moment(babysetter.end).format("hh:mm a")}</Text>
-        </Box>
-        
-      <VStack flexDirection={'row'}>
+      <Box  flexDirection={'row'}   width={Metrics.WIDTH*0.932}  >
+          <CountdownTimer targetDate={moment(babysetter.start).valueOf()}/>
+      </Box>
+      <Box>
 
-        <Box alignItems={'center'} w={Metrics.WIDTH } rounded='lg'>
+      <Box flexDirection={'row'}  justifyContent='space-between'>
+
+      <Box alignItems={'center'} w={Metrics.WIDTH} rounded='lg'>
           {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
                             onPress={() => {ReternScreeen() }}> صفحة بداء الخدمة</Button> */}
-
           <CustomButton
-            buttonColor={Colors.AminaButtonNew}
-            title="صفحة بداء الخدمة"
+            buttonColor={Colors.AminaPinkButton}
+            title="الرجوع للخلف"
             buttonStyle={{ width: '90%', alignSelf: 'center' }}
             textStyle={{ fontSize: 15 }}
             onPress={() => ReternScreeen()}
           />
+        </Box> 
         </Box>
 
 
+      </Box>
+      <Center >
 
-        {/* <Box alignItems={'center'} w={Metrics.WIDTH * 0.401} ml='3' mr='4' mt={1}   >
-
-          <CustomButton
-            buttonColor={Colors.AminaButtonNew}
-            title="كود بداء الخدمة"
-            buttonStyle={{ width: '90%', alignSelf: 'center' }}
-            textStyle={{ fontSize: 15 }}
-            onPress={() => showCode(babysetter)}
-          />
-        </Box>  */}
-        </VStack>
-        </View>
-        <Center>
-
-          <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-          <Modal.Content width={Metrics.WIDTH } >
-          <Modal.CloseButton p={3}/>
-          <Modal.Header>
-              
-          </Modal.Header>
-          <Modal.Body alignItems={'center'}  mt={1} borderColor='white'>
-          
-              <Text fontFamily={Fonts.type.aminafonts} fontSize={33}  textAlign={'center'} >كود الخدمه</Text>
-              <Text fontFamily={Fonts.type.aminafonts} fontSize={25} letterSpacing={2} textAlign={'center'} >{babysetter.scurtycode}</Text>
-              
-          </Modal.Body>
-          
-          <Modal.Footer alignItems={'center'} justifyContent='center'>
-          <Text fontFamily={Fonts.type.aminafonts} fontSize={18} letterSpacing={2}  color='warning.500' textAlign={'center'} >الرجاد عدم ابراز الكود الا للحاضنه فققط</Text>
-          <Box alignItems={'center'} w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>   
-                      
-                      <CustomButton
-                              buttonColor={Colors.AminaButtonNew}
-                              title="اغلاق"
-                              buttonStyle={{width: '90%', alignSelf: 'center'}}
-                              textStyle={{fontSize: 15}}
-                              onPress={()  => modelShow()  }
-                                />
-              </Box> 
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} borderColor={Colors.AminaButtonNew} borderWidth='1'>
+      <Modal.Content width={Metrics.WIDTH*0.9372 } >
+      <Modal.Body alignItems={'center'} justifyContent='center' >
+      
+      <Box alignItems={'center'} >
+            <Stack backgroundColor={Colors.transparent} borderRadius={22} mt={5} p={10}>
+              <Image source={Images.samilogo} style={{width:200,height:200}} resizeMode='contain' />
+            </Stack>
+            <Stack  mt={5}>
+              <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(17)}  >الوقت المتوقع لوصول الحاضنه من الموقع</Text> 
+            </Stack>
+            <Stack backgroundColor={Colors.transparent}>
+              <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(14)} mt={4}>مسافة الطريق{Distance} km  و الوقت المتوقع للوصول {Time} دقيقه</Text>
+            </Stack>
             
-          </Modal.Footer>
-          </Modal.Content>
-          </Modal>
-          </Center>
+            <Stack flexDirection={'row'} alignItems={'center'}   w={Metrics.WIDTH * 0.840} justifyContent='center' ml='3' mr='4' mt={3}  >
+                  <CustomButton
+                    buttonColor={Colors.AminaPinkButton}
+                    title="رجوع"
+                    buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:10 }}
+                    textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium }}
+                    onPress={() => setShowModal(false) }
+                  />
+                 
+                
+            </Stack>
+          </Box>
+          
+      </Modal.Body>
+      
+      </Modal.Content>
+      </Modal>
+      </Center>
+
+
                   
     </View>
 
@@ -547,16 +554,16 @@ return(
       width: Metrics.WIDTH,
       flex:1,
       flexDirection:'column',
-      // justifyContent: 'center',
-      // alignItems: 'center',
+       justifyContent: 'center',
+       alignItems: 'center',
       // alignSelf: "center",
       marginBottom: 20,
-      marginTop:2,
-      backgroundColor:Colors.white
+      // marginTop:2,
+      backgroundColor:Colors.AminabackgroundColor
   },
   map: {
-
-      height:Metrics.HEIGHT*0.631
+      width:widthPixel(388),
+      height:Metrics.HEIGHT*0.380
   },
   map2: {
     flex:1,
@@ -583,68 +590,4 @@ rightTex:{
 })
 export default DDirctionMap;
 
-
-{/* <Marker  coordinate={coordinates[0]} image={Images.maplogo}/>
-        <Marker  coordinate={coordinates2[0]}  />
-        <MapViewDirections
-          origin={coordinates[0]}
-          destination={coordinates2[0]}
-          apikey={GOOGLE_MAPS_APIKEY} // insert your API Key here
-          strokeWidth={3}
-          strokeColor={Colors.amin1Button1}
-          optimizeWaypoints={true}
-          onStart={(params) => {
-            console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
-          }}
-          mode={'DRIVING'}
-          onReady={onReady}
-          
-        />   */}
-
-
-
-
-
-
-
-
-
-      //   <MapView
-      //     showsTraffic
-      //     style={fullmapp?styles.map2: styles.map}
-      //     zoomEnabled={true}
-      //     scrollEnabled={true}
-      //     showsScale={true}
-      //     minZoomLevel={0}  // default => 0
-      //     maxZoomLevel={20} // default => 20
-      //     initialRegion={{
-      //     latitude: coordinates[0].latitude,
-      //     longitude: coordinates[0].longitude,
-      //     latitudeDelta: 0.015,
-      //     longitudeDelta: 0.0121,
-      //   }}>
-      //     <MapViewDirections
-      //                       origin={coordinates[0]}
-      //                       destination={coordinates2[0]}
-      //                       apikey={GOOGLE_MAPS_APIKEY}
-      //                       strokeWidth={4}
-      //                       strokeColor={'red'}
-      //                       mode={'DRIVING'}
-      //                       onReady={onReady}
-      //                   />
-      //                   <Marker
-      //                       coordinate={coordinates[0]}
-      //                       title=''
-      //                       description=''
-      //                   />
-      //                   <Marker
-      //                       coordinate={coordinates2[0]}
-      //                       title=''
-      //                       description=''
-      //                   />
-
-        
-         
-        
-     
-      // </MapView>
+ 

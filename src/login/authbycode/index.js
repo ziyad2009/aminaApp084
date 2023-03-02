@@ -1,7 +1,7 @@
 import React, { useState ,useEffect,useRef,useContext} from 'react';
  
 import styles from "./styles";
-import { Images,Colors , Metrics, Fonts} from "../../assets/Themes/";
+import { Images,Colors , Metrics, Fonts, fontPixel} from "../../assets/Themes/";
 import { View ,Image,Text,TouchableOpacity, Platform, Alert} from 'react-native';
 import  {UserContext} from '../../services/UserContext';
  import {Box,Button} from 'native-base'
@@ -100,13 +100,14 @@ const onCodechange=(val)=>{
        console.log("user id",code,"  ",usrId)
        
       loginbycoded(code,usrId).then((res)=>{
-            console.log("test code RESPONSE",res.data)
+            console.log("test code RESPONSE from AUTH code 3++",res)
           if(res.status===false){
-            console.log("code status false")
+            console.log("code status false",res.status)
              return seterorrmesage(true)
           }
+          //get response from server  response res.status===true  
           if(res.status===true){
-            console.log("code status true")
+            console.log("code status true",res.status)
             seterorrmesage(false)
             navigation.navigate('Profile')
          }
@@ -154,17 +155,17 @@ const onCodechange=(val)=>{
         return(
     <View style={styles.contaner}>
       <Box  alignItems='center' paddingTop={30}>
-        <View style={{marginTop:Metrics.HEIGHT*0.041}}>
+        <View style={{marginTop:Metrics.HEIGHT*0.091}}>
         <Text  style={styles.labetText}>ادخل الرمز</Text>
         </View>
-        <View style={{marginTop:Metrics.HEIGHT*0.031,alignItems:'center'}}>
-          <Text style={{fontFamily:Fonts.type.light,fontSize:18,fontWeight:"500",textAlign:'center'}}>
+        <View style={{marginTop:Metrics.HEIGHT*0.011,alignItems:'center'}} >
+          <Text  style={{fontFamily:Fonts.type.regular,fontSize:fontPixel(16),color:"#616171",textAlign:'center'}}>
             { `قمنا بارسال رسالة نصيه تحتوي على رمز `}
             {` التفعيل لرقمك  ${route.params.phone}`}
           </Text>
         </View>
 
-         <View style={styles.inputFieldSec} >
+         <View style={{ alignContent:'flex-start'}} >
             <SMSVerifyCode
                 ref={ verifycode}
                 onInputCompleted={(e)=>onCodechange(e)}
@@ -172,11 +173,13 @@ const onCodechange=(val)=>{
                 containerPaddingVertical={10}
                 containerPaddingHorizontal={50}
                 containerBackgroundColor={Colors.transparent}
-                codeViewBorderColor={Colors.lightGray}
+                codeViewBorderColor={"#214F5E"}
+                containerStyle={styles.codecontiner}
+                //codeViewStyle={{alignContent:'flex-start',textAlign:'right'}}
                  focusedCodeViewBorderColor="#0000FF"
                  warningTitle="الرجاء ادخال ارقام فقط"
                 codeViewBorderWidth={.4}
-                codeViewBorderRadius={2}
+                codeViewBorderRadius={5}
                 
             />
          
@@ -191,11 +194,11 @@ const onCodechange=(val)=>{
 
           <View style={{paddingBottom:2,paddingTop:10,alignItems:'flex-end',flexDirection:'row',}}>
             {isActive ? 
-            <Box flexDirection={'row'}>
+            <Box flexDirection={'row'} mt={'10'} >
             <Text style={styles.timerText}> {minutes_Counter}:{seconds}</Text>
             <Text style={styles.timerText}  > اعادة الارسال </Text>
             </Box>:
-            <Button variant={'link'} fontWeight='400' fontSize={18} color={'amber.700'} fontFamily={Fonts.type.base}
+            <Button variant={'link'} fontWeight='400' mt={'10'}  fontSize={18} color={'amber.700'} fontFamily={Fonts.type.base}
             onPress={()=>{renewCode()}} >اعادة الارسال </Button>}
           </View>
           {erorrmesage && <View style={{marginTop:4}}>

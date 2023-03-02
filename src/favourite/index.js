@@ -5,11 +5,14 @@ import setItem from '../services/storage';
 import api from '../services/api';
 import {Rating} from 'react-native-ratings' 
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import { Colors,Fonts ,Metrics,Images} from '../assets/Themes';
+import { Colors,Fonts ,Metrics,Images,fontPixel,widthPixel,heightPixel,pixelSizeHorizontal,pixelSizeVertical} from '../assets/Themes';
 import styles from './styles';
 //      import images from '../assets/Themes/Images';
 import {URL_ws,URL} from '../services/links';
 import _ from 'lodash'
+
+
+let HOURSWORK = 0
 
 
 const Favourite=(props)=>{
@@ -18,7 +21,7 @@ const Favourite=(props)=>{
 const[babseters,setbabyseters]=useState([])
 const[loading,setLoading]=useState(true)
 const[like,setlike]=useState(null)
- 
+const [hourswork, sethourswork] = useState(false)
 const [ favoriteList, setFavoriteList] = useState([]);
 
 useEffect(async()=>{
@@ -29,8 +32,8 @@ useEffect(async()=>{
     }else{
       setFavoriteList(favariotSettter)
     }
-    
-   console.log("Data for favariotSettter",Object.keys( favariotSettter).length)
+    console.log("Data for favariotSettter",favariotSettter)
+   //console.log("Data for favariotSettter",Object.keys( favariotSettter).length)
 
    
   
@@ -55,6 +58,20 @@ const onFavorite = async(favdata) => {
       
     };
   
+    const readWorkhours = async (id) => {
+
+      const response = await api.get(`allorderbysetterworkhours/${id}`).then((res) => {
+        console.log("Test total",res.data[0].totalhours)
+          HOURSWORK = res.data[0].totalhours
+          sethoursworktotal(res.data[0].totalhours)
+      }).finally(() => sethourswork(true)).catch((err) => {
+        console.log("Erorr from readWorkhours",err)
+          HOURSWORK = 0
+       
+      }) 
+      return response
+    }
+  
      
 
 return(
@@ -64,81 +81,55 @@ return(
          
         <Box alignItems={'center'} mt="4" backgroundColor={Colors.white}>
             {_.map(favoriteList,(item,id) =>{
-                return(
-                  <Box  key={id} bordesrWidth="1"   bgColor={Colors.white} borderColor="#00ABB9" borderRadius='md'  pr="5" py="2" ml="3" mr="5" mb={4} width={Metrics.WIDTH*0.953}  h={Metrics.HEIGHT*0.220}>
-                  <HStack space={3} justifyContent='space-around' key={item._id}>
-                    <Image  source={{ uri: `${URL}/users/${item.owner}/avatar`}} resizeMode='stretch' 
-                    style={{width: Metrics.WIDTH*0.281, height: Metrics.HEIGHT*0.170,marginLeft:5,marginRight:20,borderBottomLeftRadius:10}} />
-                    <Spacer />
-                    
-                    <VStack flexDirection={'column'}    alignItems={'flex-start'} >
-                      <Text  color= "#000000"
-                        fontFamily={Fonts.type.base} fontWeight='bold' fontSize={15}>
-                        {item.displayname}
-                      </Text>
+                return( 
+                  <View key={id} style={{flexDirection:'column' ,alignItems:'center' ,justifyContent:'center' , borderColor:Colors.gray , borderWidth:1 }}>
+                    <Box key={id}  marginLeft={pixelSizeHorizontal(15)} marginTop={'2'} paddingBottom={2} flexDirection={'row'}>
+                     
+                    <Box>
+                      <Image source={{ uri: `${URL}/users/${item.owner}/avatar` }} resizeMode='contain' style={{
+                        height: heightPixel(100), width: widthPixel(100),
+                        marginTop:22, marginRight: pixelSizeHorizontal(1), borderRadius: 22
+                      }} />
+                    </Box>
+                    <Box flexDirection={'column'} width={Metrics.WIDTH * 0.590} ml={pixelSizeHorizontal(20)} backgroundColor={Colors.transparent} marginTop={1} >
+                      <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
+                        <Stack flexDirection={'row'} justifyContent='space-around' >
+                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(16), color: Colors.newTextClr }}>{item.name}</Text>
+                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(18), color: "#FB5353", marginLeft: pixelSizeHorizontal(4) }} >{item.mainservice}</Text>
+                        </Stack>
+                        <TouchableOpacity onPress={()=>onRemoveFavorite(item._id)}>
+                          <EvilIcons name='trash' size={33} color={Colors.TexTPink} style={{marginTop:20}} />
+                        </TouchableOpacity>
+                      </Box>
                       
-                      <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} mr={6}>
-                        {item.service}
-                      </Text>
-                      <VStack flexDirection={'row'} alignItems='baseline'  bgColor='coolGray.50' >
-                       <Rating
-                          type='custom'
-                          //onFinishRating={(e)=>ratingCompleted(e)}
-                          style={{ paddingVertical: 10 ,backgroundColor:Colors.transparent,padding:10}}
-                          
-                          readonly={true}
-                          ratingCount={5}
-                          startingValue={item.rate ? Number(item.rate)/5:0}
-                          imageSize={20}
-                          ratingBackgroundColor={"#BFD1D6"}
-                          ratingColor={"#F38193"}
-                          tintColor={"#FFFFFF"}
-                            showRating ={false}
-                          starContainerStyle={styles.ratingContainerStyle}
-                          
-                          
-                    />
-                    <Box>
-                       <Text color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base}
-                        fontWeight="thin" fontSize={15}>التقييم {item.rate ? Number(item.rate):0}</Text>
+                      <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
+                        <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{item.price} ر.س/ساعة</Text>
+                        </Stack>
+                        <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
+                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{item.rate}</Text>
+                          <Image source={Images.starticon} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
+
+                        </Stack>
+
+                        <TouchableOpacity onPress={() => props.navigation.navigate('Shrtcutprofile', { data1: item, settertTitle: item.name })}>
+                          <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack} flexDirection='row' >
+                            <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>احجزي الان</Text>
+                          </Stack>
+                        </TouchableOpacity>
                     </Box>
-                   
-                    
-                    </VStack>
-                      
-                    <Box>
-                       <Text color= "#000000" fontFamily={Fonts.type.aminafonts} fontWeight="thin" fontSize={15} ml={1}>{item.hourstotal} ساعة عمل</Text>
                     </Box>
-                    <Box>
-                    <Text   color= "#000000" fontFamily={Platform.OS==='android'?Fonts.type.light:Fonts.type.base} fontWeight="thin" fontSize={15} >
-                      تكلفة الخدمه بالساعه {item.price} ريال
-                    </Text>
-                    <HStack backgroundColor={'amber.200'}>
-                    
-                    </HStack>
-                   
-                    </Box>
-        
-                    </VStack>
-                    
-                    <Spacer />
-                    {/* <TouchableOpacity onPress={()=>likeClike(item,index)}>
-                      <Image source={ index===like? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
-                    </TouchableOpacity>
-                   < TouchableOpacity onPress={()=>readlike(item)}>
-                      <Image source={ index===like? images.like1:images.like} resizeMode ={'cover'} style={{width:Metrics.WIDTH*0.0932 ,height:Metrics.HEIGHT*0.072}}   />
-                    </TouchableOpacity> */}
-        
-                    <TouchableOpacity onPress={()=>onRemoveFavorite(item._id)}>
-                      <EvilIcons name='trash' size={33} color={Colors.TexTPink} style={{marginTop:20}} />
-                    </TouchableOpacity>
-        
-                    
-                    
-                  </HStack>
-                  <Button  size={'md'} w={Metrics.WIDTH*0.944} bgColor={"#F38193"} onPress={()=> console.log(item) }>احجز الان</Button>
-                  
                 </Box>
+                <Box flexDirection={'row'} justifyContent="space-between"  width={'88%'} ml={'12'}   >
+                        <Stack flexDirection={'column'} textAlign='center' backgroundColor={Colors.ricePaper} >
+                          <Text letterSpacing={Platform.OS === 'android' ? 2.3:.2} fontFamily={Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.light} fontSize={fontPixel(Platform.OS==='android'?10:18)} color={Colors.newTextClr} >{item.bio}</Text>
+                        </Stack>
+                </Box>
+                      
+                  
+                  </View>
+                  
+                
                    
                 )
             })}

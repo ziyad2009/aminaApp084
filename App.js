@@ -7,7 +7,7 @@
  */
 import 'react-native-gesture-handler';
 import React,{useState,useEffect} from 'react';
-import { Platform, NativeModules } from 'react-native'
+import { Platform, NativeModules, Alert } from 'react-native'
 import RNRestart from "react-native-restart";
 import SplashScreen from 'react-native-splash-screen';
 import {
@@ -31,6 +31,30 @@ import Mapscreen  from './src/map';
 import Navigation from './src/routes/AuthRouter';
 import {I18nManager} from 'react-native'
  
+import OneSignal from 'react-native-onesignal';
+import {checkNotifications,openSettings,requestNotifications,check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+// OneSignal Initialization
+OneSignal.setAppId("e7f7d499-20ad-4a19-b702-414d65b3e158");
+
+// promptForPushNotificationsWithUserResponse will show the native iOS or Android notification permission prompt.
+// We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 8)
+OneSignal.promptForPushNotificationsWithUserResponse();
+
+//Method for handling notifications received while app in foreground
+OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
+  console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
+  let notification = notificationReceivedEvent.getNotification();
+  console.log("notification: ", notification);
+  const data = notification.additionalData
+  console.log("additionalData: ", data);
+  // Complete with null means don't show a notification.
+  notificationReceivedEvent.complete(notification);
+});
+
+//Method for handling notifications opened
+OneSignal.setNotificationOpenedHandler(notification => {
+  console.log("OneSignal: notification opened:", notification);
+});
 
 
 const App =() => {
@@ -46,21 +70,61 @@ const App =() => {
 
     useEffect(() => {
           SplashScreen.hide();
+          if(Platform.OS==='android'){
+            check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
+            .then((result) => {
+              switch (result) {
+                case RESULTS.UNAVAILABLE:
+                  console.log('This feature is not available (on this device / in this context)');
+                  break;
+                case RESULTS.DENIED:
+                  console.log('The permission has not been requested / is denied but requestable');
+                  break;
+                case RESULTS.LIMITED:
+                  console.log('The permission is limited: some actions are possible');
+                  break;
+                case RESULTS.GRANTED:
+                  console.log('The permission is granted');
+                  break;
+                case RESULTS.BLOCKED:
+                  openSettings()
+                  break;
+              }
+            })
+            .catch((error) => {
+              console.log('Erorr in notifscttions',error);
+            });
+          }
+          checkNotifications().then(({status, settings})=>{
+            if(status==='blocked'){
+              requestNotifications(['alert', 'sound']).then(({status, settings})=>{
+               
+               Alert.alert(
+                "امينة",
+                "يود تطبيق اميينةارسال الاشعارات اليك يمكن ان تتضمن الاشعارات تنبيهات ،اصوات وشارات على الايقونة يمكن تكوين ذلك في الاعدادات",
+                [
+                  {
+                    text: "سماح",
+                    onPress: () => openSettings()
+                  },
+                  {
+                    text: "عدم السماح",
+                    onPress: () => console.log("status",status),
+                    style: "cancel"
+                  },
+                  
+                ],
+                { cancelable: false }
+              );
+            
+              })
+            }
+            // console.log("status",status)
+            // console.log("settings",settings)
+          })
      }, []);
-  //     const changeAppLang= async(lang)=>   {
 
-  //     if(lang == 'Ar') {
-  //         if (!I18nManager.isRTL) {
-  //             await I18nManager.forceRTL(true);
-  //           }
-  //     } else {
-  //         if (I18nManager.isRTL) {
-  //             await I18nManager.forceRTL(false);
-  //           }
-  //     }
-  //     RNRestart.Restart()
-  // }
- 
+      
   if (!I18nManager.isRTL) {
       I18nManager.forceRTL(true);
       RNRestart.Restart();
@@ -71,7 +135,7 @@ const App =() => {
           NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
         : NativeModules.I18nManager.localeIdentifier;
 
-console.log("Divice languge",deviceLanguage); //en_US
+      //console.log("Divice languge",deviceLanguage); //en_US
   
   return(
     <NativeBaseProvider config={config} >

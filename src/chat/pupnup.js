@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Button,
   useColorScheme,
-  View,
+  View,TouchableOpacity,
   AppState,
   Image,
 } from 'react-native'
@@ -20,6 +20,7 @@ import PubNub from 'pubnub'
 import {PubNubProvider} from 'pubnub-react'
 import  {UserContext} from '../services/UserContext';
 import MaterialIcons from'react-native-vector-icons/MaterialIcons'
+import {Images,widthPixel,heightPixel} from '../assets/Themes/'
 
 
 
@@ -47,8 +48,8 @@ const PubNubChat = (props) => {
   //  Note: Application does not look different in dark mode
   //const isDarkMode = useColorScheme() === 'dark'
    
-  console.log( "test room from  form",props.room)
-  console.log( "test room from  form",props.username)
+  // console.log( "test room from  form",props.room)
+  // console.log( "test room from  form",props.username)
   
   //  Application state is persisted through hooks
   const [input, setInput] = useState('')
@@ -272,7 +273,7 @@ const PubNubChat = (props) => {
 
       return () => {
         
-        subscription.remove()
+       subscription.remove()
       }
     }
   }, [pubnub])
@@ -508,11 +509,9 @@ const PubNubChat = (props) => {
                 >
                   <Image
                     style={styles.logo}
-                    source={{
-                      uri:
-                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAA5CAYAAAB0+HhyAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TpUWqInaQ4pChOlkQFXHUKhShQqgVWnUwufQLmjQkKS6OgmvBwY/FqoOLs64OroIg+AHi6OSk6CIl/i8ptIj14Lgf7+497t4BQr3MNKtrHNB020wl4mImuyoGXhHEIPowgIjMLGNOkpLoOL7u4ePrXYxndT735+hVcxYDfCLxLDNMm3iDeHrTNjjvE4dZUVaJz4nHTLog8SPXFY/fOBdcFnhm2Eyn5onDxGKhjZU2ZkVTI54ijqqaTvlCxmOV8xZnrVxlzXvyF4Zy+soy12kOI4FFLEGCCAVVlFCGjRitOikWUrQf7+CPuH6JXAq5SmDkWEAFGmTXD/4Hv7u18pMTXlIoDnS/OM7HCBDYBRo1x/k+dpzGCeB/Bq70lr9SB2Y+Sa+1tOgR0L8NXFy3NGUPuNwBhp4M2ZRdyU9TyOeB9zP6piwweAv0rHm9Nfdx+gCkqavkDXBwCIwWKHu9w7uD7b39e6bZ3w9BPXKTmZenygAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAN1wAADdcBQiibeAAAAAd0SU1FB+YIEw4TFA++WWoAAALfSURBVGje7ZpNaxZXFICfMwbUxkZUqBJU0C78gApG20VFkdBWkErMQlFBF+K6tsv2X4h7V7qutqsWwQ/MQhFbN35sYtWgpVCjTTUq5n26cIQIDeSdzJ13JuTZDgPzzDn3nnPPTFAiagBbgb3ANmAFsDK/PAI8BoaAc8D1iJA6oWbqEXXY6TOsHlazukhsUm9anN/UTzotsVt95swZUwc7JXFQnbA8JtQDVUv0qc8tn3H1syLPFAUkuoE7k3ajsnkAbIiIF+3cVGTH+C6hBMBq4HjSiKhLgXtAT+LsfQasiYjRVBEZrEACYDEwkDK1BircUwaSpFbefowB3RWJ/Av0TLeNaSciyyqUAFgELEmRWr0dqLu9KUQ+6IDIohQif3ZA5FGKxT4fGC/SDRTthIAFEfG61IhExCvgboXRuD1diSJ15FyFImdTFsSzFYqkfWnqedNzoYqzyKdqK6FES91S1cHqZEKRE1WeELsSpdh5tavq4+5SdahEiSv5eacjA4j56qkSJM6oC+sw2xpUbxcQuKXurdu0sSufNv6cT0Om4oX6Uz5lLG09RCKpbqAPWAUsn9R0jgA3IuI5c8wxR6VESYu7Jx8UzGvz1glgNCL+qVwk/zCzHfgK2AFsBGZakf8GbgGXgV+BKxHRSlUnFqs/qPcraOP/UL/PI11qoftWfWr1jKrfqPNmKrFWvWbnuaquKSrRn7+RuvBE3dmuxB71pfXjpfr1tHYtdQfwC7CgpiVjHPgyIoamFFGXA7/z9kN/nfkL2BwRj6YaB51ugATAR8Cp/51rqYeALxrUlexS97+XWvk+fRf4uGEt1jCwLiLevIvIgQZKAKwF9k1OrWMNbnyPAoTaCzyk2Df3OtACejOgv8ES77KqPwM+nwXnqm0ZsH4WiKzL8pFN01mdAR/OApGeLF/1TaeVAZdmgcjFUFcBN2njd4maMQpsyiLiIbAZ+JG3P7I0hbH8mfsiYuQ/Y2ZPZ0NMPQgAAAAASUVORK5CYII=',
-                    }}
+                    source={Images.babysettericon}
                   />
+                  
                 </View>
                 <View style={styles.messageContent}>
                   {friendlyNames[message.author] !== undefined ? (
@@ -522,8 +521,8 @@ const PubNubChat = (props) => {
                     </Text>
                   ) : (
                     <Text style={styles.messageSender}>
-                      {message.author}{' '}
-                      {message.author == deviceId ? '(ME)' : ''}
+                      {/* {message.author}{' '}
+                      {message.author == deviceId ? '(ME)' : ''} */}
                     </Text>
                   )}
                   <Text style={styles.messageText}>{message.content}</Text>
@@ -544,10 +543,7 @@ const PubNubChat = (props) => {
                 >
                   <Image
                     style={styles.logo}
-                    source={{
-                      uri:
-                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAA5CAYAAAB0+HhyAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TpUWqInaQ4pChOlkQFXHUKhShQqgVWnUwufQLmjQkKS6OgmvBwY/FqoOLs64OroIg+AHi6OSk6CIl/i8ptIj14Lgf7+497t4BQr3MNKtrHNB020wl4mImuyoGXhHEIPowgIjMLGNOkpLoOL7u4ePrXYxndT735+hVcxYDfCLxLDNMm3iDeHrTNjjvE4dZUVaJz4nHTLog8SPXFY/fOBdcFnhm2Eyn5onDxGKhjZU2ZkVTI54ijqqaTvlCxmOV8xZnrVxlzXvyF4Zy+soy12kOI4FFLEGCCAVVlFCGjRitOikWUrQf7+CPuH6JXAq5SmDkWEAFGmTXD/4Hv7u18pMTXlIoDnS/OM7HCBDYBRo1x/k+dpzGCeB/Bq70lr9SB2Y+Sa+1tOgR0L8NXFy3NGUPuNwBhp4M2ZRdyU9TyOeB9zP6piwweAv0rHm9Nfdx+gCkqavkDXBwCIwWKHu9w7uD7b39e6bZ3w9BPXKTmZenygAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAN1wAADdcBQiibeAAAAAd0SU1FB+YIEw4TFA++WWoAAALfSURBVGje7ZpNaxZXFICfMwbUxkZUqBJU0C78gApG20VFkdBWkErMQlFBF+K6tsv2X4h7V7qutqsWwQ/MQhFbN35sYtWgpVCjTTUq5n26cIQIDeSdzJ13JuTZDgPzzDn3nnPPTFAiagBbgb3ANmAFsDK/PAI8BoaAc8D1iJA6oWbqEXXY6TOsHlazukhsUm9anN/UTzotsVt95swZUwc7JXFQnbA8JtQDVUv0qc8tn3H1syLPFAUkuoE7k3ajsnkAbIiIF+3cVGTH+C6hBMBq4HjSiKhLgXtAT+LsfQasiYjRVBEZrEACYDEwkDK1BircUwaSpFbefowB3RWJ/Av0TLeNaSciyyqUAFgELEmRWr0dqLu9KUQ+6IDIohQif3ZA5FGKxT4fGC/SDRTthIAFEfG61IhExCvgboXRuD1diSJ15FyFImdTFsSzFYqkfWnqedNzoYqzyKdqK6FES91S1cHqZEKRE1WeELsSpdh5tavq4+5SdahEiSv5eacjA4j56qkSJM6oC+sw2xpUbxcQuKXurdu0sSufNv6cT0Om4oX6Uz5lLG09RCKpbqAPWAUsn9R0jgA3IuI5c8wxR6VESYu7Jx8UzGvz1glgNCL+qVwk/zCzHfgK2AFsBGZakf8GbgGXgV+BKxHRSlUnFqs/qPcraOP/UL/PI11qoftWfWr1jKrfqPNmKrFWvWbnuaquKSrRn7+RuvBE3dmuxB71pfXjpfr1tHYtdQfwC7CgpiVjHPgyIoamFFGXA7/z9kN/nfkL2BwRj6YaB51ugATAR8Cp/51rqYeALxrUlexS97+XWvk+fRf4uGEt1jCwLiLevIvIgQZKAKwF9k1OrWMNbnyPAoTaCzyk2Df3OtACejOgv8ES77KqPwM+nwXnqm0ZsH4WiKzL8pFN01mdAR/OApGeLF/1TaeVAZdmgcjFUFcBN2njd4maMQpsyiLiIbAZ+JG3P7I0hbH8mfsiYuQ/Y2ZPZ0NMPQgAAAAASUVORK5CYII=',
-                    }}
+                    source={Images.mothericon }
                   />
                 </View>
 
@@ -571,7 +567,10 @@ const PubNubChat = (props) => {
             placeholder='Type your message here...'
           />
           <View style={styles.submitButton}>
-            <MaterialIcons name='send' size={33} color='#33687B'   onPress={handleSend} />
+            <TouchableOpacity  onPress={handleSend}>
+              <Image source={Images.pinkysendbutton} style={{width:widthPixel(32),height:heightPixel(32)}} resizeMode="contain" />
+            </TouchableOpacity>
+             
             {/* <Button title='Send' onPress={handleSend} color='#33687B' /> */}
           </View>
         </View>

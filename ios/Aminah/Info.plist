@@ -35,12 +35,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This is needed to get location updates in the background and get benefits for serve you</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>location is required for provide reservation benefits for you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>location is required for provide reservation benefits for you</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This is needed to get location updates in the background and get benefits for serve you</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Cairo-Black.ttf</string>
@@ -71,7 +71,7 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>location</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>

@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
         paddingTop:Platform.OS==='android'?55:77 ,
-        backgroundColor: 'white',
+        backgroundColor:Colors.AminabackgroundColor,
         
       },
       label: {

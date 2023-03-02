@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Image, View, TouchableOpacity, TextInput, Platform, Alert, Modal, StyleSheet, SafeAreaView, Pressable, ActivityIndicator } from 'react-native';
 
 import TelrSdk from 'rn-telr-sdk';
-import { Metrics, Colors, Fonts } from '../assets/Themes/';
+import { Metrics, Colors, Fonts,fontPixel,Images, widthPixel, heightPixel } from '../assets/Themes/';
 import { Stack, Box, Text, HStack, VStack, Spinner } from 'native-base';
 import setItem from '../services/storage/index'
 import api from '../services/api';
@@ -27,8 +27,9 @@ const TelerPage = (props) => {
   const [pass, setpass] = useState('processed')
   const [tran_amount, setTran_amount] = React.useState("");
   const [extrapayment, seteextrapayment] = useState(false)
-
+ 
   useEffect(async () => {
+    console.log("PRICE++++ props",props.route.params)
     setloding(true)
 
     const token = await setItem.getItem('BS:Token');
@@ -60,26 +61,29 @@ const TelerPage = (props) => {
   const telrModalClose = () => {
     setTelrModalVisible(false)
     setpass("canceled")
-    Alert.alert("الغيت من قبل المستخدمr");
+    console.log("fuction telrModalClose event=canceled","الغيت من قبل المستخدمr")
+   // Alert.alert("الغيت من قبل المستخدمr");
     handelScreenoption("canceled")
 
   }
   const didFailWithError = (message) => {
     setTelrModalVisible(false)
     setpass("canceled")
-    Alert.alert("الغاء الدفع**", (message));
+   // Alert.alert("الغاء الدفع**", (message));
+   console.log("fuction didFailWithError event=canceled==",message)
     handelScreenoption("canceled")
 
   }
 
   const didPaymentSuccess = (response) => {
-    console.log(response)
+    console.log("Response fo Success payment+++")
     
     setpass("success")
     //update order paymeet after aproved by gate
     handlepayment(tran_amount)
     setTelrModalVisible(false)
-    Alert.alert("تنبيه-الدفع",response.message);
+   // Alert.alert("تنبيه-الدفع",response.message);
+   console.log("fuction didPaymentSuccess event=success=>",response.message)
     handelScreenoption("success")
   }
 
@@ -112,7 +116,7 @@ const TelerPage = (props) => {
       tran_type: "sale",//sale
       tran_class: "paypage",
       tran_cartid: `${Math.floor(Math.random() * 1000) + 3}`,//enter cart id it shoud be unique for every transaction //1234567890
-      tran_description: "Test Mobile API",// enter tran description
+      tran_description: "paymetn from aminah app ",// enter tran description
       tran_currency: "SAR",
       tran_amount: tran_amount,
       tran_language: "en",
@@ -185,12 +189,13 @@ const TelerPage = (props) => {
       receiver: props.route.params.newData.settterowner,
       content: "لقد تم الدفع من قبل الام ",
       title: "تم الدفع",
-      orderid: props.route.params.newData.orderid
+      orderid: props.route.params.newData.orderid,
+      playerid:props.route.params.newData.setterplayerid
     }
     sendNotifcation(data)
   }
 
-  const handelScreenoption = (value) => {
+  const handelScreenoption = async(value) => {
     switch (value) {
       case "success":
         console.log("start chose screen", value)
@@ -198,11 +203,14 @@ const TelerPage = (props) => {
           updateOrderStatuse()
         } else {
           //send success for extra paymment
-          props.navigation.navigate({
-            name: 'WorkScreen',
-            params: { paymentstatuse: true },
-            merge: true,
-          });
+          // props.navigation.navigate({
+          //   name: 'WorkScreen',
+          //   params: { paymentstatuse: true },
+          //   merge: true,
+          // });
+          const statuse=true
+          await setItem.setItem('BS:EXTRAPAYMENT', JSON.stringify(statuse));
+          await setItem.removeItem('BS:ReqExtratime')
         }
         break;
       case "canceled":
@@ -211,11 +219,13 @@ const TelerPage = (props) => {
         console.log('opration  was  canceld by user')
         } else {
           //send success for extra paymment
-          props.navigation.navigate({
-            name: 'WorkScreen',
-            params: { paymentstatuse:false },
-            merge: true,
-          });
+          // props.navigation.navigate({
+          //   name: 'WorkScreen',
+          //   params: { paymentstatuse:false },
+          //   merge: true,
+          // });
+          const statuse=false
+          await setItem.setItem('BS:EXTRAPAYMENT', JSON.stringify(statuse));
         }
         break;
     }
@@ -223,71 +233,92 @@ const TelerPage = (props) => {
   }
   return (
     <SafeAreaView style={styles.backgroundStyle}>
-      <TelrSdk backButtonText={"Back"} buttonBackStyle={styles.buttonBackStyle} buttonBackColor={styles.buttonBackColor} backButtonTextStyle={styles.backButtonTextStyle} paymentRequest={paymentRequest} telrModalVisible={telrModalVisible} telrModalClose={telrModalClose} didFailWithError={didFailWithError} didPaymentSuccess={didPaymentSuccess} />
+      <TelrSdk backButtonText={"X"} buttonBackStyle={styles.buttonBackStyle} buttonBackColor={styles.buttonBackColor} backButtonTextStyle={styles.backButtonTextStyle} paymentRequest={paymentRequest} telrModalVisible={telrModalVisible} telrModalClose={telrModalClose} didFailWithError={didFailWithError} didPaymentSuccess={didPaymentSuccess} />
       {!loading ? <View style={styles.centeredView}>
-        <Stack w={"100%"} mt='24' backgroundColor={Colors.transparent}>
-
-          <Stack alignItems={'center'} height={"22%"} backgroundColor='amber.100' >
-            <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={22} mt={3}  > تفاصيل الفاتورة</Text>
+      {pass === "processed" && <Box w={"100%"} mt='24' backgroundColor={Colors.transparent}>
+          <Stack alignItems={'center'} justifyContent='center' height={"30%"} backgroundColor={Colors.transparent} >
+            <Image source={Images.samilogo} style={{width:widthPixel(200),height:heightPixel(200), borderRadius:16}} resizeMode='contain' />
           </Stack>
-          <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
-          <VStack alignItems={'center'}>
-            <HStack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'} >
+
+          <Box borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
+          
+          <Box alignItems={'center'}>
+            <Stack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'} >
               <Text style={styles.billRighttext}>المبلغ</Text>
               <Text style={styles.billLifttext}> SR {newdatta.totalprice}</Text>
-            </HStack>
+            </Stack>
 
-            <HStack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'}>
+            <Stack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'}>
               <Text style={styles.billRighttext} >قيمة الضريبة المضافة</Text>
-              <Text style={styles.billLifttext}>SR{(Number(0.15) * Number(newdatta.totalprice))}</Text>
-            </HStack>
-            <HStack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'}>
+              <Text style={styles.billLifttext}>SR{parseFloat(Number(0.15) * Number(newdatta.totalprice)).toPrecision(3)}</Text>
+            </Stack>
+            <Stack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'}>
               <Text style={styles.billRighttext}>طريقة الدفع</Text>
               <Text style={styles.billLifttext}>بطاقة مدى</Text>
-            </HStack>
-            <HStack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
-            <HStack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'}>
+            </Stack>
+            <Stack borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
+            <Stack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'}>
               <Text style={styles.billRighttext}>المبلغ الاجمالي</Text>
               <Text style={styles.billLifttext} > SR {(Number(0.15) * Number(newdatta.totalprice)) + newdatta.totalprice}</Text>
-            </HStack>
-          </VStack>
-        </Stack>
+            </Stack>
+          </Box>
 
-        {pass === "processed" && <Pressable
-          style={[styles.buttonPay, styles.buttonPayment]}
-          onPress={() => showTelrPaymentPage()}>
-          <Text style={styles.payButtonTextStyle}>اكمل عملية الدفع</Text>
-        </Pressable>
+          <Box width={"100%"} alignItems='center' justifyContent={'center'}>
+            <Pressable
+            style={[styles.buttonPay, styles.buttonPayment]}
+            onPress={() => showTelrPaymentPage()}>
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr}  >اكمل عملية الدفع</Text>
+            </Pressable>
+          </Box>
+
+        </Box>
+
+       
+        
         }
         {pass === "success" &&
           <Box flexDirection={'column'} alignItems='center' marginTop={6} w={"100%"}>
+            <Box width={"100%"} alignItems='center' justifyContent={'center'} mb={8}>
+            <Stack backgroundColor={Colors.backgroundimage} borderRadius={22} mt={10} p={10}>
+                <Image source={Images.wowimage} style={{width:widthPixel(200),height:heightPixel(200)}} />
+            </Stack>
+            <Stack  mt={2}>
+                <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(36)}  > تم الدفع بنجاح</Text> 
+            </Stack></Box>
             <Pressable
               style={[styles.buttonPay, styles.buttonPayment]}
-              onPress={() => props.navigation.goBack()}>
-              <Text style={styles.payButtonTextStyle}>العودة الى طلباتي</Text>
+              onPress={() => props.navigation.navigate('Request')}>
+              <Text style={styles.payButtonTextStyle}>طلباتي</Text>
             </Pressable>
-            <Text style={styles.payButtonTextStyle} >اكتملت عملية الدفع</Text>
+             
 
           </Box>
         }
         {pass === "canceled" &&
           <Box flexDirection={'column'} alignItems='center' marginTop={6}>
+            <Box alignItems={'center'}>
+            <Stack backgroundColor={Colors.backgroundimage} borderRadius={22} mt={10} p={10}>
+                <Image source={Images.canselorder} style={{width:widthPixel(200),height:heightPixel(200)}} />
+            </Stack>
+            <Stack  mt={2}>
+                <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(36)}  >عملية الدفع  ملغية</Text> 
+            </Stack></Box>
             <Pressable
               style={[styles.buttonPay, styles.buttonPayment]}
-              onPress={() => props.navigation.goBack()}>
-              <Text style={styles.payButtonTextStyle}>العودة الى طلباتي</Text>
+              onPress={() => props.navigation.navigate('Request') }>
+              <Text style={styles.payButtonTextStyle}> طلباتي</Text>
             </Pressable>
-            <Text style={styles.infoText} >  عملية الدفع  ملغية</Text>
+            
 
           </Box>}
         {pass === "erorr" &&
           <Box flexDirection={'column'} alignItems='center' marginTop={6}>
             <Pressable
               style={[styles.buttonPay, styles.buttonPayment]}
-              onPress={() => props.navigation.goBack()}>
-              <Text style={styles.payButtonTextStyle}>العودة الى طلباتي</Text>
+              onPress={() => props.navigation.navigate('Request')}>
+              <Text style={styles.payButtonTextStyle}> طلباتي</Text>
             </Pressable>
-            <Text style={styles.payButtonTextStyle} > خطاد في عملية الدفع</Text>
+            <Text style={styles.payButtonTextStyle}color={Colors.newTextClr} fontSize={fontPixel(18)} > خطاد في عملية الدفع</Text>
 
           </Box>}
          
@@ -306,7 +337,7 @@ const TelerPage = (props) => {
 
 const styles = StyleSheet.create({
   backgroundStyle: {
-    backgroundColor: 'white',
+    backgroundColor:Colors.AminabackgroundColor,
     flex: 1
   },
   centeredView: {
@@ -326,10 +357,11 @@ const styles = StyleSheet.create({
   buttonPay: {
     borderRadius: 10,
     padding: 10,
-    elevation: 2
+    elevation: 2,
+    width:widthPixel(200)
   },
   buttonPayment: {
-    backgroundColor: Colors.amin1Button1,
+    backgroundColor: Colors.AminaPinkButton,
     marginTop: 20,
   },
   payButtonTextStyle: {
@@ -373,30 +405,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'red'
   },
   billRighttext: {
-    fontFamily: Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.base,
+    fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular,
     fontWeight: '400',
     color: Colors.black,
-    fontSize: 15,
+    fontSize: 16,
     marginStart: 10,
     marginTop: 2,
 
 
   },
   billLifttext: {
-    fontFamily: Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.base,
+    fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular,
     fontWeight: '800',
     color: Colors.black,
-    fontSize: 15,
+    fontSize: 16,
     marginStart: 10,
     marginTop: 2,
 
 
   },
   infoText: {
-    fontFamily: Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.base,
+    fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular,
     fontWeight: '800',
     color: Colors.black,
-    fontSize: 15,
+    fontSize: 16,
     marginStart: 1,
     marginTop: 10,
   }
