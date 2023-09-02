@@ -104,7 +104,7 @@ const onCodechange=(val)=>{
           if(res.status===false){
             console.log("code status false",res.status)
              return seterorrmesage(true)
-          }
+          } 
           //get response from server  response res.status===true  
           if(res.status===true){
             console.log("code status true",res.status)
@@ -158,9 +158,10 @@ const onCodechange=(val)=>{
         <View style={{marginTop:Metrics.HEIGHT*0.091}}>
         <Text  style={styles.labetText}>ادخل الرمز</Text>
         </View>
-        <View style={{marginTop:Metrics.HEIGHT*0.011,alignItems:'center'}} >
-          <Text  style={{fontFamily:Fonts.type.regular,fontSize:fontPixel(16),color:"#616171",textAlign:'center'}}>
-            { `قمنا بارسال رسالة نصيه تحتوي على رمز `}
+        <View style={{marginTop:Metrics.HEIGHT*0.011,alignItems:'center',flexDirection:'column'}} >
+          <Text  style={{fontFamily:Fonts.type.regular,fontSize:fontPixel(18),color:"#616171",textAlign:'center',flexWrap:'wrap',letterSpacing:1.5}}>
+            { `قمنا بارسال رسالة نصيه تحتوي على رمز `}</Text>
+            <Text  style={{fontFamily:Fonts.type.medium,fontSize:fontPixel(16),color:"#616171",textAlign:'center',flexWrap:'wrap',letterSpacing:1.5}}>
             {` التفعيل لرقمك  ${route.params.phone}`}
           </Text>
         </View>
@@ -192,14 +193,18 @@ const onCodechange=(val)=>{
           </TouchableOpacity>
  
 
-          <View style={{paddingBottom:2,paddingTop:10,alignItems:'flex-end',flexDirection:'row',}}>
+          <View style={{alignItems:'center',flexDirection:'row',}}>
             {isActive ? 
-            <Box flexDirection={'row'} mt={'10'} >
-            <Text style={styles.timerText}> {minutes_Counter}:{seconds}</Text>
-            <Text style={styles.timerText}  > اعادة الارسال </Text>
+            <Box flexDirection={'row'} mt={'4'} >
+            
+            <Text style={styles.timerText}>  اعادة الارسال  </Text>
+            <Text style={styles.timerText2}> {minutes_Counter}:{seconds}</Text>
             </Box>:
-            <Button variant={'link'} fontWeight='400' mt={'10'}  fontSize={18} color={'amber.700'} fontFamily={Fonts.type.base}
-            onPress={()=>{renewCode()}} >اعادة الارسال </Button>}
+            <Button variant={'ghost'}   mt={'2'} p={1} fontSize={18} color={Colors.rmadytext} fontFamily={Fonts.type.base}
+              onPress={()=>{renewCode()}} >
+              <Text style={{letterSpacing:1,fontSize:fontPixel(18) ,color:Colors.newTextClr,fontFamily:Platform.OS==='android'? Fonts.type.aminafonts: Fonts.type.base
+                            ,textDecorationLine:'underline'}} >اعادة ارسال الكود؟</Text>
+              </Button>}
           </View>
           {erorrmesage && <View style={{marginTop:4}}>
             <Text style={{fontFamily:Fonts.type.sembold,fontSize:18,fontWeight:"400",color:"red"}}>{errmsg}</Text>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
-import {View, Alert,ScrollView, Platform,KeyboardAvoidingView} from 'react-native'
+import {View,SafeAreaView, Alert,ScrollView, Platform,KeyboardAvoidingView} from 'react-native'
 import {Stack,Text,Input,Button,Select,CheckIcon,Spinner,HStack,Heading, Box,Modal,Center,Radio, VStack} from 'native-base'
 import styles from './styles'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
@@ -10,7 +10,7 @@ import{Metrics,Colors,Fonts,fontPixel,widthPixel,heightPixel,pixelSizeHorizontal
 import { UserContext } from '../services/UserContext';
 import CustomButton from '../services/buttons/buttton';
 import { FacebookLoader, InstagramLoader } from 'react-native-easy-content-loader';
- 
+import AnimatedLoader from "react-native-animated-loader";
 const Profile=(props)=>{
    
     const[motherName,setmotherName]=useState("")
@@ -35,7 +35,7 @@ const Profile=(props)=>{
     const [loding ,setLoding]=useState(false)
     const [msgerorr,setmsgerorr]=useState(false)
     const [msg,setmsge]=useState(false)
-
+    const[visible,setvisible]=useState(false)
     const{sethome,ErorrMessage,errmsg}=useContext(UserContext)
     let alllrets=true
     
@@ -113,6 +113,7 @@ const Profile=(props)=>{
 
     const profileChick=async()=>{
         console.log("start chick profiles")
+        setvisible(true)
         const token = await setItem.getItem('BS:Token'); 
         const location= await setItem.getItem('BS:Location') 
         const  existLocation=JSON.parse(location)
@@ -124,6 +125,7 @@ const Profile=(props)=>{
 
         api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
        const response= await api.get("/mothers/me").then((res)=>{
+        console.log("loading MOTHER DATA finsh",res.data)
            return res
         })
         // .catch((err)=>{
@@ -151,11 +153,11 @@ const Profile=(props)=>{
         }
         
         if (response.status===201){
-            console.log("mother Profile Ok==***=",response.alow)
+            console.log("mother Profile Ok==***=",response.mother)
            
         setTimeout(() => {
             console.log("mother Profile Goo ===")
-             
+            setvisible(false)
             setLoding(false)
             sethome(true)
            
@@ -170,50 +172,82 @@ const Profile=(props)=>{
     const addMother=async()=>{
         console.log("START ADD MOTTHER")
         setmsgerorr(!msgerorr)
+        const token = await setItem.getItem('BS:Token');            
         const location= await setItem.getItem('BS:Location') 
         const  existLocation=JSON.parse(location)
+         console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
         if(existLocation===null){
-             Alert.alert("تنبيه", "الرجاء تفعيل خدمة الموقع واتحديد عنوانك من مربع العنوان ")
-             return;
+               return   Alert.alert("تنبيه", "الرجاء تفعيل خدمة الموقع واتحديد عنوانك من مربع العنوان ")
         }
-
-        console.log("LOCATIO",existLocation.lat)
+        console.log("LOCATIO",(existLocation.address_line1).toString())
+        
         const motherPhone= await setItem.getItem('BS:Phone');
-        const  existPhone=JSON.parse(motherPhone)
-        // console.log("mother phone",existPhone)
+        const MOTPhone=JSON.parse(motherPhone)
+        if(MOTPhone===null){
+            return   Alert.alert("تنبيه", "رقم الجوال غير مدخل")
+              
+         }
+        console.log("mother phone",MOTPhone)
+        const existPhone= Number(MOTPhone)
+        const sex="female"
+        //const IDCARD=Number(motherId)
+        const IDCARD=Number(motherId)
+        // const dadt=[
+        //     {name:motherName,
+        //     email:motherEmail,
+        //     gender:'female',
+        //     phone:existPhone,
+        //     idcard:IDCARD,}
+        // ]
+        // console.log("mothrl",dadt)
         // console.log("mother name",motherName)
         
+        // if (motherName.length<1 || motherEmail.length<1 || existPhone.length<1 ||motherFamyly.length<1 ){
+        //     return Alert.alert("آمينة","يجب عليك تعبئة الحقول")
+        // }
+       
+        api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+        //api.defaults.headers.Authorization =(`Bearer ${tttoken}`);
+       // console.log("Token= ",JSON.parse(token) )
         const response=await api.post('/creatmother',{
                 name:motherName,
                 email:motherEmail,
-                gender:'female',
+                gender:sex,
                 phone:existPhone,
-                idcard:motherId,
-                location:{
-                    "type": "Point",
-                    "coordinates": [lat, lon] 
-                },
+                idcard:IDCARD,
+                location:{coordinates:[lat, lon],"type":"Point"},
+                // location:{
+                //     "type": "Point",
+                //     "coordinates": [lat, lon] 
+                // },
                     address:locationmother,
                     chiled:chieldList,
                     displayname:motherFamyly
             }).then((res)=>{
                 console.log("test  mother res",res.data)
-                sethome(true)
+                return res.data
+               // sethome(true)
                  
             }).catch(err=>{
+                console.log("Erorr from add mother ",err)
                 if(err.message==="Request failed with status code 500"){
                     setmsgerorr(!msgerorr)
                     setmsge('الرجاءالتاكد من المدخلات بشكل صحيح')
                 }
             })
+           
             if(response==='undefined'){
                 setmsgerorr(true)
                 setmsge('الرجاء التاكد من ادخال جميع المعلومات')
+            }else if(response){
+                console.log("test response mother ",response)
+                sethome(true)
             }
            
-            console.log("test response mother ",response)
+          
 
     }
+    
      
     const addChield=  ()=>{
         console.log("test ")
@@ -286,14 +320,17 @@ const removeChiiled=async(val,name)=>{
     }
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 1 : 0
 return(
+    <SafeAreaView  >
+    <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+             keyboardVerticalOffset={keyboardVerticalOffset} enabled  >
+    <ScrollView  contentContainerStyle={{backgroundColor:Colors.AminabackgroundColor,width:Metrics.WIDTH,height:Metrics.HEIGHT }}   >
+        
     
-    <Box  backgroundColor={'white'} width={"100%"} height={"100%"} alignItems={'center'} justifyContent='center' mt={Platform.OS==='android'?'1':'4'}  >
-        <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-             keyboardVerticalOffset={keyboardVerticalOffset}    >
-        <View  style={{ flexDirection:'column',width:Metrics.WIDTH,marginRight:Platform.OS==="android"?1:1}}> 
+    
+        <View  style={{ backgroundColor:Colors.transparent,flexDirection:'column',width:Metrics.WIDTH,marginRight:Platform.OS==="android"?1:4,marginTop:Metrics.HEIGHT*0.1117}}> 
             { loding ?
-                <HStack  flexDirection={'column'} backgroundColor='white'  height={'90%'} alignItems={'center'} justifyContent='center' ml={1} mr={1}>
-                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
+                <HStack  flexDirection={'column'} backgroundColor='white'    alignItems={'center'} justifyContent='center' ml={1} mr={1}>
+                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:4} marginBottom={Platform.OS==='android' ?2:2} >
                         <Stack>
                             <Text alignItems='flex-start' fontSize={fontPixel(18) } fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.base} fontWeight='400'   color={Colors.black} ml={'2'} >الاسم الاول</Text>
                         </Stack>  
@@ -303,7 +340,7 @@ return(
                         </Stack>
                     </Box>
 
-                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
+                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:4} marginBottom={Platform.OS==='android' ?2:2} >
                         <Stack>
                             <Text alignItems='flex-start' fontSize={fontPixel(18) } fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.base} fontWeight='400' ml={'2'} mt="2">اسم العائلة</Text> 
                         </Stack>
@@ -313,17 +350,17 @@ return(
                         </Stack>
                     </Box>
 
-                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
+                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:4} marginBottom={Platform.OS==='android' ?2:2} >
                         <Stack>
                             <Text alignItems='flex-start' fontSize={fontPixel(18) } fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">رقم الهوية</Text>
                         </Stack>
                         <Stack  space={4}   alignItems={'center'}>
-                            <Input value={ (motherId).toString()}   maxLength={10} onChangeText={(e)=>setmotherId(e)} variant='outline'    color={Colors.blacktxt} 
+                            <Input value={motherId} placeholder="1xxxxxxxxx"  type='text'  maxLength={10} onChangeText={(e)=>setmotherId(e)} variant='outline'    color={Colors.blacktxt} 
                                 fontSize={fontPixel(18) }  fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
                         </Stack>
                     </Box>
 
-                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
+                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:4} marginBottom={Platform.OS==='android' ?2:2} >
                         <Stack>
                             <Text alignItems='flex-start' fontSize={fontPixel(18) } fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">العنوان</Text>
                         </Stack>
@@ -334,7 +371,7 @@ return(
                                 borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
                         </Stack>
                     </Box>
-                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
+                    <Box  w={widthPixel(Platform.OS==='android'?343:343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:4} marginBottom={Platform.OS==='android' ?2:2} >
                 <Stack>
                     <Text alignItems='flex-start' fontSize={fontPixel(18) } fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.regular} fontWeight='400' ml={'2'}  mt="2">البريد الالكتروني</Text>
                 </Stack>
@@ -344,7 +381,7 @@ return(
                 </Stack>
             </Box>
             
-            <Box  alignItems={"center"} justifyContent='center' padding={2} marginTop={'3'}    > 
+            <Box  alignItems={"center"} justifyContent='center' padding={2} marginTop={'3'} backgroundColor={Colors.transparent}    > 
                     <HStack flexDirection={'row'} space={3} justifyContent='space-around' w={"37%"}>
                         <Text alignItems="center" fontSize={20} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='400'  color={Colors.black} >اضف طفلك</Text>
                         <EvilIcons name={"plus"} size={35} color='#f38193' onPress={()=>addChield()}/>
@@ -353,8 +390,16 @@ return(
                 </Box>
                 </HStack>
                 : 
-                <Box height ={"77%"} alignItems='center'>
-                     <InstagramLoader active />
+                <Box   alignItems='center'>
+                    <AnimatedLoader
+                    visible={visible} 
+                    overlayColor="rgba(255,255,255,0.75)"
+                    source={require("./loadingdoots.json")}
+                    animationStyle={styles.lottie}
+                    speed={1}
+                >
+                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,fontSize:10,color:Colors.textZahry}} >جاري التوجيه للصفحة الرئيسيه...</Text>
+                </AnimatedLoader>
                 </Box>
                }
         </View>
@@ -364,7 +409,7 @@ return(
 
         
         {msgerorr&&
-        <View style={{width:Metrics.WIDTH,alignItems:'center',alignContent:'space-around',marginTop:3}}>
+        <View style={{width:Metrics.WIDTH,alignItems:'center',alignContent:'space-around',marginTop:1}}>
         <Text fontSize={18} color='error.500' fontFamily={Platform.OS==='android'? Fonts.type.regular:Fonts.type.base}>{msg}</Text>  
         </View>  
         }
@@ -374,56 +419,68 @@ return(
              marginTop:Platform.OS==='android'?1:1,justifyContent:'center',alignItems:'center',
             position:Platform.OS==='android'?'relative':'relative',bottom:Platform.OS==='android'?2:22}}>
            { loding ?
-                    <View style={{ width:Metrics.WIDTH,alignItems:'center',justifyContent:'center' }}>
+                    <View style={{ width:Metrics.WIDTH,alignItems:'center',justifyContent:'center' ,marginTop:10}}>
                     {/* <Button bgColor={Colors.amin1Button1} size={'lg'} onPress={() => 
                     addMother() }>اكمال التسجيل</Button> */}
+                    
                     < CustomButton
                     buttonColor={Colors.AminaPinkButton}
                     titleColor={Colors.white}
                     title="اكمال التسجيل"
-                    buttonStyle={{width: '88%', alignSelf: 'center',borderRadius:15 ,marginLeft:16}}
+                    buttonStyle={{width:"88%", alignSelf: 'center',borderRadius:15 ,marginLeft:16}}
                     textStyle={{fontSize: 20}}
                     onPress={() => addMother()}
                     />
+                    
                 </View>
             
-            :
+            :<Box/>
                     
-             <Box   justifyContent="center" alignItems={'center'}  width={"100%"}  mt={'4'}   > 
-                <Spinner accessibilityLabel="Loading posts"  color={Colors.AminaButtonNew} size={'lg'}/>
-                <Text color={Colors.textZahry} fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(20)}  >
-                     جاري التوجيه الى الصفحة الرئيسية
-                </Text>
-            </Box>
+            //  <Box  backgroundColor={'amber.100'} justifyContent="center" alignItems={'center'} h={'40'} width={"100%"}  mt={'1'}   > 
+            //     <Spinner accessibilityLabel="Loading posts"  color={Colors.greys} size={'lg'}/>
+            //     <Text color={Colors.textZahry} fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(22)}  mt={'5'} >
+            //          جاري التوجيه الى الصفحة الرئيسية
+            //     </Text>
+            //      <AnimatedLoader
+            //         visible={visible}
+            //         overlayColor="rgba(255,255,255,0.75)"
+            //         source={require("./loader.json")}
+            //         animationStyle={styles.lottie}
+            //         speed={1}
+            //     >
+            //         <Text>Doing something...</Text>
+            //     </AnimatedLoader>
+            //             </Box>
              }
         </View>
         
          <Center >
 
-            <Modal isOpen={ShowModal} onClose={() => setShowModal(false)}>
-            <Modal.Content width={Metrics.WIDTH } h={Metrics.HEIGHT*0.752}>
-            <Modal.CloseButton padding={3} />
+            <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} mr={3}>
+            <Modal.Content width={Metrics.WIDTH } h={Metrics.HEIGHT*0.822}>
+             
             <Modal.Header alignItems={'center'}>
-            <Heading fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontWeight='500'>بيانات طفلك</Heading>
+            <Heading fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} color={Colors.newTextClr} textAlign='center'>بيانات طفلك</Heading>
             </Modal.Header> 
             <Modal.Body alignItems={'center'} >
  
             <Stack flexDirection={"column"} alignItems='flex-start'  space={4} w="95%" padding={2}   >
-                <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base,
-                fontWeight:'400',marginLeft:1}}>اسم الطفل</Text>
+                <Text alignItems={'center'} fontSize={fontPixel(16)} marginLeft={1} 
+                 fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} color={Colors.newTextClr}>اسم الطفل</Text>
                 <Input variant='outline' placeholder="اسم الطفل" onChangeText={(e)=>setChiled(e)}  borderColor='#00ABB9'  borderWidth='1'  style={{textAlign:'right'}}
-                        fontSize={18} w={Metrics.WIDTH*0.824}   />
+                        fontSize={fontPixel(18)} w={Metrics.WIDTH*0.8001}   />
 
-                <HStack flexDirection={'row'} justifyContent='space-between'   w={Metrics.WIDTH*0.824}>
+                <HStack flexDirection={'row'} justifyContent='space-between'   w={Metrics.WIDTH*0.8001}>
                     <Box alignItems={'flex-start'}  w={Metrics.WIDTH*0.324}  >
-                        <Text style={{alignItems:"center",fontSize:15,fontFamily:Fonts.type.base,fontWeight:'400',marginLeft:1}}> العمر</Text>
+                        <Text alignItems={'center'} fontSize={fontPixel(16)} marginLeft={1} 
+                            fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} color={Colors.newTextClr}> العمر</Text>
                         <Input variant='outline' placeholder="العمر"  onChangeText={(e)=>setAge(e)}   borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}}
-                                fontSize={18} />
+                                fontSize={fontPixel(18)} />
                     </Box>
                     
                     <Box alignItems={'flex-start'}  w={Metrics.WIDTH*0.324}   >
-                        <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base,
-                        fontWeight:'400',marginLeft:1}}>الجنس</Text>    
+                        <Text alignItems={'center'} fontSize={fontPixel(16)} marginLeft={1} 
+                 fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} color={Colors.newTextClr}>الجنس</Text>    
                         <Select selectedValue={gender===null?"":null}  accessibilityLabel="الجنس" placeholder="الجنس" defaultValue="ذكر"
                                     _selectedItem={{
                                         bg: "gray.200", endIcon: <CheckIcon size="5" />}}
@@ -468,21 +525,27 @@ return(
                 </HStack>:null}
                 
                 <Box alignItems={'center'}   w={"100%"} p='2'> 
-                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base ,fontSize:15 ,fontWeight:'400',textAlign:'center'} } >
+                    <Text  alignItems={'center'} fontSize={fontPixel(16)} marginLeft={1} 
+                 fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} color={Colors.newTextClr} >
                                     الرجاء الحرص على ادخال بيانات طفلك بشكل دقيق </Text>
                     {chiieldAcount >=1 ? <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.base ,fontSize:15 ,fontWeight:'400',textAlign:'center'} } >
                             عدد الاطفال المسجلين  مسبقا {chiieldAcount} </Text>:null}
                 </Box>
                 <Box alignItems={'center'} w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>
-                    <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-                    onPress={() => addChield2()}> اضف الطفل</Button>
+                    <Button bgColor={Colors.AminaPinkButton} size={'lg'} mb='1.5' w='full'
+                            onPress={() => addChield2()}>
+                        <Text alignItems={'center'} fontSize={fontPixel(16)} marginLeft={1} 
+                             fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} color={Colors.white} > اضف الطفل</Text>
+                    </Button>
                 </Box> 
             </Modal.Footer>
             </Modal.Content>
             </Modal>
     </Center>
-    </KeyboardAvoidingView>
-     </Box>
+    </ScrollView>
+     </KeyboardAvoidingView>
+     
+     </SafeAreaView>
 
 )
 }

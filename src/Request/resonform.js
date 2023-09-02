@@ -11,12 +11,12 @@ const ResonForm=(props)=>{
     const[reson,setreson]=useState(true)
     useEffect(()=>{
         console.log("tetts val",value)
-        if(value==="وجود سبب اخر"){
-            setreson(false)
-        }else{
-            setreson(true)
+        // if(value==="وجود سبب اخر"){
+        //     setreson(false)
+        // }else{
+        //     setreson(true)
             
-        }
+       // }
     },[value])
 
     
@@ -41,7 +41,7 @@ const ResonForm=(props)=>{
                 </Radio.Group>
             </Stack>
             <Stack>
-            <TextArea isDisabled={reson} totalLines={6} value={reson} ontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={18} fontWeight='bold'  onChangeText={(text)=>console.log(text)}/>
+            <TextArea isDisabled={false} totalLines={6} value={reson} ontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={18} fontWeight='bold'  onChangeText={(text)=>setValue(text)}/>
             </Stack>
             </Box>
             <Stack flexDirection={'row'} alignItems={'center'} w={Metrics.WIDTH * 0.740} justifyContent='space-between' ml='3' mr='4' mt={3}  >
@@ -59,7 +59,7 @@ const ResonForm=(props)=>{
                     buttonStyle={{ width: '55%', alignSelf: 'center',borderRadius:15 }}
                     textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium  }}
                     titleColor={Colors.white}
-                    onPress={() =>  props.hiidmodal(false) }
+                    onPress={() =>  props.hidemodal(false) }
                   />
             </Stack>
          </Box>
@@ -84,7 +84,7 @@ const ResonForm=(props)=>{
                     buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:15 }}
                     textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium  }}
                     titleColor={Colors.white}
-                    onPress={() =>  props.hiidmodal(false) }
+                    onPress={() =>  props.hidmodal(false) }
                   />
             </Stack>
          </Box>

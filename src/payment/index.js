@@ -45,14 +45,12 @@ const paymentmethode=[
     
     return (
       <View  style={styles.wrapper }>
-        <Box   mt={10} >
-
-        
+        <Box   mt={1} >
         {paymentmethode.map((item)=>{
           return(
-          <Box key={item.id}  flexDirection={'row'} backgroundColor={Colors.white} width={widthPixel(380)} height={heightPixel(70)} justifyContent={'space-around'} alignItems='center' mt={5}  ml={15}  >
+          <Box key={item.id}  flexDirection={'row'} backgroundColor={Colors.white} width={widthPixel(371)} height={'16'} justifyContent={'space-around'} alignItems='center' mt={5}  ml={15}  >
             <Stack ml={2} alignItems='center'   justifyContent={'center'}>
-            <Radio.Group defaultValue={selected} name="exampleGroup" onChange={nextValue => {
+            <Radio.Group defaultValue={selected} value={selected} name="exampleGroup" onChange={nextValue => {
                 setselected(nextValue) }}>
                <Radio key={item.id} value={item.type}> </Radio>
               </Radio.Group>
@@ -77,6 +75,7 @@ const paymentmethode=[
                     buttonStyle={{width: '44%', alignSelf: 'center',borderRadius:10}}
                     textStyle={{ fontFamily:Fonts.type.bold,fontSize: 22 }}
                     onPress={() =>props.navigation.popToTop() } 
+                    
         />
         <CustomButton
                     buttonColor={Colors.textZahry}

@@ -1,7 +1,7 @@
 
 import React,{useEffect,useState} from 'react';
 import {View,Image, TouchableOpacity,Platform,} from 'react-native'
-import { Box,Heading,Avatar,Text, VStack, HStack,TextArea, Spinner, Spacer,Button,Center, Stack, ScrollView, Modal} from 'native-base';
+import { Box,Heading,Avatar,Text, VStack, HStack,TextArea, Spinner, Spacer,Button,Center, Stack, ScrollView, Modal, FlatList} from 'native-base';
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Feather from 'react-native-vector-icons/Feather'
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -15,6 +15,7 @@ import {URL_ws,URL} from '../services/links';
 import CustomButton from '../services/buttons/buttton';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import moment from 'moment';
+import axios from 'axios';
 
 
 let HOURSWORK
@@ -29,12 +30,15 @@ const[hourswork,sethourswork]=useState(false)
 const[hoursworktotal,sethoursworktotal]=useState(0)
 const[prevvorder,setprevorrder]=useState(false)
 const [disButton, setdisButton] = useState(false)
+const[locationdetails,setlocationdetals]=useState([])
+
 useEffect( async()=>{
   setbabyseters(props.route.params.data1)
 },[])
 
 useEffect(async () => {
   HOURSWORK=0 
+ //getLocattionDetails(props.route.params.data1.location)
   const from=props.route.params.data1.start
   const to =props.route.params.data1.end
   const owner=props.route.params.data1.owner
@@ -109,84 +113,155 @@ const canselRequest = async (id) => {
 }
 
 
+const ImageItem=({item,index,len} )=>{
+  return(
+    <View key={item.name} style={styles.containerimage}>
+
+      <Image
+        //resizeMode='contain'
+        
+        //style={(len -1>index)? styles.imagHome:styles.imagHomefullLength}
+        style={styles.imagHome}
+        source={{ uri: `${URL}/${item.name}` }}
+      />
+     
+      <MaterialIcons name='zoom-in' size={30} color={Colors.black} lineBreakMode='middle' onPress={() => props.navigation.navigate('Zoomphoto', { setterdata: item.name })}
+        style={styles.buttonViewimage} />
+    
+                    {/* <Button onPress={()=>console.log("tets",setterdata.name)} >ttest</Button> */}
+
+    </View>
+  )
+}
+
+// const ImageItem=({setterdata})=>{
+//   return(
+//     <View key={setterdata.name} style={styles.containerimage}>
+//        <ImageViewer
+//                  enableImageZoom={true}
+//                 renderHeader={()=><AntDesign name='close' size={30} color={Colors.white} style={{marginTop:Platform.OS==='android'? 20:88,marginRight:12}} onPress={()=>showModel() } />}
+//                 imageUrls={images}/>
+                
+//       <Image
+//         resizeMode='contain'
+        
+//         style={styles.imagHome}
+//         source={{ uri: `${URL}/${setterdata.name}` }}
+//       />
+//       <EvilIcons name='eye' size={33} color={Colors.textZahry} onPress={() => props.navigation.navigate('Zoomphoto', { setterdata: setterdata.name })}
+//         style={styles.buttonViewimage} />
+                   
+//                     {/* <Button onPress={()=>console.log("tets",setterdata.name)} >ttest</Button> */}
+
+//     </View>
+//   )
+// }
+
+
+const  getLocattionDetails=async(loc)=>{
+  const  geoapify={
+    key:'c4f58dbcba424e86be11ad602549059a',
+    key2:"AIzaSyA2pSYX2J6rUcHE2d2W-YD4tpBeciHbDhw",
+    site:'https://www.geoapify.com/reverse-geocoding-api'
+}
+
+//language
+console.log("test llll",loc);
+  var config = {
+    method: 'get',
+   // uri:`https://maps.googleapis.com/maps/api/geocode/json?address='+${loc.coordinates[0]}+ ',' +${loc.coordinates[1]}'&key=' + ${geoapify.key2}`,
+    url: `https://api.geoapify.com/v1/geocode/reverse?lat=${loc.coordinates[0]}&lon=${loc.coordinates[1]}&apiKey=${geoapify.key}&lang=ar`,
+    headers: { }
+  };
+  await axios(config)
+  .then(function (response) {
+      console.log(response.data.features);
+      setlocationdetals(response.data.features) 
+     //res.status(201).send(response.data)
+  })
+  .catch(function (error) {
+    //res.status(404).send(error)
+    console.log("tets api loca",error)
+  });
+
+}
 return(
   <Box  backgroundColor={Colors.white}  h={"100%"} w={"99%"}>
-    <Box backgroundColor={Colors.white} mt={Platform.OS==='android'?'24':'32'}    height={"100%"}  >
+    <Box backgroundColor={Colors.white} mt={Platform.OS==='android'?'16':'32'}    height={"100%"}  >
      
-       <Box  borderColor={Colors.veryLightGray} borderRadius={10} marginLeft={pixelSizeHorizontal(15)} marginTop={2}   paddingBottom={2} flexDirection={'row'} 
-            width={ Platform.OS==='android'? widthPixel(370): widthPixel(370)} backgroundColor={Colors.white} >
+       <Box  borderColor={Colors.veryLightGray} borderRadius={10} marginLeft={'4'} marginTop={2}   paddingBottom={2} flexDirection={'row'} justifyContent={"space-around"} 
+            width={ Platform.OS==='android'? Metrics.WIDTH*0.8902: widthPixel(391)} backgroundColor={Colors.AminabackgroundColor} >
         <Box>
-          <Image source={{ uri: `${URL}/users/${babseters.owner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),
-           marginTop:pixelSizeVertical(6),marginRight:pixelSizeHorizontal(10),borderRadius:10 }} />
+          <Image source={{ uri:`${URL}/users/${babseters.owner}/avatar` }} resizeMode='contain' style={{
+              height: heightPixel(109), width: widthPixel(109),
+              marginTop: pixelSizeVertical(6), marginRight: pixelSizeHorizontal(10), borderRadius:44
+            }} />
         </Box>
 
-        <Box flexDirection={'column'}   width={widthPixel(228)} ml={pixelSizeHorizontal(20)}  marginTop={1} > 
-          <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
-            <Stack flexDirection={'row'} mt={1} ml={2} alignItems='baseline' width={widthPixel(220)} justifyContent='space-between' >
-              <Text  fontFamil={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(24)} color={Colors.newTextClr} >{babseters.displayname}</Text>
-              <Image source={Images.save} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
-             </Stack>
+        <Box flexDirection={'column'}   width={Platform.OS==='android'? widthPixel(230): widthPixel(254)}  marginTop={1} backgroundColor='white'> 
+          <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'}  >
+            <Stack flexDirection={'row'} mt={1}  alignItems='baseline' width={Platform.OS==='android'? widthPixel(230):widthPixel(235)} justifyContent='space-between'  >
+            <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(24)} fontWeight={700} color={Colors.newTextClr} >{babseters.displayname}</Text>
+              <TouchableOpacity>
+              <Image source={Images.hartgray} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
+              </TouchableOpacity>
+            </Stack>
           </Box> 
         
-          <Box flexDirection={'row'} justifyContent="space-between">
-            <Stack flexDirection={'row'} >
-              <Text  fontFamil={Platform.OS==='android'?Fonts.type.light:Fonts.type.light} fontSize={fontPixel(12)} color={Colors.smolegrayColors} marginLeft={pixelSizeHorizontal(4)} >{babseters.mainservice ? babseters.mainservice : "-"}</Text>
+          <Box flexDirection={'row'} justifyContent="space-between" mt={'1'}   width={Platform.OS==='android'? widthPixel(230):widthPixel(235)} >
+            <Stack flexDirection={'row'}  >
+              <Text  fontFamily={Platform.OS === 'android' ? Fonts.type.base : Fonts.type.base} fontSize={fontPixel(12)} letterSpacing={1.8} color={Colors.amin1Button1} marginLeft={pixelSizeHorizontal(4)} >{babseters.mainservice ? babseters.mainservice : "-"}</Text>
             </Stack>
-             
             <Stack position={'relative'} bottom={1} >
-              <Text fontFamil={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(10)} color={Colors.rmadytext} marginLeft={pixelSizeHorizontal(2)}  >حفظ  </Text>
+                <EvilIcons name='share-apple' color={Colors.textZahry}  size={22}  />
             </Stack>
           </Box>
 
-          <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
-              <Text  fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr}  >{babseters.price} ر.س/ساعة</Text>
+          <Box flexDirection={'row'} justifyContent="space-between" mt={'2'} >
+            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={"#6BAF59"} padding={"1"}>
+                  <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(12)} color={Colors.white}>{babseters.price} ر.س/ساعة</Text>
             </Stack>
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
-             <Text  fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr} >{babseters.rate}</Text>
-             <Image source={Images.starticon} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
-
+            <Stack width={'12'} height={36} alignItems='center' justifyContent={'space-around'} borderRadius={'lg'} backgroundColor={"#FFB01E"} flexDirection='row' padding={'1'}>
+                  <Text fontFamil={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(12)} color={Colors.white} >{babseters.rate}</Text>
+                  <Image source={Images.staryellow} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
             </Stack>
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
-            {hourswork && <Text fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.rmadytext}>{HOURSWORK} ساعه عمل</Text>}
-              
+            <Stack width={'20'} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={"#EFEEFF"}>
+                  {hourswork && <Text fontFamily={Platform.OS === 'android' ? Fonts.type.base : Fonts.type.base} fontSize={fontPixel(12)} color={Colors.newTextClr}>{HOURSWORK} ساعه عمل</Text>}
             </Stack>
-            
-              
           </Box>
-           
-          </Box>
+        </Box>
           
           
+      </Box>
+
+      <Box  alignItems='flex-start' ml={3}     backgroundColor={Colors.white} mt={2}>
+      <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >نبذه مختصره</Text>
+      <TextArea  width={"100%"} placeholder="نبذه عن الحاضنه" value={babseters.bio} isReadOnly={true} borderColor={'gray.100'}
+             numberOfLines={20} lineHeight='lg'  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontWeight={'700'} 
+            fontSize={fontPixel(16)} textAlign={'right'} color={Colors.newTextClr}  />
           </Box>
 
-          <Box  alignItems='flex-start' ml={3} mt={1}>
-          <TextArea mt={1} mb={2}    placeholder="نبذه عن الحاضنه" value={babseters.bio} isReadOnly={true} borderColor={'white'}
-            width={"100%"}  height={20}  numberOfLines={20}  fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} 
-            fontSize={12} textAlign={'right'}  />
+          <Box mt={3} ml={1} alignItems={'baseline'}>
+              <Text  numberOfLines={2}  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >العنوان</Text>
+            <Stack flexDirection={'row'} justifyContent='space-around'  ml={3}>
+              <Image source={Images.locationgreen} style={{width:widthPixel(16),height:heightPixel(22)}}  />
+              <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(13)} fontWeight={'700'} color={Colors.newTextClr} ml={'2'} >{babseters.address}</Text>
+            </Stack>
           </Box>
+          <Box mt={'3'} ml={'3'}   >
 
-          <Box mt={3}  alignItems={'baseline'}>
-                <Stack flexDirection={'row'} justifyContent='space-around'  ml={3}>
-                <Image source={Images.locationblack} style={{width:widthPixel(13),height:heightPixel(14)}}  />
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(13)} color={Colors.newTextClr} ml={2} >{babseters.address}</Text>
-                </Stack>
-          </Box>
-          <Box mt={6} ml={3}  >
-          <Stack flexDirection={'column'}  >
-            <Stack alignItems={'flex-start'} flexDirection={'row'} ml={4} >
-              <Image source={Images.cirtfcate} style={{width:widthPixel(17),height:heightPixel(17)}} resizeMode='contain'/>
-            <Text  fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(14)}  color={Colors.newTextClr} ml={2} >شهادات ودورات مهنية</Text>
-            
+            <Stack flexDirection={'column'}  >
+              <Stack alignItems={'flex-start'} flexDirection={'row'} ml={2} >
+                <Image source={Images.cirtfcate} style={{ width: widthPixel(17), height: heightPixel(17) }} resizeMode='contain' />
+                <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red}  ml={'2'}>شهادات ودورات مهنية</Text>
+              </Stack>
+              <Stack>
+                <TextArea mt={1} mb={2} ml={5} placeholder="  الشهادات والموهلات الحاضنه" value={babseters.certificate} isReadOnly={true} borderColor={'white'}
+                  width={"100%"} height={20} numberOfLines={20} fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontWeight={'700'}
+                  fontSize={12} textAlign={'right'} textDecorationLine='underline' />
+              </Stack>
+
             </Stack>
-            <Stack>
-              <TextArea mt={1} mb={2}  ml={5}   placeholder="  الشهادات والموهلات الحاضنه" value={babseters.certificate} isReadOnly={true} borderColor={'white'}
-              width={"100%"}  height={20}  numberOfLines={20}   fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} 
-              fontSize={12} textAlign={'right'}  textDecorationLine='underline' />
-            </Stack>
-            
-          </Stack>
-        
         
           
         </Box>
@@ -202,10 +277,11 @@ return(
          <Image source={Images.awsma} resizeMode='contain' style={{ width: Metrics.WIDTH*0.9321 , height: Metrics.HEIGHT * 0.0453}} />
          </Box> */}
         
-         <View style={{ alignItems:'center',marginBottom:10,marginLeft:8, marginTop:8,width:Metrics.WIDTH*0.952,
-          height:Metrics.HEIGHT*0.2381,backgroundColor:Colors.transparent}}>
-
-        <Swiper    style={styles.wrapper}
+        <View style={{
+          alignItems: 'center', marginBottom: 10, marginLeft: 8, marginTop: 8, width: Metrics.WIDTH * 0.952,
+          height: Metrics.HEIGHT * 0.1881, backgroundColor: Colors.transparent
+        }}>
+        {/* <Swiper    style={styles.wrapper}
           dot={
             <View
               style={{
@@ -246,8 +322,15 @@ return(
                   
                  )
               })}
-            </Swiper>
+            </Swiper> */}
 
+        <FlatList 
+        data={imgList1}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({item,index}) => <ImageItem item={item} index={index} len={imgList1.length}/>}
+        style={{width:Metrics.WIDTH *0.911,  marginLeft:1,marginRight:2,backgroundColor:Colors.transparent}}
+        horizontal={true}
+        />
         </View>
         <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' mb={Platform.OS==='android'?4:1}  >
           {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full' 

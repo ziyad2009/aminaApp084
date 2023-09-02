@@ -31,11 +31,10 @@ const ExpiredNotice = () => {
         <Stack flexDirection={'row'} alignItems='baseline'>
           <AntDesign name='exclamationcircleo' size={15} color={Colors.black}  style={{marginRight:3}}/>
           <Text flexWrap={'wrap'} color={Colors.error} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base}
-            fontSize={12} >عفوا! لقد تجاوزت</Text>
+            fontSize={12} >عفوا! وقت الخدمة قد بداء</Text>
         </Stack>
         
-        <Text flexWrap={'wrap'} color={Colors.error} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base}
-            fontSize={12} >الوقت المسموح به</Text>
+         
       </Box>
     );
   };

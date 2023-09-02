@@ -1,15 +1,18 @@
 import React, { useState, useEffect,useContext } from 'react';
-import {View, Alert,ScrollView, Platform,KeyboardAvoidingView} from 'react-native'
-import {Stack,Text,Input,Button,Select,CheckIcon,Spinner,HStack,Heading, Box,Modal,Center,Radio} from 'native-base'
+import {View, SafeAreaView,Alert,ScrollView, Platform,KeyboardAvoidingView,Image,TouchableOpacity} from 'react-native'
+import {Stack,Text,Input,Button,Select,CheckIcon,Spinner,IconButton,Icon,HStack,Heading, Box,Modal,Center,Radio,Popover, Spacer} from 'native-base'
 import styles from './styles'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import Feather from 'react-native-vector-icons/Feather'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import api from '../services/api';
 import setItem from '../services/storage'
-import{Metrics,Colors,Fonts,fontPixel,widthPixel,heightPixel,pixelSizeHorizontal,pixelSizeVertical} from '../assets/Themes/'
+import{Metrics,Colors,Fonts,Images,fontPixel,widthPixel,heightPixel,pixelSizeHorizontal,pixelSizeVertical} from '../assets/Themes/'
 import { UserContext } from '../services/UserContext';
 import CustomButton from '../services/buttons/buttton';
 import { FacebookLoader, InstagramLoader } from 'react-native-easy-content-loader';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+
 const Motherprofilw=(props)=>{
     const[motherData,setmotherData]=useState({})
     const[motherName,setmotherName]=useState("")
@@ -36,7 +39,8 @@ const Motherprofilw=(props)=>{
     const [msg,setmsge]=useState(false)
     const{sethome,ErorrMessage,errmsg}=useContext(UserContext)
     let alllrets=true
-
+    const [position, setPosition] = useState("auto");
+    const [isOpen, setIsOpen] = useState(false);
     useEffect(async()=>{
        
         profileChick()
@@ -150,7 +154,8 @@ const Motherprofilw=(props)=>{
 
      const addChield=  ()=>{
         setShowModal(!ShowModal)
-        setmsgerorr(!msgerorr)
+        if(msgerorr===false){}
+        setmsgerorr(false)
         setmsge ('')
     }
     
@@ -197,13 +202,17 @@ const Motherprofilw=(props)=>{
             await api.delete(`chailedbynamedelete/${name}`).then((res)=>{
             console.log("tes remove chiled",res.data)
             }).finally((done)=> allchiled())
+            .catch((err)=>{
+                console.log("Erorr Editt chiled",err)
+            })
         
         }
 
 
             const updateChiled =async (chld)=>{
                 console.log("name deisi",chld.name,"name chiled",chld._id    )
-        
+                const token = await setItem.getItem('BS:Token');            
+                api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
                 const getMotherChieeld=await  api.post("/motherupdatechiledisease",{
                     name:chiled,
                     disease:selectDies
@@ -214,6 +223,7 @@ const Motherprofilw=(props)=>{
                 setOpen(!isopen)
                 setOpen1(!isopen1)
         }
+
         const updatemotherdata=async(id)=>{
             console.log("test mother id",id)
             const location= await setItem.getItem('BS:Location') 
@@ -262,132 +272,197 @@ const Motherprofilw=(props)=>{
     
         const keyboardVerticalOffset = Platform.OS === 'ios' ? 1 : 0
     return(
-    <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        keyboardVerticalOffset={keyboardVerticalOffset}    >
-    <ScrollView contentContainerStyle={{ backgroundColor:Colors.transparent,width:Metrics.WIDTH ,alignItems:"center",height:Metrics.HEIGHT*0.990,
-         paddingTop:Platform.OS==='android'?30:83}} >
+    <SafeAreaView  >
+        <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+                 keyboardVerticalOffset={keyboardVerticalOffset} enabled  >
+     
             
         {loding? <InstagramLoader active />
         :
-        <View> 
-        <HStack  flexDirection={'column'} w='100%' alignItems={'flex-start'} ml='4'>
+        <View style={{ backgroundColor:Colors.AminabackgroundColor,alignItems:'center',width:Metrics.WIDTH ,height:Metrics.HEIGHT
+                    , paddingTop:Platform.OS==='android'?18:4}}> 
+         
+                   
+                   
+      
+        <Box  flexDirection={'column'} w={Metrics.WIDTH *0.991} alignItems={'center'}   backgroundColor={Colors.AminabackgroundColor}>
         {/* <View style={{flexDirection:'row',justifyContent:'space-around',alignContent:'baseline',marginLeft:12,}}>
             
-             <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'} >الاسم الاول</Text>
-        </View> */}
+             <Text alignItems='
+             flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'} >الاسم الاول</Text>
+        </View> */} 
+        <Box   width={Metrics.WIDTH*0.9873 } height={Metrics.HEIGHT*0.02112} justifyContent={'flex-end'} mt={'1.5'}  flexDirection={'row'}
+                 >
+            {/* <TouchableOpacity onPress={()=>props.navigation.push("PaymentCardDisplay")}>
+                <Image source={Images.bankcard} style={{width:50,height:50}} />
+            </TouchableOpacity> */}
             
+                                <IconButton icon={<Icon as={MaterialIcons} name="system-update-alt" />} borderRadius="full" _icon={{
+                                    color:Colors.AminaPinkButton,
+                                    size: "lg"
+                                }} _hover={{
+                                    bg: "orange.600:alpha.20"
+                                }} _pressed={{
+                                    bg: Colors.rmadytext,
+                                    _icon: {
+                                        name: "system-update-alt"
+                                    },
+                                    _ios: {
+                                        _icon: {
+                                            size: "2xl"
+                                        }
+                                    }
+                                }} _ios={{
+                                    _icon: {
+                                        size: "2xl"
+                                    }
+                                }}_android={{
+                                    _icon: {
+                                        size: "2xl"
+                                    }
+                                }}  onPress={()=> updatemotherdata(motherData.mother._id)} />
+                   
+                </Box>
+            <Box  w={Metrics.WIDTH *0.971} mr={'12'} flexDirection={'row'} margin={2} ml={'12'}>
+                <Stack >
+                    <Image source={Images.MainLogo1} resizeMode='cover'
+                    style={{borderRadius:70 ,borderWidth:.2,borderColor:Colors.pinkystack,width:100,height:100 ,padding:2}}/>
+                </Stack>
+                <Stack flexDirection={'column'} alignContent={'space-around'} ml={'3'}>
+                    <Stack flexDirection={'row'} alignItems={'center'} ml={'1.5'} mt={'2'} >
+                        <Text>{motherName}</Text>
+                        <Text>{motherFamyly}</Text>
+                        
+                    </Stack>
+                    <Stack flexDirection={'row'} alignItems={'center'} ml={'1.5'} mt={'2'} >
+                        <Text>{motherEmail}</Text>
+                    </Stack>
+                    <Stack  flexDirection={'row'} mt={'2'} w={'100%'} >
+                    <Image source={Images.location} resizeMode='contain' style={{width:22,height:22,marginRight:3}} />
+                        <TouchableOpacity style={{backgroundColor:Colors.ricePaper ,width:Metrics.WIDTH*0.322}}
+                            onPress={()=>props.navigation.push("Mapscreen")}>
+                            <Text   numberOfLines={1} flex={1} flexWrap={'wrap'}>{locationmother}</Text>
+                        </TouchableOpacity>
+                        
+                        
+                    </Stack>
+                </Stack>
+                
+                
+                
+            </Box>
+            <Box borderColor={Colors.rmadytext} borderWidth={1}   width={'80'} />
+            
+            <Box  width={Metrics.WIDTH*0.9143} flexDirection={'row'}   mt={2} ml={'2'} mr={2}  backgroundColor={Colors.AminabackgroundColor} >
+                <Image source={Images.chiled} style={{width:33,height:26,marginRight:3,marginTop:10}} resizeMode='contain' />
+                <Box    ml={'1'} backgroundColor={Colors.AminabackgroundColor} justifyContent={'space-around'}>
+                    {chieldList.length>=1? <HStack   >
+                    
+                    {chieldList.map((chld)=>{    
+                        return(
+                            <Box backgroundColor={Colors.transparent} marginX={'1'} >
+                                <Popover trigger={triggerProps => {
+                                    return <Box  key={chld._id}   w={'auto'} flexDirection={'row'} borderColor={Colors.ricePaper} alignItems={'center'} borderWidth='.2' borderRadius={10}  mt={3}  h={Metrics.HEIGHT*0.0424} ml={2} mr={2}>
+                                           <TouchableOpacity  key={chld._id} {...triggerProps} style={{flexDirection:'row' ,width:'auto',marginRight:2,marginLeft:2}} >
+                                                <Stack flexDirection={'row'}>
+                                                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={fontPixel(15)} color={Colors.newTextClr} alignItems={'stretch'}> {chld.name} </Text>
+                                                    {/* <Text fontSize={fontPixel(12)} color={Colors.newTextClr}  > {chld.age} -سنوات</Text> */}
+                                                    {/* <Text  style={{fontSize:10,color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} >- {chld.diseasses}</Text> */}
+                                                </Stack>
+                                            </TouchableOpacity>
+                                            </Box> 
+                                    }}>
+                                    <Popover.Content accessibilityLabel="Delete Customerd" w='24'>
+                                    <Popover.Arrow />
+                                    <Popover.CloseButton />
+                                    <Popover.Header fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} >ازالة من القائمة</Popover.Header>
+                                    
+                                    <Popover.Footer justifyContent='center'>
+                                        <Button.Group space={1} alignItems={'center'}>
+                                                <Stack flexDirection={'row'} alignItems={'center'}>
+                                                    <EvilIcons name={"trash"} size={33} color={Colors.textZahry} onPress={()=>removeChiiled(chld.id,chld.name)}  style={{marginTop:1}}/>
+                                                    {/* <EvilIcons name={"pencil"} size={30} color={Colors.bloodOrange} onPress={()=>updateChiled(chld)}  style={{marginTop:1}}/> */}
+                                                </Stack>
+                                        </Button.Group>
+                                    </Popover.Footer>
+                                    </Popover.Content>
+                                </Popover>
+                                 
+                            </Box>
+                            
+                            
+                            )
+                            })}
+                    </HStack>
+                    :<Box> </Box>}
+                </Box>
+                    <TouchableOpacity onPress={()=>addChield()} style={{ marginLeft:22,alignItems:'center',justifyContent:'center'}}>
+                        <Image source={Images.addchiled} resizeMode='contain' style={{height:33,width:33, }} />
+                    </TouchableOpacity>
+                </Box>
+                <Box marginTop={'7'}>
+                    <Box  w={widthPixel(343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?3:4} marginBottom={Platform.OS==='android' ?2:2} >
+                        <Stack>
+                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400'   color={Colors.black} ml={'2'} >الاسم الاول</Text>
+                        </Stack>  
+                        <Stack space={4}   alignItems={'center'} >
+                            <Input value={motherName}  onChangeText={(e)=>setmotherName(e)} variant='outline'  placeholder="الاسم الاول " color={Colors.blacktxt} 
+                            fontSize={18} fontFamily={ Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base }   borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
+                        </Stack>
+                    </Box>
+                    <Box  w={widthPixel(343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:4} marginBottom={Platform.OS==='android' ?2:2} >
+                        <Stack>
+                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'} mt="2">اسم العائلة</Text> 
+                        </Stack>
+                        <Stack  space={4}   alignItems={'center'}>
+                            <Input value={motherFamyly} onChangeText={(e)=>setmotherFamyly(e)} variant='outline'  placeholder="اسم العائلة " color={Colors.blacktxt} 
+                                fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
+                        </Stack>
+                    </Box>
+
+                    <Box  w={widthPixel(343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:4} marginBottom={Platform.OS==='android' ?2:2} >
+                        <Stack>
+                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">رقم الهوية</Text>
+                        </Stack>
+                        <Stack  space={4}   alignItems={'center'}>
+                            <Input value={ (motherId).toString()}   maxLength={10} onChangeText={(e)=>setmotherId(e)} variant='outline'    color={Colors.blacktxt} 
+                                fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
+                        </Stack>
+                    </Box>
+                    
+                    <Box  w={widthPixel(343)} height={'20'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:4} marginBottom={Platform.OS==='android' ?2:2} >
+                        <Stack>
+                            <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">البريد الالكتروني</Text>
+                        </Stack>
+                        <Stack  space={4}   alignItems={'center'}>
+                            <Input value={motherEmail }  onChangeText={(e)=>setmotherEmail(e)} variant='outline'   placeholder="البريد الالكتروني" color={Colors.blacktxt} 
+                                fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
+                        </Stack>    
+                    </Box>
+                </Box>
+        </Box>
+       
+
+        {msgerorr&&<View style={{ backgroundColor:Colors.bloodOrange, width:Metrics.WIDTH,height:Metrics.HEIGHT*0.0583,alignItems:'center',alignContent:'space-around',marginTop:8}}>
+            <Text style={{color:Colors.error,fontSize:20}}>{msg}</Text>  
+        </View> }
 
         
-            <Box  w={widthPixel(343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
-                <Stack>
-                    <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400'   color={Colors.black} ml={'2'} >الاسم الاول</Text>
-                </Stack>  
-                <Stack space={4}   alignItems={'center'} >
-                    <Input value={motherName}  onChangeText={(e)=>setmotherName(e)} variant='outline'  placeholder="الاسم الاول " color={Colors.blacktxt} 
-                    fontSize={18} fontFamily={ Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base }   borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
-                </Stack>
-            </Box>
-            <Box  w={widthPixel(343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
-                <Stack>
-                    <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'} mt="2">اسم العائلة</Text> 
-                </Stack>
-                <Stack  space={4}   alignItems={'center'}>
-                    <Input value={motherFamyly} onChangeText={(e)=>setmotherFamyly(e)} variant='outline'  placeholder="اسم العائلة " color={Colors.blacktxt} 
-                        fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
-                </Stack>
-            </Box>
-
-            <Box  w={widthPixel(343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
-                <Stack>
-                    <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">رقم الهوية</Text>
-                </Stack>
-                <Stack  space={4}   alignItems={'center'}>
-                    <Input value={ (motherId).toString()}   maxLength={10} onChangeText={(e)=>setmotherId(e)} variant='outline'    color={Colors.blacktxt} 
-                        fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
-                </Stack>
-            </Box>
-
-            <Box  w={widthPixel(343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
-                <Stack>
-                    <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">العنوان</Text>
-                </Stack>
-                <Stack  space={4}   alignItems={'center'}>
-                    <Input value={locationmother} onPressIn={()=>props.navigation.push("Mapscreen")}
-                        variant='outline'    color={Colors.blacktxt} 
-                        placeholder="ادخل العنوان"  fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}
-                        borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
-                </Stack>
-            </Box>
-
-            <Box  w={widthPixel(343)} height={'24'} flexDirection={'column'}  alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS==='android'?5:12} marginBottom={Platform.OS==='android' ?2:2} >
-                <Stack>
-                    <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">البريد الالكتروني</Text>
-                </Stack>
-                <Stack  space={4}   alignItems={'center'}>
-                    <Input value={motherEmail }  onChangeText={(e)=>setmotherEmail(e)} variant='outline'   placeholder="البريد الالكتروني" color={Colors.blacktxt} 
-                        fontSize={18}  fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}  borderColor='#00ABB9'  borderWidth='1' style={{textAlign:'right'}} mt={2} height={Metrics.HEIGHT*0.0624} />
-                </Stack>
-            </Box>
-            
-            {chieldList.length>=1? <HStack    flexDirection={'column'}>
-                <Text textAlign={'left'} fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='400' ml={'2'}  mt="2">اطفالك</Text>
-                   {chieldList.map((chld)=>{    
-                    return(
-                        <Box  key={chld.id}   w={"90%"} flexDirection={'row'} borderColor='#00ABB9' alignItems={'center'} borderWidth='1' borderRadius={5}  mt={3}  h={Metrics.HEIGHT*0.0624} >
-                            <Box w={"80%"}  flexDirection={'row'} >
-                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} > {chld.name} </Text>
-                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} > {chld.age} - سنوات  </Text>
-                                <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} >- {chld.diseasses}</Text>
-                            </Box>
-                            
-                            <Box  w={"20%"} flexDirection={'row'}   >
-                                <EvilIcons name={"trash"} size={30} color={"#9191A4"} onPress={()=>removeChiiled(chld.id,chld.name)}  style={{marginTop:3}}/>
-                                <EvilIcons name={"pencil"} size={30} color={"#9191A4"} onPress={()=>updateChiled(chld)}  style={{marginTop:3}}/>
-                            </Box>
-                            
-                        </Box> )
-                        })}
-                </HStack>
-                :<Box> </Box>
-            }
-        <View  style={{alignItems:"center",padding:2 ,marginTop:30 ,width:Metrics.WIDTH*0.9272}}> 
-            <HStack flexDirection={'row'} space={3} justifyContent='space-around' w={"37%"}>
-                <Text alignItems="center" fontSize={20} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}   >اضف طفلك</Text>
-                <EvilIcons name={"plus"} size={33} color='#f38193' onPress={()=>addChield()}/>
-            </HStack>
-        </View>
-        </HStack>
-
-        {msgerorr?<View style={{ width:Metrics.WIDTH,height:Metrics.HEIGHT*0.0583,alignItems:'center',alignContent:'space-around',marginTop:8}}>
-            <Text style={{color:Colors.error,fontSize:20}}>{msg}</Text>  
-        </View>:<Box></Box>}
-
-        <View style={{width:Metrics.WIDTH*0.943 ,marginBottom:20}}>
-                    {/* <Button bgColor={Colors.amin1Button1} size={'lg'} onPress={() => 
-                 updatemotherdata(motherData.mother._id) }>حفظ</Button> */}
-                   <CustomButton
-                    buttonColor={Colors.AminaButtonNew}
-                    title="حفظ"
-                    buttonStyle={{width: '90%', alignSelf: 'center'}}
-                    textStyle={{fontSize: 20}}
-                    onPress={() =>   updatemotherdata(motherData.mother._id)  }
-                />
-        </View>
         <Center >
 
-            <Modal isOpen={ShowModal} backgroundColor={Colors.veryLightGray} onClose={() => setShowModal(false)}>
+            <Modal isOpen={ShowModal} backgroundColor={Colors.AminabackgroundColor} onClose={() => setShowModal(false)}>
             <Modal.Content width={Metrics.WIDTH }  h={Metrics.HEIGHT*0.752}>
-            <Modal.CloseButton padding={3} />
-            <Modal.Header backgroundColor={Colors.AminaButtonNew}  alignItems={'center'}>
-            <Heading fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontWeight='500' color={'white'}>بيانات طفلك</Heading>
+            <Modal.CloseButton padding={1} />
+            <Modal.Header backgroundColor={Colors.AminaPinkButton}  alignItems={'center'}>
+            <Heading fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}   color={'white'}>بيانات طفلك</Heading>
             </Modal.Header> 
             <Modal.Body alignItems={'center'} >
  
             <Stack flexDirection={"column"} alignItems='flex-start'  space={4} w="95%" padding={2}   >
-                <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,
-                fontWeight:'400',marginLeft:1}}>اسم الطفل</Text>
+                <Text style={{alignItems:"center",fontSize:12,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,
+                            marginLeft:1}}>اسم الطفل</Text>
                 <Input variant='outline' placeholder="اسم الطفل" onChangeText={(e)=>setChiled(e)}  borderColor='#00ABB9'  borderWidth='1'  style={{textAlign:'right'}}
-                        fontSize={18} w={Metrics.WIDTH*0.824}   />
+                        fontSize={12} w={Metrics.WIDTH*0.754}   />
 
                 <HStack flexDirection={'row'} justifyContent='space-between'   w={Metrics.WIDTH*0.824}>
                     <Box alignItems={'flex-start'}  w={Metrics.WIDTH*0.324}  >
@@ -397,7 +472,7 @@ const Motherprofilw=(props)=>{
                     </Box>
                     
                     <Box alignItems={'flex-start'}  w={Metrics.WIDTH*0.324}   >
-                        <Text style={{alignItems:"center",fontSize:15,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,
+                        <Text style={{alignItems:"center",fontSize:12,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base,
                         fontWeight:'400',marginLeft:1}}>الجنس</Text>    
                         <Select selectedValue={gender===null?"":null}  accessibilityLabel="الجنس" placeholder="الجنس" defaultValue="ذكر"
                                     _selectedItem={{
@@ -432,13 +507,14 @@ const Motherprofilw=(props)=>{
              </Modal.Body>
             
              <Modal.Footer alignItems={'flex-start'}>
-                {chieldList.length>=1? <HStack   flexDirection={'row'} flexWrap='wrap'  alignItems={'flex-start'}   >
+                {chieldList.length>=1? <HStack   flexDirection={'row'} justifyContent='space-around' flexWrap='wrap'   alignItems='center'  width={Metrics.WIDTH*0.8973}  >
                    {chieldList.map((chld)=>{ 
                     return(
-                        <Box  key={chld.id} borderColor='#00ABB9' alignItems={'center'} borderWidth='1' borderRadius={40}  mt={2} ml={2}  w={Metrics.WIDTH*0.232} >
-                            <EvilIcons name={"close"} size={18} color={Colors.red} onPress={()=>removeChiiled(chld.id,chld.name)}  style={{marginTop:3,marginBottom:1}}/>
+                        <Box  key={chld.id} borderColor={Colors.AminaPinkButton}  alignItems={'center'} borderWidth='1' borderRadius={'lg'}  flexDirection={'row'} w={'auto'} p={1} >
+                            <EvilIcons name={"trash"} size={18} color={Colors.blacktxt} onPress={()=>removeChiiled(chld.id,chld.name)}  style={{marginTop:3,marginBottom:3}}/>
                                     {/* <EvilIcons name={"close"} size={18} color={Colors.skyblue} onPress={()=>console.log(chld)}  style={{marginTop:3}}/> */}
-                            <Text  style={{fontSize:18,fontWeight:'600',color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} > {chld.name} </Text>
+                            <Text fontSize={12} color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base }
+                                 > {chld.name} </Text>
                         </Box> )
                         })}
                 </HStack>:null}
@@ -451,9 +527,9 @@ const Motherprofilw=(props)=>{
                 </Stack>
                 <Box alignItems={'center'} w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>
                     <CustomButton
-                        buttonColor={Colors.AminaButtonNew}
+                        buttonColor={Colors.AminaPinkButton}
                         title=" اضف الطفل"
-                        buttonStyle={{width: '90%', alignSelf: 'center'}}
+                        buttonStyle={{width: '88%', alignSelf: 'center',borderRadius:15}}
                         textStyle={{fontSize: 20}}
                         onPress={() =>   addChield2()  }
                     />
@@ -464,9 +540,9 @@ const Motherprofilw=(props)=>{
             </Modal>
     </Center>
 </View>}        
-    </ScrollView>
+   
     </KeyboardAvoidingView>
-
+    </SafeAreaView>
     )
 
 }

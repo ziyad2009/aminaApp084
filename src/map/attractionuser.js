@@ -92,7 +92,7 @@ const Attractionuser = (props) => {
       console.log('leave location')
     }),
     [props.navigation, watchId]
-  );
+  ); 
 
   const _handelappstate=(nextAppState)=>{
     if (

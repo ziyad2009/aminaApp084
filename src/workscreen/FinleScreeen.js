@@ -116,8 +116,8 @@ const FinleScreeen=(props)=>{
   }
        
     return(
-        <Box w={Metrics.WIDTH} flex={1} alignItems='center' backgroundColor={'white'} mt={Platform.OS==='android'?"70":"70"}>
-          <Box  borderColor={'black'} borderWidth={1} marginLeft={pixelSizeHorizontal(15)} marginTop={'12'}   paddingBottom={2} flexDirection={'row'} 
+        <Box w={Metrics.WIDTH} flex={1} alignItems='center' backgroundColor={'white'} mt={Platform.OS==='android'?"33":"70"}>
+          <Box    marginLeft={pixelSizeHorizontal(15)} marginTop={'12'}   paddingBottom={2} flexDirection={'row'} 
                 width={widthPixel(388)} height={heightPixel(140)} backgroundColor={"#FFFFFF"}   >
           <Box>
             <Image source={{ uri: `${URL}/users/${babysetter.settterowner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),

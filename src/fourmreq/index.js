@@ -19,97 +19,116 @@ import CustomButton from '../services/buttons/buttton';
  
 import DatePicker from 'react-native-date-picker';
 import OutlaintButton from '../services/buttons/buttonsOutlain';
+import AnimatedLoader from 'react-native-animated-loader';
 
 let MOTHERARRAY=[]
 let HOURSWORK=0
 let slctslots=0
 let childrensArray=[]
+
 const Fourm1=(props)=>{
-    const[loading,setloding]=useState(false);
-    const [subservice,setsubservice]=useState([]);
-    const [select,setselect]=useState(1)
+
+    const [loading, setloding] = useState(false);
+    const [subservice, setsubservice] = useState([]);
+    const [select, setselect] = useState(1)
     const [serviestype, setserviestype] = React.useState("حاضنة");
     const [mainservice, setmainservice] = React.useState("");
-    const [location,setlocation]=useState('')
-    const[babsetersData,setbabysetterData]=useState([])
-    const[like,setlike]=useState(false)
+    const [location, setlocation] = useState('')
+    const [babsetersData, setbabysetterData] = useState([])
+    const [like, setlike] = useState(false)
 
     const [timePicker, setTimePicker] = useState(false);
     const [timePicker2, setTimePicker2] = useState(false);
-   // const [time, setTime] = useState(new Date(Date.now()));
-        const [time, setTime] =useState(new Date())
+    // const [time, setTime] = useState(new Date(Date.now()));
+    const [time, setTime] = useState(new Date())
     const [time2, setTime2] = useState(new Date(Date.now()));
     const [datePicker, setDatePicker] = useState(false);
     const [date, setDate] = useState(new Date(Date.now()));
-    const[totalInminuts,settotalInminuts]=useState(0)
-    const [reservion,setReservion]=useState("")
- 
-    const[ResWay,setResWay]=useState(1)
-   
+    const [totalInminuts, settotalInminuts] = useState(0)
+    const [reservion, setReservion] = useState("")
+
+    const [ResWay, setResWay] = useState(1)
+
 
     const [showModal, setShowModal] = useState(false);
-    const[childeArray,settChiledArray]=useState([])
-    
-    const [motherch,setmothersh]=useState([])
+    const [childeArray, settChiledArray] = useState([])
+
+    const [motherch, setmothersh] = useState([])
 
     const [date4, setDate4] = useState(new Date())
-  const [open, setOpen] = useState(false)
-  const [open2, setOpen2] = useState(false)
+    const [open, setOpen] = useState(false)
+    const [open2, setOpen2] = useState(false)
 
-  const [resevButton, setresevButton] = useState(false)
-  const[hourswork,sethourswork]=useState(false)
+    const [resevButton, setresevButton] = useState(false)
+    const [hourswork, sethourswork] = useState(false)
+    const[visible,setvisible]=useState(false)
+    //Clender
 
-//Clender
-   
-const  onDateSelected=((event, value)=>{
-    //     const inputDate = selectedDate.toISOString();
-//     const outputDate = inputDate.split('T')[0];
-//    //setSelectedDate(outputDate);
-//     setDate(selectedDate);
-//     console.log("outputDate",outputDate)
-       
-if(Platform.OS==='ios'){
-    return setDate(value) ,setDatePicker(!datePicker);
-  }
-  setDatePicker(!datePicker);
-  setDate(value);
-// if (event?.type === 'dismissed') {
-//     console.log("ddessmes DATE")
-//     //setDatePicker(false);
-//     }else if 
-//     (event?.type === 'set'){
-//         console.log("SET DATE",value)
-//         setDate(value);
-//         //setDatePicker(false);
-// }
- 
-  } )
+    const onDateSelected = ((event, value) => {
+        //     const inputDate = selectedDate.toISOString();
+        //     const outputDate = inputDate.split('T')[0];
+        //    //setSelectedDate(outputDate);
+        //     setDate(selectedDate);
+        //     console.log("outputDate",outputDate)
 
-  
-  
-  const modelShow=()=>{
-    setShowModal(false)
-     //console.log("time1",moment(time1).format('HH:MM a'))
- }
+        if (Platform.OS === 'ios') {
+            return setDate(value), setDatePicker(!datePicker);
+        }
+        setDatePicker(!datePicker);
+        setDate(value);
+        // if (event?.type === 'dismissed') {
+        //     console.log("ddessmes DATE")
+        //     //setDatePicker(false);
+        //     }else if 
+        //     (event?.type === 'set'){
+        //         console.log("SET DATE",value)
+        //         setDate(value);
+        //         //setDatePicker(false);
+        // }
 
- useEffect(() => {
-    setDatePicker(false);
-  }, [date]);
-  
-//   useEffect(() => {
-//     setTimePicker(false);
-//   }, [time]);
+    })
 
-//   useEffect(() => {
-//     setTimePicker2(false);
-//   }, [time2]);
-//clender
- 
 
-   const handleSelection = (id,title) => {
-          setselect(id)
-          console.log( "test title ",title.services)
-            setserviestype(title.services)
+
+    const modelShow = () => {
+        setShowModal(false)
+        //console.log("time1",moment(time1).format('HH:MM a'))
+    }
+    const showClenderrIcon=()=>{
+        setTimeout(()=>{
+            setvisible(true)
+        },1000)
+    }
+    const hideClenderrIcon=()=>{
+        setTimeout(()=>{
+            setvisible(false)
+        },2000)
+    }
+
+    useEffect(() => {
+        setDatePicker(false);
+    }, [date]);
+
+    //   useEffect(() => {
+    //     setTimePicker(false);
+    //   }, [time]);
+
+    //   useEffect(() => {
+    //     setTimePicker2(false);
+    //   }, [time2]);
+    //clender
+
+    useEffect(() => props.navigation.addListener('beforeRemove', (e) => {
+        console.log("not hony back")
+    }),
+        [props.navigation]
+    );
+
+
+    const handleSelection = (id, title) => {
+        setselect(id)
+        console.log("test title ", title.services)
+        setserviestype(title.services)
     }
 
      
@@ -136,57 +155,59 @@ if(Platform.OS==='ios'){
         
       );
     }
+
     const BabyseterProfile=()=>{
         return(
-        <Box flex={1} backgroundColor={Colors.white}  >
-            <Box  borderColor={Colors.veryLightGray} borderRadius={10} marginLeft={pixelSizeHorizontal(15)} marginTop={2}
-            paddingBottom={2} flexDirection={'row'} 
-            width={widthPixel(370)}   backgroundColor={Colors.white} >
-            <Box>
-                <Image source={{ uri: `${URL}/users/${babsetersData.owner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),
-                    marginTop:pixelSizeVertical(6),marginRight:pixelSizeHorizontal(10),borderRadius:10 }} />
+            <Box flex={1} backgroundColor={Colors.white} width={Platform.OS === 'android' ? widthPixel(300) : widthPixel(360)} marginLeft={'5'} marginTop={2}      >
+                <Box borderColor={Colors.white} borderWidth={1} borderRadius={15}
+                    paddingBottom={2} flexDirection={'row'}
+                    width={Platform.OS === 'android' ? widthPixel(300) : widthPixel(371)} backgroundColor={Colors.white} >
+                    <Box>
+                        <Image source={{ uri: `${URL}/users/${babsetersData.owner}/avatar` }} resizeMode='contain' style={{
+                            height: heightPixel(109), width: widthPixel(109),
+                            marginTop: pixelSizeVertical(6), marginRight: pixelSizeHorizontal(10), borderRadius: 10
+                        }} />
+                    </Box>
+
+                    <Box flexDirection={'column'} width={widthPixel(228)} ml={'1'} marginTop={'1'} >
+                        <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
+                            <Stack flexDirection={'row'} mt={1} ml={2} alignItems='baseline' width={widthPixel(220)} justifyContent='space-between' >
+                                <Text fontFamily={Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.bold} fontSize={fontPixel(22)} color={Colors.newTextClr} >{babsetersData.displayname}</Text>
+                                <Image source={Images.save} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
+                            </Stack>
+                        </Box>
+
+                        <Box flexDirection={'row'} justifyContent="space-between">
+                            <Stack flexDirection={'row'} >
+                                <Text fontFamil={Platform.OS === 'android' ? Fonts.type.light : Fonts.type.light} fontSize={fontPixel(12)} color={Colors.smolegrayColors} marginLeft={pixelSizeHorizontal(4)} >{babsetersData.mainservice ? babsetersData.mainservice : "-"}</Text>
+                            </Stack>
+
+                            <Stack position={'relative'} bottom={1} left={Platform.OS == 'android' ? 1 : 0} mt={2} >
+                                <Text fontFamil={Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium} fontSize={fontPixel(10)} color={Colors.rmadytext} marginLeft={pixelSizeHorizontal(2)}  >حفظ  </Text>
+                            </Stack>
+                        </Box>
+
+                        <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
+                            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+                                <Text fontFamil={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr}  >{babsetersData.price} ر.س/ساعة</Text>
+                            </Stack>
+                            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
+                                <Text fontFamil={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(10)} color={Colors.newTextClr} >{babsetersData.rate}</Text>
+                                <Image source={Images.starticon} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
+
+                            </Stack>
+                            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+                                {hourswork &&
+                                    <Text fontFamil={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr}>{HOURSWORK} ساعه عمل</Text>}
+
+                            </Stack>
+                        </Box>
+
+                    </Box>
+
+
+                </Box>
             </Box>
-
-        <Box flexDirection={'column'}   width={widthPixel(228)} ml={pixelSizeHorizontal(20)}  marginTop={1} > 
-          <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
-            <Stack flexDirection={'row'} mt={1} ml={2} alignItems='baseline' width={widthPixel(220)} justifyContent='space-between' >
-              <Text  fontFamil={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(24)} color={Colors.newTextClr} >{babsetersData.displayname}</Text>
-              <Image source={Images.save} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
-             </Stack>
-          </Box> 
-        
-          <Box flexDirection={'row'} justifyContent="space-between">
-            <Stack flexDirection={'row'} >
-              <Text  fontFamil={Platform.OS==='android'?Fonts.type.light:Fonts.type.light} fontSize={fontPixel(12)} color={Colors.smolegrayColors} marginLeft={pixelSizeHorizontal(4)} >{babsetersData.mainservice ?babsetersData.mainservice : "-"}</Text>
-            </Stack>
-             
-            <Stack position={'relative'}    bottom={1} left={Platform.OS=='android'? 1: 0} mt={2} >
-              <Text fontFamil={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(10)} color={Colors.rmadytext} marginLeft={pixelSizeHorizontal(2)}  >حفظ  </Text>
-            </Stack>
-          </Box>
-
-          <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
-              <Text  fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr}  >{babsetersData.price} ر.س/ساعة</Text>
-            </Stack>
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
-             <Text  fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr} >{babsetersData.rate}</Text>
-             <Image source={Images.starticon} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
-
-            </Stack>
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
-            {hourswork && <Text fontFamil={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.rmadytext}>{HOURSWORK} ساعه عمل</Text>}
-              
-            </Stack>
-            
-              
-          </Box>
-           
-          </Box>
-          
-          
-          </Box>
-          </Box>
 
         )
         
@@ -212,7 +233,7 @@ useEffect(async()=>{
 
 useEffect(()=>{
     console.log("test chiled",childeArray.length)
-},[childrensArray])
+},[childeArray])
 
 
 useEffect(  () => {
@@ -377,11 +398,11 @@ useEffect(  () => {
 
         const token = await setItem.getItem('BS:Token');
         const location = await setItem.getItem('BS:Location')
-        const playeridUUid = await setItem.getItem('BS:playerid');
+        const playeridUUid = await setItem.getItem('@FCMTOKEN');
 
-        const playerid = JSON.parse(playeridUUid)
+        const playerid =   playeridUUid
         const coordinates = JSON.parse(location)
-
+        
         const timeresult = `${time} الى ${time}`
         if (totalInminuts < 1 || childeArray.length < 1) {
             console.log("account", totalInminuts, "=", childeArray.length < 1)
@@ -391,7 +412,7 @@ useEffect(  () => {
         const requestData = {
             serviestype: mainservice==="حضانة منزلية"?"":serviestype,
             mainservice: mainservice,
-            childe: childrensArray,
+            childe: childeArray,
             childeaccount: childeArray.length,
             time: timeresult,
             motherplayerid: playerid,
@@ -414,8 +435,8 @@ useEffect(  () => {
     const QiuqRREQUEST = async () => {
         const token = await setItem.getItem('BS:Token');
         const location = await setItem.getItem('BS:Location')
-        const playeridUUid = await setItem.getItem('BS:playerid');
-        const playerid = JSON.parse(playeridUUid)
+        const playeridUUid = await setItem.getItem('@FCMTOKEN');
+        const playerid = playeridUUid
         const coordinates = JSON.parse(location)
         //configer player id 
         const timeresult = `${time} الى ${time}`
@@ -438,7 +459,7 @@ useEffect(  () => {
         
         const babseters = {
             scurtycode: securenumber,
-            childe: childrensArray,
+            childe: childeArray,
             serviestype: babsetersData.mainservice,
             orderid: orderid,
             childeaccount: childeArray.length,
@@ -447,6 +468,7 @@ useEffect(  () => {
             time: timeresult,
             motherplayerid: playerid,
             setterplayerid: babsetersData.playerid,
+            setterphone:babsetersData.phone,
             settername: babsetersData.name,
             statuse: "processing",
             reson: "",
@@ -462,6 +484,7 @@ useEffect(  () => {
             totalhours: rhours,
             rreservioninfo: reservion
         }
+        //console.log("test arry",babseters)
         props.navigation.navigate('ConfirmRes', { data1: JSON.stringify(babseters) })
     }
 
@@ -475,7 +498,17 @@ useEffect(  () => {
     }
   
 
-
+const openModelWithshowTime=()=>{
+     showClenderrIcon()
+     hideClenderrIcon()
+    setShowModal(true)
+    setTimeout(() => {
+        
+        setOpen(true)
+       
+    }, 3000);
+  
+}
 
 return(
     <ScrollView contentContainerStyle={{backgroundColor:Colors.AminabackgroundColor,flex:1} }>
@@ -491,7 +524,7 @@ return(
         <View><Spinner accessibilityLabel="جاري تحميل البيانات" size="lg"  color={Colors.loginBlue}/></View>} */}
         </Box>
         
-        <Box flexDirection={'row'} alignItems={'center'} height={'141'} width="90%" marginLeft={pixelSizeHorizontal(22)} marginRight={pixelSizeHorizontal(22)} backgroundColor={Colors.bannerColor} marginTop={pixelSizeVertical(4)} borderRadius={20}>
+        <Box flexDirection={'row'} alignItems={'center'} height={'141'} width="90%" marginLeft={'5'} marginRight={'5'} backgroundColor={Colors.bannerColor} marginTop={pixelSizeVertical(4)} borderRadius={20}>
             {/* <Text style={{ paddingTop: 20, fontWeight: Platform.OS === 'android' ? "300" : "700", fontFamily: Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.base, fontSize: 22, marginLeft: 5, marginBottom: 2 }} >اختر الخدمة</Text>
             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.light : Fonts.type.light, fontSize: 18, marginBottom: 10 }}>الرجاء اختيار نوع الخدمه والبدء بانشاء طلبك</Text> */}
             <Box   flex={2}>
@@ -517,7 +550,7 @@ return(
             </Stack>
             <Stack  alignItems='baseline' flexDirection={'row'}     >
                 <Image source={Images.chiled} style={{width:widthPixel(17) ,height:heightPixel(17)}} resizeMode='contain'/>
-                <Text style={{marginLeft:5}}> {childrensArray.length}</Text>
+                <Text style={{marginLeft:5}}> {childeArray.length}</Text>
                 <Text  fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} fontSize={fontPixel(12)} mr={1}
                 >طفل</Text>
             </Stack>
@@ -543,32 +576,40 @@ return(
                 
     </View> 
     <View style={styles.framView}>
-        <Box justifyContent={'space-between'} flexDirection='column'  width={widthPixel(375)}  mt={3} >
-            <Box justifyContent={'space-between'} flexDirection='row'    >
+        <Box justifyContent={'space-between'} flexDirection='column'  width={widthPixel(375)}  mt={3}  >
+            <Box justifyContent={'space-between'} flexDirection='row' h={'5'}  >
                 <Stack alignItems={'baseline'} flexDirection='row' justifyContent={'space-around'} ml={2} >
                     <Image source={images.calender} style={{width:widthPixel(13),height:heightPixel(14)}}  />
                                     {/* <EvilIcons name="pencil" size={33} color={Colors.textZahry} }   /> */}
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontWeight='400'   color={Colors.greentext} 
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular}  color={Colors.greentext} 
                                 fontSize={fontPixel(12)} ml={2} textAlign='left'>اختر موعد الخدمة</Text>
                 </Stack>
-                <Stack mr={3}>
-                    <TouchableOpacity onPress={()=>setShowModal(true)}   >
+                <Stack mr={3}  >
+                    <TouchableOpacity onPress={()=>openModelWithshowTime() }    style={{height:Metrics.HEIGHT*0.0221 ,width:Metrics.WIDTH*0.0891,alignItems:'flex-end'}}  >
                         <Image source={images.pin} style={{width:widthPixel(16),height:heightPixel(16)}}  />
                             {/* <EvilIcons name="pencil" size={33} color={Colors.textZahry} }   /> */}
                     </TouchableOpacity>
                 </Stack>
             </Box>
-            <Box flexDirection={'row'} mb={10} ml={22} alignItems={'baseline'}>
-                <Image source={images.clock} style={{width:widthPixel(12),height:heightPixel(12)}}  />
-                <Stack  flexDirection={"row"} width={widthPixel(100)} ml={17} >
-                    <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >{moment(time).format("hh:mm a")}</Text>
-                    <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >/</Text>
-                    <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={15} fontWeight="400" ml="1" >{moment(time2).format("hh:mm a")}</Text>
-                </Stack> 
-                <Stack   flexDirection={"row"}   alignItems={'baseline'} >
-                    <Image source={images.clenderblack} style={{width:widthPixel(13),height:heightPixel(14),marginLeft:55}}  />
-                    <Text fontFamily={Fonts.type.medium}   fontSize={15} fontWeight="400" ml={17}>{moment(date).format('LL')}</Text>
-                </Stack> 
+            <Box flexDirection={'row'}   alignItems={'baseline'} mt={'2'}  >
+                
+                <Box flexDirection={'row'} alignItems={'center'} justifyContent='center'>
+                    <Stack   justifyContent={'center'} alignItems='center' ml={'5'}>
+                    <Image source={images.clock} style={{width:widthPixel(13),height:heightPixel(20),marginRight:Platform.OS==='android?'?2:2}}resizeMode='contain'  />
+                    </Stack >
+                    <Stack  flexDirection={"row"} width={widthPixel(100)} ml={'4'}     alignItems='baseline' justifyContent={'center'}   >
+                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={fontPixel(14)}  ml="1" >{moment(time).format("hh:mm a")}</Text>
+                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={fontPixel(14)}  ml="1" >/</Text>
+                        <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.base} fontSize={fontPixel(14)}  ml="1" >{moment(time2).format("hh:mm a")}</Text>
+                    </Stack> 
+                </Box>
+                <Box alignItems={'center'} justifyContent='center'>
+                    <Stack justifyContent={'center'} alignItems='center'  flexDirection={"row"}    >
+                        <Image source={images.clenderblack} style={{width:widthPixel(13),height:heightPixel(20),marginLeft:55}} resizeMode='contain'  />
+                        <Text fontFamily={Fonts.type.medium}   fontSize={fontPixel(14)} fontWeight="400" ml={17}>{moment(date).format('LL')}</Text>
+                    </Stack> 
+                </Box>
+                
             </Box>
         </Box>
                     
@@ -577,7 +618,7 @@ return(
     </View>
                 {/* 00000000 */}
     <View style={styles.framView}>
-            <Box justifyContent={'space-between'} flexDirection='column'  width={widthPixel(375)}  mt={3} >
+            <Box justifyContent={'space-between'} flexDirection='column'  width={widthPixel(375)}   >
             <Box justifyContent={'space-between'} flexDirection='row'>
                 <Stack flexDirection={'row'} ml={2} alignItems='baseline'>
                     <Image source={images.location} style={{width:widthPixel(13),height:heightPixel(14)}}  />
@@ -586,9 +627,10 @@ return(
                         fontSize={fontPixel(12)} ml="1" mt="2" textAlign='left'>الموقع</Text>
                 </Stack>
                 <Stack flexDirection={'row'} mr={2} alignItems='baseline' justifyContent={'space-between'}>
-                    <Text fontFamily={Platform.OS === 'android'? Fonts.type.medium : Fonts.type.medium}  color={Colors.textZahry}
+                    
+                    <TouchableOpacity  onPress={() => props.navigation.push("Mapscreen")} style={{alignItems:'flex-end',flexDirection:'row'}}>
+                        <Text fontFamily={Platform.OS === 'android'? Fonts.type.medium : Fonts.type.medium}  color={Colors.textZahry}
                         fontSize={fontPixel(12)} ml="1" mr={2} mt="2" textAlign='left'>اضف عنوان جديد</Text>
-                    <TouchableOpacity  onPress={() => props.navigation.push("Mapscreen")}>
                         <Image source={images.pin} style={{width:widthPixel(13),height:heightPixel(14)}}  />
                     </TouchableOpacity>
                 </Stack>
@@ -624,16 +666,17 @@ return(
      <Center>
          
         <Modal  isOpen={showModal} onClose={() => setShowModal(false)}
+           
                 borderColor={Colors.white} backgroundColor={Colors.transparent}
                 avoidKeyboard justifyContent="flex-end" bottom="4">
-            <Modal.Content width={Metrics.WIDTH }  height={heightPixel(646)} backgroundColor={Colors.AminabackgroundColor}>
+            <Modal.Content width={Metrics.WIDTH }  height={heightPixel(540)} backgroundColor={Colors.AminabackgroundColor} >
             <Modal.CloseButton />
             <Modal.Body flexDirection={'column'}  height={heightPixel(400)} >
                 <View style={{justifyContent:'space-around',marginLeft:1 ,marginTop:10 }}>
-                    <Box flexDirection={'row'}  mt={10} justifyContent='space-around'>
-                        <Stack  backgroundColor={Colors.textZahry}  w={Platform.OS==='android'? widthPixel(170):widthPixel(190)}
-                            borderRadius={15}    h={heightPixel(65)} alignItems='center'   mr={19} flexDirection='row'  justifyContent={'center'} >
-                            <Image source={images.yellowpin} style={{width:widthPixel(16),height:heightPixel(16),marginRight:7}}  />
+                    <Box flexDirection={'row'}  mt={'4'}  >
+                        <Stack  backgroundColor={Colors.textZahry}  w={Platform.OS==='android'? widthPixel(190):widthPixel(190)}
+                            borderRadius={'md'}    h={heightPixel(65)} alignItems='center'   mr={19} flexDirection='row'  justifyContent={'center'} >
+                            <Image source={images.yellowpin} resizeMode='contain' style={{width:widthPixel(16),height:heightPixel(16),marginRight:7}}  />
                             {datePicker ? (
                             <DateTimePicker
                                 value={date}
@@ -648,14 +691,6 @@ return(
                                     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} color={Colors.goldText} >
                                         {moment(date).format("dddd")}  {moment(date).format(" LL")}</Text>
                                 </TouchableOpacity>
-                            
-                                // <Input isReadOnly={true} h={heightPixel(22)} textAlign={'right'}  value={moment(date).format("LLLL")}
-                                //     fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} tintColor='amber.100'
-                                //     w={Platform.OS==='android'?60:158}   onPressIn={()=>setDatePicker(!datePicker)}
-                                //     borderColor={Colors.black} fontSize={fontPixel(16)} font   bgColor={Colors.textZahry}
-                                //     // InputLeftElement={<Icon as={ !datePicker && (<Feather name="calendar"  onPress={()=>setDatePicker(!datePicker)}/>  ) }
-                                //     // size={'lg'} ml="4"   color={Colors.textZahry} />}
-                                //        placeholder="تاريخ الخدمة" /> 
                             )}
                         </Stack>
                         
@@ -667,18 +702,23 @@ return(
                                         textAlign={'center'} fontSize={fontPixel(16)} backgroundColor='warning.700' >
                                         {moment(time).format("LT A")} </Text>
                                 <DatePicker
-                                mode='time'
+                                mode='datetime'
                                 modal
+                                
                                 theme='light'
                                 minuteInterval={30}
                                 open={open}
                                 date={time}
+                                
                                 onConfirm={(date) => {setTime(date) 
-                                            setOpen(false)}}
+                                            setDate(date)
+                                            setOpen(false) 
+                                            setresevButton(false)}}
                                 onCancel={() => {setOpen(false)}}
                                 />
                                 </TouchableOpacity>
                         </Stack>
+                         
                     </Box>
                 </View>
 
@@ -690,17 +730,36 @@ return(
                                 عدد ساعات الخدمة
                             </Text>
                         </Stack>
-                        <Stack  flexDirection={'row'}   alignItems='center'  justifyContent={'space-around'} mr={Platform.OS==='android'?8:1} >
+                        <Stack  flexDirection={'row'}   alignItems='center'  justifyContent={'space-around'} mr={Platform.OS==='android'?'2':'1'} >
                                 {timeslots.map((slot,index)=>{
                                 return(
-                                
-                                    <Box key={slot.id} backgroundColor={slctslots===index? "#F38193":Colors.white} borderRadius='md'  alignItems={'center'} justifyContent='center'
-                                            w={widthPixel(10)} height={heightPixel(40)} ml={Platform.OS==='android'?pixelSizeVertical(18): pixelSizeVertical(2)} mr={pixelSizeVertical(3)} mt={pixelSizeHorizontal(28)}  >
-                                        <TouchableOpacity  key={slot.id} style={{width:widthPixel(33),height:heightPixel(36),justifyContent:'center',alignItems:'center' }}   onPress={()=>extraTime(time,slot.time,index) } >
-                                            <Text alignSelf={'center'} fontSize={fontPixel(15)} color={"#000000"}>{slot.time}</Text>
-                                        </TouchableOpacity>
+                                    <TouchableOpacity  key={slot.id} style={{width:widthPixel(55),height:heightPixel(55),justifyContent:'center',alignItems:'center',marginTop:10,backgroundColor:Colors.transparent,
+                                                            borderRadius:100,borderColor:slctslots===index? "#F38193":Colors.greys ,borderWidth:1 }}   
+                                            onPress={()=>extraTime(time,slot.time,index) } >
+                                            <Box  key={slot.id}   borderRadius='lg'  alignItems={'center'} justifyContent='center' borderColor={'black'}
+                                                w={widthPixel(10)} height={heightPixel(40)}
+                                            ml={Platform.OS==='android'?'1': pixelSizeVertical(2)} mr={'2'}   >
+                                                <Text alignSelf={'center'} fontSize={ slctslots===index?  fontPixel(22): fontPixel(15)} 
+                                                    fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}
+                                                    color={"#000000"}>{slot.time}
+                                                </Text>
+                                            </Box>
                                         
-                                    </Box>
+                                    </TouchableOpacity>
+                                    
+                                        // <TouchableOpacity  key={slot.id} style={{width:widthPixel(33),height:heightPixel(36),justifyContent:'center',alignItems:'center',marginTop:10,backgroundColor:Colors.transparent }}   
+                                        //         onPress={()=>extraTime(time,slot.time,index) } >
+                                        //     <Box  key={slot.id} backgroundColor={slctslots===index? "#F38193":Colors.white} borderRadius='md'  alignItems={'center'} justifyContent='center'
+                                        //     w={widthPixel(10)} height={heightPixel(40)} ml={Platform.OS==='android'?'1': pixelSizeVertical(2)} mr={'2'}   >
+                                        //     <Text alignSelf={'center'} fontSize={fontPixel(15)} 
+                                        //         fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium}
+                                        //         color={"#000000"}>{slot.time}
+                                        //     </Text>
+                                        //     </Box>
+                                            
+                                        // </TouchableOpacity>
+                                        
+                                  
                                
                                 )
                             })}
@@ -718,6 +777,18 @@ return(
                    </Stack>
                 </Box>
                 </View>
+                {visible?<Stack > 
+                            <TouchableOpacity>
+                                <AnimatedLoader
+                                    visible={visible}
+                                    overlayColor="rgba(255,255,255,0.75)"
+                                    source={require("./calender.json")}
+                                    animationStyle={styles.lottie}
+                                    speed={1}
+                                /> 
+                            </TouchableOpacity>
+                        
+                        </Stack>:<Stack/>}
             </Modal.Body>
             
             <Modal.Footer alignItems={'center'} justifyContent='space-around'  backgroundColor={Colors.AminabackgroundColor} height={Metrics.HEIGHT*0.281}>
@@ -729,7 +800,7 @@ return(
                     </Stack> 
                     <Box flexDirection={'row'} justifyContent='space-around' width={widthPixel(388)} mt={7}>
                         <Stack flexDirection={"row"} >
-                            <Image source={images.clenderblack} style={{width:widthPixel(16),height:heightPixel(16),marginRight:8}}  />
+                            <Image source={images.clenderblack} resizeMode='contain' style={{width:widthPixel(16),height:heightPixel(16),marginRight:8}}  />
                             <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.newTextClr} alignItems={'flex-end'}>
                                 {moment(date).format('dddd')}</Text>
                             <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts:Fonts.type.base} color={Colors.newTextClr} alignItems={'flex-end'}>
@@ -737,12 +808,12 @@ return(
                         </Stack>
                         <Stack flexDirection={'row'} >
                             <Stack flexDirection={'row'}>
-                                <Image source={images.clock} style={{width:widthPixel(16),height:heightPixel(16),marginRight:8}}  />
+                                <Image source={images.clock} resizeMode='contain' style={{width:widthPixel(16),height:heightPixel(16),marginRight:8}}  />
                                 <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium} color={Colors.newTextClr} alignItems={'flex-end'}>
                                     {moment(time).format('hh:mm a')}</Text>
                             </Stack>
                             <Stack flexDirection={'row'}   >
-                                <Image source={images.clockred} style={{width:widthPixel(16),height:heightPixel(16),marginLeft:8}}  />
+                                <Image source={images.clockred} resizeMode='contain' style={{width:widthPixel(16),height:heightPixel(16),marginLeft:8}}  />
                                 <Text fontFamily={Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium} color={Colors.newTextClr} marginLeft={2}> 
                                 {moment(time2).format('hh:mm a')}</Text>
                             </Stack>

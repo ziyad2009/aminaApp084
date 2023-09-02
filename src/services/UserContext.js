@@ -2,7 +2,8 @@
 import React,{ useEffect,useState} from 'react';
 import api from '../services/api';
 import setItem from '../services/storage';
-import socketio from "socket.io-client";
+import socketio  from "socket.io-client";
+import SocketIOClient from "socket.io-client";
 import { URL_ws, URL_ws_chat } from './links';
 import DeviceInfo from 'react-native-device-info';
 import deviceInfoModule from 'react-native-device-info';
@@ -13,8 +14,10 @@ import deviceInfoModule from 'react-native-device-info';
 export const UserContext =React.createContext({})
 
   const SOKITIO = socketio(URL_ws_chat);
-  const SOKITIOSetter = socketio(URL_ws);
-
+ // const SOKITIOSetter = socketio(URL_ws);
+  const SOKITIOSetter = SocketIOClient(URL_ws, {
+    jsonp: false,
+  });
    
    
  const  UserProvider= ({children})=> {
@@ -24,6 +27,7 @@ export const UserContext =React.createContext({})
       const [loading, setLoading] = useState(true);
      const [verify,setverify]=useState(false)
      const [regUser,setRegUser]=useState(false)
+     const[dirction,setdirction]=useState(null)
      const [statuscode,setstatuscode]=useState(null)
     const[home,sethome]=useState(false)
     const[errmsg,seterrmsg]=useState('')
@@ -32,8 +36,8 @@ export const UserContext =React.createContext({})
     const[chatroom,setchatroom]=useState('')
       useEffect(() => {
          async function tryGetUser(){ 
-            await setItem.removeItem('BS:User');
-            await setItem.removeItem('BS:Token');
+        //    await setItem.removeItem('BS:User');
+        //    await setItem.removeItem('BS:Token');
         //    await setItem.removeItem('BS:Location');
         //    await setItem.removeItem('on:like');
           
@@ -42,7 +46,8 @@ export const UserContext =React.createContext({})
             if(!user || !token){
                 setLoading(false);
                 setRegUser(false);
-                console.log("can t get user fro Contxt");
+                setdirction(false)
+                console.log("can t get user fro Contxt no user!");
                 return false;
             }
             try{
@@ -52,6 +57,8 @@ export const UserContext =React.createContext({})
                     setUser(false)
                     setLoading(false)
                     setRegUser(false)
+                    setdirction(false)
+                    console.log(" User dont have token!");
                     return;
                 }
                 if(!user_from_api.verify){
@@ -59,19 +66,28 @@ export const UserContext =React.createContext({})
                     setUser(user_from_api);
                     setRegUser(true);
                     
-                    console.log(" user vervay not ",user_from_api.verify)
+                    console.log("User is not verify ++++  ",user_from_api.verify)
                     return;
                 }
-                console.log("test USER Data ",token)
+                console.log("User token is from backend ?? ",token)
+                console.log("User information from  backend ?? ",user_from_api)
                 ///go home
                 setUser(user_from_api);
                 setToken(token);       
                 setRegUser(true)                                          
                 setLoading(false);
-                sethome(true);
+                setverify(true)
+                setdirction(true)
+               // sethome(true);
             } catch(err){
-                console.log(err);
-                console.log("can t get user");
+                
+                 
+                    setUser(false)
+                    setLoading(false)
+                    setRegUser(false)
+                    setdirction(false)
+                    console.log("Erorr  from backendd",err);
+                 
             }
         };
         
@@ -259,6 +275,7 @@ export const UserContext =React.createContext({})
             SOKITIOSetter,
             DeviceID,
             chatroom,
+            dirction,
          loginbyphone,
          loginbycoded,
          sethome,

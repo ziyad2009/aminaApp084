@@ -21,45 +21,56 @@ import {
 } from 'react-native';
 import {NativeBaseProvider} from 'native-base'
 import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
+import {
   Colors,Fonts,Metrics
 } from './src/assets/Themes/';
-import {WithSplashScreen} from './src/Home/splashScreen' 
-import IntroScreen from './src/introscreen';
-import Singin from './src/login';
  import UserProvider  from './src/services/UserContext'
 import Mapscreen  from './src/map';
 import Navigation from './src/routes/AuthRouter';
 import {I18nManager} from 'react-native'
- 
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
+
 import OneSignal from 'react-native-onesignal';
 import {checkNotifications,openSettings,requestNotifications,check, PERMISSIONS, RESULTS} from 'react-native-permissions';
-// OneSignal Initialization
-OneSignal.setAppId("e7f7d499-20ad-4a19-b702-414d65b3e158");
+import notifee, { EventType ,AuthorizationStatus} from '@notifee/react-native';
+import  {requestUserPermission,notifacttionlistener, notifeeConfige} from  './src/services/utils/notifactionservices'
+ 
+import CodePush from "react-native-code-push"; 
 
-// promptForPushNotificationsWithUserResponse will show the native iOS or Android notification permission prompt.
-// We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 8)
-OneSignal.promptForPushNotificationsWithUserResponse();
+const appVersion='33'
+// // OneSignal Initialization
+// OneSignal.setAppId("e7f7d499-20ad-4a19-b702-414d65b3e158");
 
-//Method for handling notifications received while app in foreground
-OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
-  console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
-  let notification = notificationReceivedEvent.getNotification();
-  console.log("notification: ", notification);
-  const data = notification.additionalData
-  console.log("additionalData: ", data);
-  // Complete with null means don't show a notification.
-  notificationReceivedEvent.complete(notification);
-});
+// // promptForPushNotificationsWithUserResponse will show the native iOS or Android notification permission prompt.
+// // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 8)
+// OneSignal.promptForPushNotificationsWithUserResponse();
 
-//Method for handling notifications opened
-OneSignal.setNotificationOpenedHandler(notification => {
-  console.log("OneSignal: notification opened:", notification);
-});
+// //Method for handling notifications received while app in foreground
+// OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
+//   console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
+//   let notification = notificationReceivedEvent.getNotification();
+//   console.log("notification: ", notification);
+//   const data = notification.additionalData
+//   console.log("additionalData: ", data);
+//   // Complete with null means don't show a notification.
+//   notificationReceivedEvent.complete(notification);
+// });
+
+// //Method for handling notifications opened
+// OneSignal.setNotificationOpenedHandler(notification => {
+//   console.log("OneSignal: notification opened:", notification);
+// });
+
+// OneSignal.addTrigger("current_app_version", appVersion);
 
 
 const App =() => {
   
   const [showRealApp,setshowRealApp]=useState(false)
+  const [publishableKey, setPublishableKey] = useState('');
   const config = {
     dependencies: {
     // For Expo projects (Bare or managed workflow)
@@ -68,8 +79,81 @@ const App =() => {
     'linear-gradient': require("react-native-linear-gradient").default,
     },};
 
-    useEffect(() => {
+    // const fetchPublishableKey = async () => {
+    //   //const key = await fetchKey(); // fetch key from your server here
+    //   const key="pk_test_51NRjCPGwvmyvUe6o5AgiOgHL3ILqWU622BBFUoFYauj3vi1JBVvZPGdLh4mduITS1CDhWIXDuRpnh3kRRkCzlB8400tYXqjSEH"
+    //   setPublishableKey(key);
+    // };
+   
+
+    useEffect(async() => {
+          requestUserPermission()
+          notifacttionlistener()
           SplashScreen.hide();
+          requestUserPermissionNotfee()
+        
+          
+        //   notifee.onForegroundEvent(({ type, detail }) => {
+        //     //console.log("starr 00000000000000",type,"aand =",detail)
+        //     if (type === EventType.APP_BLOCKED) {
+        //       console.log('User toggled app blocked????', detail.blocked);
+        //     }
+          
+        //     if (type === EventType.CHANNEL_BLOCKED) {
+        //       console.log('User toggled channel block???', detail.channel.id, detail.blocked);
+        //     }
+          
+        //     if (type === EventType.CHANNEL_GROUP_BLOCKED) {
+        //       console.log('User toggled channel group block???', detail.channelGroup.id, detail.blocked);
+        //     }
+        //  });
+
+         
+          
+     }, []);
+
+
+    async function requestUserPermissionNotfee() {
+          const settings = await notifee.requestPermission();
+         if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+            console.log('Permission settings:  is alow', settings);
+            await notifee.requestPermission({
+              sound: true,
+              announcement: true,
+              inAppNotificationSettings: true,
+              criticalAlert:true,
+             criticalVolume: 0.9,
+             
+              // ... other permission settings
+            });
+          } else {
+            console.log('User declined permissions');
+            askPermsionNotfaction()
+            await notifee.requestPermission({
+              sound: true,
+              announcement: true,
+              inAppNotificationSettings: true,
+              criticalAlert:true,
+             criticalVolume: 0.9,
+             
+              // ... other permission settings
+            });
+          }
+          console.log('iOS settings: ', settings.ios);
+          
+        }
+
+     
+        async function getExistingSettings() {
+          const settings = await notifee.getNotificationSettings();
+        
+          if (settings) {
+            console.log('Current permission settings: ', settings);
+          }
+        }
+
+        const askPermsionNotfaction=()=>{
+          console.log("++++++++++++++++")
           if(Platform.OS==='android'){
             check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
             .then((result) => {
@@ -79,6 +163,7 @@ const App =() => {
                   break;
                 case RESULTS.DENIED:
                   console.log('The permission has not been requested / is denied but requestable');
+                 Alert.alert("notifaction denid")
                   break;
                 case RESULTS.LIMITED:
                   console.log('The permission is limited: some actions are possible');
@@ -122,7 +207,7 @@ const App =() => {
             // console.log("status",status)
             // console.log("settings",settings)
           })
-     }, []);
+        }
 
       
   if (!I18nManager.isRTL) {
@@ -138,22 +223,24 @@ const App =() => {
       //console.log("Divice languge",deviceLanguage); //en_US
   
   return(
-    <NativeBaseProvider config={config} >
-      <UserProvider>
-         <Navigation  />
+    <AutocompleteDropdownContextProvider>
+      <NativeBaseProvider config={config} >
+        <UserProvider>
+          <SafeAreaProvider>
+        
+            <Navigation  />
+          
+          </SafeAreaProvider>
+         
       </UserProvider>
          
         
        </NativeBaseProvider>
+    </AutocompleteDropdownContextProvider>
+    
    )
-        
-   
-      
-      
-     
-  
 };
-
+  
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
@@ -236,4 +323,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default App;
+export default  CodePush(App);

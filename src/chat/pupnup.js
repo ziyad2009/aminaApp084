@@ -89,8 +89,10 @@ const PubNubChat = (props) => {
       //  This getting started application is set up to unsubscribe from all channels when the app goes into the background.
       //  This is good to show the principles of presence but you don't need to do this in a production app if it does not fit your use case.
       props.userstatuse("background")
-      console.log('application is in the background')
-      pubnub.unsubscribe({channels: [chatroom]})
+      console.log('application is in the BACKground')
+      //change from unsubscribe to subscribe if you want messag in background
+      pubnub.subscribe({channels: [chatroom]})
+      //pubnub.unsubscribe({channels: [chatroom]})
     }
   }
  

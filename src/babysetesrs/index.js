@@ -1,13 +1,11 @@
 
 
 import React,{useEffect,useState} from 'react';
-import {View,Image, TouchableOpacity,Platform, Alert} from 'react-native'
+import {View,Image, TouchableOpacity,Platform,RefreshControl, Alert} from 'react-native'
 import {FlatList,Box,Heading,Avatar,Text,VStack,HStack,Spacer,Stack, Button,Spinner} from 'native-base';
 import SocketIOClient from "socket.io-client";
 import setItem from '../services/storage';
 import api from '../services/api';
-import {Rating} from 'react-native-ratings' 
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import { Colors,Fonts ,Metrics,Images,fontPixel,heightPixel,widthPixel,pixelSizeHorizontal,pixelSizeVertical} from '../assets/Themes';
 import styles from './styles';
 import images from '../assets/Themes/Images';
@@ -15,6 +13,9 @@ import {URL_ws,URL} from '../services/links';
 import CustomButton from '../services/buttons/buttton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDistance ,convertDistance} from 'geolib';
+import { useCallback } from 'react';
+let pageNumber=0
+let limitNumber=3
 const Babysetesrs=(props)=>{
  
 const[babseters,setbabyseters]=useState([])
@@ -23,13 +24,14 @@ const[loadStorage,setloadStorage]=useState(false)
  const[mylocattion,setmylocation]=useState({})
 const [favoriteList, setFavoriteList] = useState([]);
 const [page,setpage]=useState(0)
+const [selectedId, setSelectedId] = useState();
 const  [loadrate,setloadrate]=useState(false)
 const[ratedata,setratedata]=useState([])
-
+const [refreshing, setRefreshing] = React.useState(false);
+const[limit,setlimit]=useState(5)
 
 useEffect( ()=>{
-  console.log("Pre ====Data ==== Babysetter==========" )
-  getDate()
+ getDate()
    
 },[loadStorage ])
 
@@ -42,11 +44,12 @@ useEffect( async ()=>{
   
 //})
 
-   setterData()
+  // setterData()
+  setterApisrch(limitNumber)
 
    const location= await setItem.getItem('BS:Location') 
    const  existLocation=JSON.parse(location)
-   console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
+   //console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
     setmylocation( existLocation)
 
 },[])
@@ -61,28 +64,28 @@ const savedataTofav= async(item)=> {
     
   }
  // setterrFav[item._id]=item
-  console.log("Get fav from storage",favSetter)
+  //console.log("Get fav from storage",favSetter)
   const succses = setItem.setItem("on:like",favSetter)
   if(succses){
     const newFav=setItem.getItem("on:like").then((res)=>{
-      console.log("test from storage data",res)
+     // console.log("test from storage data",res)
       setFavoriteList(res)
       setloadStorage(!loadStorage)
     })
    
-    console.log("items add to  storage ",favSetter)
+    //console.log("items add to  storage ",favSetter)
   }
 
 }
 
 const onRemoveFavorite = async(itemId) => {
-  console.log("start remove ",itemId)
+  //console.log("start remove ",itemId)
  delete favoriteList[itemId]
- console.log("test == remove ",favoriteList)
+ //console.log("test == remove ",favoriteList)
  const succses= await setItem.setItem("on:like",favoriteList)
  
  if(succses){
-  console.log("start remove by ID ",itemId)
+ // console.log("start remove by ID ",itemId)
  
   // setFavoriteList(favoriteList)
  }
@@ -95,7 +98,7 @@ const getDate=async()=>{
   const favSetter=await setItem.getItem("on:like") ||{}
   setFavoriteList(favSetter)
   ifExists()
-  console.log("from storage favSetter",favSetter)
+  //console.log("from storage favSetter",favSetter)
   // AsyncStorage.getItem('on:like', (err, result) => {
   //   console.log("result of fav album",JSON.parse(result));
   //   setFavoriteList(JSON.parse(result))
@@ -114,13 +117,13 @@ const getDate=async()=>{
   const ifExists =  (itemID) => {
    // const newFav= await setItem.getItem("on:like") ||{}
     //console.log("exist data ",JSON.stringify(newFav))
-    console.log("exist data ",favoriteList)
+    //console.log("exist data ",favoriteList)
     
     if (favoriteList[itemID]) {
-      console.log("exist data is true")
+     // console.log("exist data is true")
       return true;
     }else{
-      console.log("exist data is not? false ")
+     // console.log("exist data is not? false ")
       return false;
     }
     
@@ -131,64 +134,88 @@ const getDate=async()=>{
    
 
 
-const setterData= async()=>{
-  let babySeterData=null
-  const {mainservice,serviestype}=JSON.parse(props.route.params.setterdata)
-  const user = await setItem.getItem('BS:User');
-  const token = await setItem.getItem('BS:Token');
-  const location= await setItem.getItem('BS:Location') 
-  const  existLocation=JSON.parse(location)
-  console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
+// const setterData= async()=>{
+//   let babySeterData=null
+//   const {mainservice,serviestype}=JSON.parse(props.route.params.setterdata)
+//   const user = await setItem.getItem('BS:User');
+//   const token = await setItem.getItem('BS:Token');
+//   const location= await setItem.getItem('BS:Location') 
+//   const  existLocation=JSON.parse(location)
+//   console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
 
-  api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-  const socket = SocketIOClient(URL_ws, {
-    jsonp: false,
-  });
-  const motherDtat=JSON.parse(user)
+//   api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+//   const socket = SocketIOClient(URL_ws, {
+//     jsonp: false,
+//   });
+//   const motherDtat=JSON.parse(user)
 
-  const data={
-    "id":motherDtat._id,
-    "name":motherDtat.name?motherDtat.name:"DEMOUSER",
-    "mainservice":mainservice,
-    "service":serviestype?serviestype:"",
-    "coordinates":[existLocation.lat,existLocation.lon],
-    "token":JSON.parse(token) ,
-    "limit":20,
-    "skip":page
+//   const data={
+//     "id":motherDtat._id,
+//     "name":motherDtat.name?motherDtat.name:"DEMOUSER",
+//     "mainservice":mainservice,
+//     "service":serviestype?serviestype:"",
+//     "coordinates":[existLocation.lat,existLocation.lon],
+//     "token":JSON.parse(token) ,
+//     "limit":20,
+//     "skip":page
 
-}
-console.log("DATA for serche serveses",data)
- 
-
-    socket.on("connect", () => {
-      console.log("connected");
-
-      socket.on("welcome", (data) => {
-        console.log("welcom from Soket ",data);
+// }
+// socket.on("connect", () => {
+//     socket.on("welcome", (data) => {
+//         console.log("welcom from Soket ",data);
         
-      });
-    
-    socket.emit("setterlocation",(data))
+//       });
+//       socket.emit("setterlocation",(data))
         
-       socket.on("seteeslocation", (loc) => {
-        console.log("setter ddata",loc);
-         setbabyseters(loc)
-         if(loc.length >= 1){
-          setLoading(false)
-        }
-        setLoading(false)
-      })
+//        socket.on("seteeslocation", (loc) => {
+//         console.log("setter ddata",loc);
+//          setbabyseters(loc)
+//          if(loc.length >= 1){
+//           setLoading(false)
+//         }
+//         setLoading(false)
+//       })
   
      
 
-    });
+//     });
    
    
-  }
+//   }
 
+  const setterApisrch=async(limitval)=>{
+    setLoading(true)
+    const {mainservice,serviestype}=JSON.parse(props.route.params.setterdata)
+    const user = await setItem.getItem('BS:User');
+    const token = await setItem.getItem('BS:Token');
+    const location= await setItem.getItem('BS:Location') 
+    const  existLocation=JSON.parse(location)
+    const motherDtat=JSON.parse(user)
     
+    const skip=0
+    console.log("tets limt",limitval,"and page",skip)
+     
+      api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+      const response=await  api.post(`${URL}/setterlocation?limit=${limitval}&skip=${skip}`,{
+        "coordinates":[existLocation.lat,existLocation.lon],
+        "mainservice":mainservice,
+        "service":serviestype?serviestype:"",
+    }).then((res)=>{
+      return  res.data
+       
+    }).finally(()=>{ setLoading(false)}
+    ).catch(err=>console.log("Erorr 500 ",err.message))
+    setbabyseters(response);
+ 
+  
+  return response
+
+  
+  
+  }
     
   const ConfimSetterData=(item)=>{
+    setSelectedId(item._id)
     const prevReservion= JSON.parse(props.route.params.setterdata)
     const  num = prevReservion.hours;
     const  hours = (num / 60); //convert minutes to hours
@@ -264,108 +291,120 @@ console.log("DATA for serche serveses",data)
     })
    
    
-  }
+   }
+
+
+   const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    limitNumber = limitNumber + 5;
+    console.log("test fresh limit",limitNumber)
+    setTimeout(() => {
+      setterApisrch(limitNumber).then((item)=>{
+        console.log("test onRefresh",item)
+        setRefreshing(false);
+      })
+     
+    }, 2000);
+  }, []);
+
+  const fetchMore = async () => {
+    limitNumber = limitNumber + 5;
+    console.log("test limit",limitNumber)
+    const newData = await setterApisrch(limitNumber);
+    console.log("test newData",newData)
+   //setbabyseters([...babseters,...newData])
+    setlimit(limitNumber);
+    
    
+  };
+  const ListFooterComponent = () => (
+    <Text
+      style={{
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        padding: 5,
+      }}
+    >
+      Loading...
+    </Text>
+  );
+  
+   const renderItem = ({item}) => {
+     const backgroundColor = item._id === selectedId ? Colors.Milky : Colors.white;
+    // const color = item.id === selectedId ? 'white' : 'black';
+
+    return (
+        <Box key={item._id} backgroundColor={backgroundColor} borderColor={Colors.border}  marginLeft={4} marginTop={ Platform.OS==='android'?"5":21 }   paddingBottom={2} flexDirection={'row'} 
+            width={Platform.OS==='android'? widthPixel(371): widthPixel(371)} height={'24'}  >
+          <Box>
+            <Image source={{ uri:`${URL}/users/${item.owner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),
+              marginTop:6,marginLeft:1,borderRadius:10 }} />
+          </Box>
+          
+          <Box flexDirection={'column'}   width={Metrics.WIDTH*0.560} ml={3} backgroundColor={Colors.transparent} marginTop={3} > 
+            <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
+              <Stack flexDirection={'row'} justifyContent='space-around' >
+                <Text   >{item.name}</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontsize={fontPixel(16)} color={"#FB5353"} marginLeft='1' >{item.mainservice}</Text>
+              </Stack>
+              <TouchableOpacity   onPress={()=>ifExists(item._id)?onRemoveFavorite(item._id): savedataTofav(item) }>
+                      <Image source={ifExists(item._id)? images.like1:images.like} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'  />
+              </TouchableOpacity>
+                    
+            </Box>
+            <Box flexDirection={'row'} justifyContent="space-between">
+              <Stack flexDirection={'row'} >
+                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.hourstotal}</Text>
+                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr ,marginLeft:pixelSizeHorizontal(2)}}>ساعة عمل</Text>
+              </Stack>
+              <Stack>
+                {calcDistance(item.location) }
+              </Stack>
+              <Stack position={'relative'} bottom={1} >
+                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium,fontSize:fontPixel(10),color:Colors.rmadytext ,marginLeft:pixelSizeHorizontal(2)} }>حفظ  </Text>
+              </Stack>
+            </Box>
+            <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
+              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.price} ر.س/ساعة</Text>
+              </Stack>
+              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
+                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.rate}</Text>
+                <Image source={Images.starticon} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
+              </Stack>
+              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.AminaPinkButton} flexDirection='row' >
+                <Button onPress={() => ConfimSetterData(item)} bgColor={Colors.AminaPinkButton} variant='link' >
+                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.white }}>احجزي الان</Text>
+                </Button>
+              </Stack>
+            </Box>
+          </Box>
+    </Box>
+    );
+  };
+const keyExtractor_k=useCallback((item)=>`${item._id}`)
 return(
 <Box backgroundColor={Colors.AminabackgroundColor}  mt={Platform.OS==='android'?66:94} flex={1}>
-       
+        
       {loading?<Box>
         <Spinner size={'lg'} color={Colors.bloodOrange}/>
 
       </Box>:
-      <FlatList data={babseters} renderItem={({item ,index}) => (
-        <Box key={index}  borderColor={"#FFFFFF"} marginLeft={pixelSizeHorizontal(15)} marginTop={ 21}   paddingBottom={2} flexDirection={'row'} 
-            width={widthPixel(388)} height={heightPixel(129)}  >
-        <Box>
-          <Image source={{ uri: `${URL}/users/${item.owner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),
-           marginTop:pixelSizeVertical(6),marginRight:pixelSizeHorizontal(10),borderRadius:10 }} />
-        </Box>
-
-        <Box flexDirection={'column'}   width={Metrics.WIDTH*0.560} ml={pixelSizeHorizontal(20)} backgroundColor={Colors.transparent} marginTop={3} > 
-        <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
-          <Stack flexDirection={'row'} justifyContent='space-around' >
-            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(16),color:Colors.newTextClr }}>{item.name}</Text>
-            <Text  style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),color:"#FB5353",marginLeft:pixelSizeHorizontal(4) }} >{item.mainservice}</Text>
-          </Stack>
-          <TouchableOpacity   onPress={()=>ifExists(item._id)?onRemoveFavorite(item._id): savedataTofav(item) }>
-                  <Image source={ifExists(item._id)? images.like1:images.like} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'  />
-          </TouchableOpacity>
-                
-        </Box> 
+      <FlatList data={babseters} 
+        renderItem={renderItem}
+        keyExtractor={keyExtractor_k }
+        ListEmptyComponent={<Box><Heading>Sory no data present!</Heading></Box>}
+        contentContainerStyle={{ height: Metrics.HEIGHT*0.8721,backgroundColor:Colors.transparent }}
+        refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        // onEndReachedThreshold={0.5}
+        // onEndReached={()=>fetchMore()}
+        maxToRenderPerBatch={5}
+        ListFooterComponent={()=>loading &&<ListFooterComponent/>}
+      //onEndReached={({distanceFromEnd})=> console.log("this is ",distanceFromEnd)}
+      />}
         
-        <Box flexDirection={'row'} justifyContent="space-between">
-            <Stack flexDirection={'row'} >
-              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.hourstotal}</Text>
-              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr ,marginLeft:pixelSizeHorizontal(2)}}>ساعة عمل</Text>
-            </Stack>
-            <Stack>
-               {calcDistance(item.location) }
-            </Stack>
-            <Stack position={'relative'} bottom={1} >
-              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium,fontSize:fontPixel(10),color:Colors.rmadytext ,marginLeft:pixelSizeHorizontal(2)} }>حفظ  </Text>
-            </Stack>
-            
-            
-          </Box>
-
-          <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
-              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.price} ر.س/ساعة</Text>
-            </Stack>
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
-             <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.rate}</Text>
-             <Image source={Images.starticon} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
-
-            </Stack>
-           
-            <TouchableOpacity onPress={() => ConfimSetterData(item) }>
-              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.AminaPinkButton} flexDirection='row' >
-              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>احجزي الان</Text>
-              </Stack>
-            </TouchableOpacity>
-            
-              {/* <AirbnbRating
-              // onFinishRating={(e)=>ratingCompleted(e)}
-              style={{ paddingVertical: 1, backgroundColor: Colors.transparent }}
-              count={5}
-              //defaultRating={setterdata.rating ? Number(setterdata.rating)/5:0}
-              imageSize={20}
-              tintColor={"#E5E5E5"}
-              showRating={false}
-              size={8}  
-              starContainerStyle={styles.ratingContainerStyle}
-              isDisabled /> */}
-          </Box>
-
-               
-                
-                
-                
-                 
-              {/* <TouchableOpacity style={{
-                marginTop: 30,
-                backgroundColor:"#F38193",
-                height: 48,
-                width:Metrics.WIDTH*0.950,
-                borderBottomLeftRadius:25,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: 1 }}
-                 onPress={() => ConfimSetterData(item) }>
-                <Text  style={{ color:'#fff',letterSpacing:1.5,color: '#fff',fontSize: 16,
-                      fontWeight: Platform.OS==='android'? '400':'500',
-                      fontFamily:Platform.OS==='android'?Fonts.type.light:Fonts.type.base,}}>
-                    احجز الان </Text>
-                 </TouchableOpacity> */}
-              </Box>
-            </Box>
-            )
-            
-          }
-          onEndReachedThreshold={0.5}
-          onEndReached={()=> setpage(page+1)}
-          keyExtractor={item => item.id} />}
-      
       
     </Box>
 

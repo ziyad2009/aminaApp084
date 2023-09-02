@@ -10,7 +10,7 @@ import CustomButton from '../services/buttons/buttton';
     return(
         <Box>
             <Stack  alignItems={'flex-start'} mt={'16'} ml={4}>
-              <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base} fontSize={fontPixel(18)} fontWeight={400} textAlign={'right'} >عدد ساعات التمديد</Text>
+              <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(18)} fontWeight={400} textAlign={'right'} >عدد ساعات التمديد</Text>
             </Stack>
             <Stack  direction={'row'} space='3'  ml={pixelSizeVertical(20)} mr={pixelSizeVertical(18)} mt={pixelSizeHorizontal(1)}>
               {slot.map((slt,index)=>{

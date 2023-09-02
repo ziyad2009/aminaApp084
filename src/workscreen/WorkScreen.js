@@ -70,30 +70,33 @@ const WorkScreen=(props)=>{
     // SOKITIO from contextt   to connection
     socket.current =SOKITIO;
     
-    // useEffect( ()=>{
-    //   const subscription = AppState.addEventListener("change", nextAppState => {
-    //     if (
-    //       appState.current.match(/inactive|background/) &&
-    //       nextAppState === "active"
-    //     ) {
+    useEffect( ()=>{
+      const subscription = AppState.addEventListener("change", nextAppState => {
+        if (
+          appState.current.match(/inactive|background/) &&
+          nextAppState === "active"
+        ) {
         
-    //       console.log("App has come to the foreground!");
-    //     }
+          console.log("App has come to the foreground!");
+        }
   
-    //     appState.current = nextAppState;
-    //     setAppStateVisible(appState.current);
-    //     // clearInterval(realtime)
-    //     // console.log("vale",loadtime)
-    //     // updatemessageschat()
-    //     console.log("leeeeeee")
+        appState.current = nextAppState;
+        setAppStateVisible(appState.current);
+        // clearInterval(realtime)
+        // console.log("vale",loadtime)
+        // updatemessageschat()
+        console.log("leeeeeee")
+        // if(appState.current==='active'){
+        //   props.navigation.goBack()
+        // }
     
-    //     console.log("AppState", appState.current);
-    //   });
+        console.log("AppState", appState.current);
+      });
   
-    //   return () => {
-    //     subscription.remove();
-    //   };
-    // },[])
+      return () => {
+        subscription.remove();
+      };
+    },[])
 
     useEffect(
       () => props.navigation.addListener('beforeRemove', (e) => {
@@ -259,8 +262,10 @@ useEffect(async () => {
           console.log("data of extra time valed but statusePayment is not null ",validextraTime)
           console.log("data of extra time valed but statusePayment is not null ",validextraTime.plusehours)
           setExtraTimeValue(validextraTime.plusehours)
+          settotallprice(validextraTime.price)
             EXTENDTIMEvLUE=validextraTime.plusehours
           setextraTime(true)
+          
            
         }
       break;
@@ -328,7 +333,7 @@ useEffect(async () => {
   //   console.log("  paymentstatuse +++ ccansel",totallprice)
   // } 
 
-}, [props.route.params?.paymentstatuse]);
+}, []);
 
 
 
@@ -422,7 +427,7 @@ const ENDDEXP=()=>{
          const newData={
          ...babysetter,
           totalprice:totallprice ,
-        }
+        }   
         const paymentMethode='mada'
         //props.navigation.navigate('PaymentForm',{data1:newData})
         console.log("test total price to payment ",newData)
@@ -609,10 +614,11 @@ const handeluserstatuse=(val)=>{
   switch(val){
     case "foreground":
       console.log("test user statuse1" ,val)
-     
+        //props.navigation.goBack()
     break;
     case  "background":
       console.log("test user statuse2" ,val)
+      //props.navigation.goBack()
     break;
     case  "join":
       console.log("test user statuse3" ,val)
@@ -649,10 +655,10 @@ const sendRequestExtraWork=async()=>{
 
 const cheackAccspete=async()=>{
   const  orderId= babysetter._id===undefined? props.route.params.data1._id:babysetter._id
+  
   chektimer=setInterval(async()=>{
-  const token = await setItem.getItem('BS:Token');
+    const token = await setItem.getItem('BS:Token');
     api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
-    console.log("tets Token" ,token)
     const response=await api.get(`acceptedextraworkmother/${orderId}`).then((res)=>{
       console.log("tets response of acceptted",res.data)
       if(res.data.status===true){
@@ -672,6 +678,9 @@ const cheackAccspete=async()=>{
 const handelExpandScreen=async(val)=>{
 if (val===1){
   setloding(true)
+  if(totallhours<1||totallprice<1){
+   return Alert.alert('تنبيه',"عفوا الرجاءء تحديد عدد ساعات التمديد")
+  }
   sendRequestExtraWork().then(async( )=>{
     cheackAccspete()
     const data2={status:true,totprice:totallprice,tothours:totallhours}
@@ -699,6 +708,7 @@ if (val===1){
 const canselexpandExtraTime=async()=>{
   //cansel witting 
   await setItem.removeItem('BS:ReqExtratime')
+  await setItem.removeItem('BS:Extratime') 
   console.log("test ID-- after reQ",babysetter._id)
   const token = await setItem.getItem('BS:Token');
   api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
@@ -841,10 +851,10 @@ return(
     
     <Box h={ Platform.OS==="android"?"70%" : "68%" } backgroundColor={Colors.transparent} borderTopRadius={20} >
             {loadChat?
-            <PubNubChat data={loadmsg} room={room} username={babysetter.mothername} userstatuse={(e)=>handeluserstatuse(e)} />:
+            <PubNubChat data={loadmsg} room={room} username={babysetter.mothername} userstatuse={(e)=>handeluserstatuse(e)}  />:
             <View style={{marginTop:22, alignItems:'center' ,justifyContent:"space-around",flexDirection:"column"} }>
               <ActivityIndicator size={20} color={Colors.banner} />
-              <Text fontSize={22} fontFamily={Fonts.type.aminafonts} >..جاري تحميل المحاداثات السابقة</Text>
+              <Text fontSize={22} fontFamily={Fonts.type.aminafonts} >..جاري تحميل المحادثات السابقة</Text>
             </View>
             }
     </Box>

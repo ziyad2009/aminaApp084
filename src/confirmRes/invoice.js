@@ -241,7 +241,7 @@ const modelShow=()=>{
     
     }
     <Center>
-        <Modal isOpen={showModal} onClose={() => setShowModal(false)} height={'72'} backgroundColor='white' position={'absolute'} bottom={0} >
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)} height={Metrics.HEIGHT*0.5342} backgroundColor='white' position={'absolute'} bottom={0} >
         <Modal.Content width={Metrics.WIDTH } alignItems={'center'}  justifyContent='center'  >
             
             <Modal.Body alignItems={'center'}  justifyContent='center' mt={1} borderColor='white'>

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "556261275238",
+    "project_id": "aminahappnotifaction8530",
+    "storage_bucket": "aminahappnotifaction8530.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556261275238:android:fedb3aeab41aca256f5fa7",
+        "android_client_info": {
+          "package_name": "com.amenid084"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556261275238-3fe3ie5p79968rppjepls4e4b63nkdok.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.amenid084",
+            "certificate_hash": "6f5c29e82a858e41273fda9e6a507f517d6960a5"
+          }
+        },
+        {
+          "client_id": "556261275238-hi7gosvklbn878pr3ggpicd0b0m74n8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs1AWusPpCFrFnnIzZVUEqEIEyfgEM_hU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556261275238-hi7gosvklbn878pr3ggpicd0b0m74n8j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

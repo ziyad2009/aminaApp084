@@ -4,10 +4,10 @@ import { Metrics,Colors, Fonts } from '../assets/Themes';
 
 const styles = StyleSheet.create({
     wrapper: {
-      backgroundColor:Colors.AminabackgroundColor,
+      backgroundColor:Colors.veryLightGray,
      
        marginBottom:2,
-       marginTop:Platform.OS==='android'?1: 20,
+       marginTop:Platform.OS==='android'?1:1,
       // marginHorizontal:30,
         alignItems:'center',
         

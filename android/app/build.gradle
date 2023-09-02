@@ -1,5 +1,5 @@
     apply plugin: "com.android.application"
-
+    apply plugin: 'com.google.gms.google-services' // <- Add this line
 import com.android.build.OutputFile
 
 /**
@@ -82,7 +82,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -137,8 +137,8 @@ android {
         applicationId "com.amenid084"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 28
-        versionName "1.28.0"
+        versionCode 46
+        versionName "1.46.0"
     }
     splits {
         abi {
@@ -209,7 +209,7 @@ dependencies {
        implementation 'com.google.android.gms:play-services-location:19.0.1'
         
        implementation 'com.google.android.gms:play-services-maps:18.0.2'
-     
+      //  implementation platform('com.google.firebase:firebase-bom:32.1.1')
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }

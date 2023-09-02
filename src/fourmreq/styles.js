@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     framView:{
         flexDirection:'column' ,
          marginLeft:20,
-         marginRight:20,
+         marginRight:15,
          borderColor:Colors.white,
          borderWidth:.2,
          marginTop:15,
@@ -273,7 +273,10 @@ const styles = StyleSheet.create({
     backgroundColor:Colors.transparent
     
   },
- 
+  lottie:{
+    height:100,
+    width:100
+  }
 
 
 });

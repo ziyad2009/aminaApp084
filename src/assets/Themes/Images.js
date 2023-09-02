@@ -57,12 +57,41 @@ const images = {
    helpicon:require("../images/helpicon.png"),
    notifactiion:require("../images/notifactiion.png"),
    samilogo:require("../images/samilogo.jpeg"),
-   
-    
-   
-   
+   leftarow:require("../images/leftarow.png"),
+   helpicon1:require("../images/helpicon1.png"),
+   settingicon:require("../images/settingicon.png"),
+   infoico:require("../images/infoico.png"),
+   logouticon:require("../images/logouticon.png"),
 
-   
+   intro1:require("../images/intro1.png"),
+   intro2:require("../images/intro2.png"),
+   intro3:require("../images/intro3.png"),
+   distance:require("../images/distance.png"),
+   accompany:require("../images/accompany.jpeg"),
+   bankcard: require("../images/bankcardpng.png"),
+   addchiled:require("../images/addchiled.png"),
+   saveprofile:require("../images/saveprofile.png"),
+
+  locationred:require("../images/loctionred.png"),
+  moneyred:require("../images/monygreen.png"),
+  hartgray:require("../images/hartgray.png"),
+  chiledgreen:require("../images/chiledgreen.png"),
+  chileid:require("../images/chiledid.png"),
+  locationgreen:require("../images/locationgreen.png"),
+  moneylistgreen:require("../images/moneylistgreen.png"),
+  moneygreen:require("../images/moneygreen.png"),
+  ccalendrgreen2:require("../images/ccalendrgreen2.png"),
+  staryellow:require("../images/staryellow.png"),
+  chilednew:require("../images/chilednew.png"),
+  clockgreennew:require("../images/clockgreennew.png"),
+  emailicon:require("../images/emailicon.png"),
+  billicon:require("../images/billicon.png"),
+  
+  
+
+  
+  
+  
 
 
    

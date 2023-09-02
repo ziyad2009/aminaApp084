@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
         alignContent:'center',
         width:Metrics.WIDTH*0.900,
         height:Metrics.HEIGHT*0.0640,
-        marginTop:20,
-        padding:3,
+        marginTop:10,
+        padding:1,
         //marginRight:Metrics.WIDTH*0.9
              borderRadius:10
       },
@@ -47,10 +47,18 @@ const styles = StyleSheet.create({
       fontSize:18
     },
     timerText:{
-      fontFamily:Fonts.type.sembold,
+      color:Colors.newTextClr,
+      fontFamily:Platform.OS==='android'? Fonts.type.aminafonts: Fonts.type.base,
       fontSize:18,
       fontWeight:"400",
-      color:"#2E2E2E"
+      
+    },
+    timerText2:{
+      color:Colors.textZahry,
+      fontFamily:Platform.OS==='android'? Fonts.type.aminafonts: Fonts.type.base,
+      fontSize:18,
+      fontWeight:"400",
+      
     },
     codecontiner:{
       direction:'ltr',

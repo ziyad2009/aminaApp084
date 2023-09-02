@@ -4,7 +4,7 @@ import { Metrics,Colors, Fonts } from '../assets/Themes';
 const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
-        paddingTop:Platform.OS==='android'?55:77 ,
+        paddingTop:Platform.OS==='android'?55:10 ,
         backgroundColor:Colors.AminabackgroundColor,
         
       },

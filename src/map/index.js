@@ -56,9 +56,7 @@ const Mapscreen = ({ route ,navigation}) => {
         
      const  requestPermissions= async()=> {
         console.log("ASk permmeesion ")
-        if (Platform.OS === 'android'){
-          console.log("ASk Android ")
-        }
+        
 
         if (Platform.OS === 'ios') {
         const auth = await Geolocation.requestAuthorization("whenInUse");
@@ -277,31 +275,28 @@ const Mapscreen = ({ route ,navigation}) => {
           <Center >
 
             <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} borderColor={Colors.AminaButtonNew} borderWidth='1'>
-            <Modal.Content width={Metrics.WIDTH*0.9372 } >
-            <Modal.CloseButton padding={3} mt='2' mb={'2'} />
-            <Modal.Header alignItems={'center'} backgroundColor={Colors.amin1Button1}>
-            <Heading fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.base}  >رسالة تنبيه</Heading>
-            </Modal.Header> 
-            <Modal.Body alignItems={'center'} justifyContent='center' >
-
-            <Stack flexDirection={"column"} alignItems='flex-start'  w="95%" padding={2}   >
-              <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={22} fontWeight="medium" textAlign={"center"} >
-               لكي نتمكن من خدمتك بشكل افضل سوف يتم حفظ موقعك بشكل دائم</Text>
-            </Stack>
-
-            </Modal.Body>
-            <Modal.Footer alignItems={'center'}>
+              <Modal.Content width={Metrics.WIDTH*0.9372 } >
                
+              <Modal.Header  backgroundColor={Colors.amin1Button1}>
+                  <Modal.CloseButton    />
+                  <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={'md'} alignSelf={'center'} color={'white'}>رسالة تنبيه</Text>
+              </Modal.Header> 
+              <Modal.Body alignItems={'center'} justifyContent='center' >
+                <Stack flexDirection={"column"} alignItems='flex-start'  w="95%" padding={2}   >
+                  <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={18} fontWeight="medium" textAlign={"center"} >
+                  لكي نتمكن من خدمتك بشكل افضل سوف يتم حفظ موقعك بشكل دائم</Text>
+                </Stack>
                 <Box alignItems={'center'}  w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>
                 <CustomButton
-                  buttonColor={Colors.AminaButtonNew}
+                  buttonColor={Colors.AminaPinkButton}
                   title="استمرار"
-                  buttonStyle={{width: '90%', alignSelf: 'center',marginTop:1}}
-                  textStyle={{fontSize: 20}}
+                  buttonStyle={{width: '77%', alignSelf: 'center',marginTop:1}}
+                  textStyle={{fontSize: 20,color:Colors.white}}
                   onPress={() => saveLocation()}
                 />
                 </Box> 
-            </Modal.Footer>
+            </Modal.Body>
+             
             </Modal.Content>
             </Modal>
             </Center>

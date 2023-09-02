@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {View ,Text,Image,StyleSheet,Platform,TouchableOpacity} from 'react-native'
-import {Box,VStack,Badge, HStack} from 'native-base'
+import {Box,VStack,Badge, HStack, Button} from 'native-base'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -50,7 +50,12 @@ import Zoomphoto from '../Setterprofile/zoomphoto';
 import Ewallet from '../Wallet/ewalet';
 import TelerPage from '../payment/telerpage';
 import Attractionuser from '../map/attractionuser';
-
+import HELPFOURM from '../helpfourm';
+import HoldNottifaction from '../helpfourm/Testnotifaction';
+import AddPaymentCard from '../payment/addpaymentcard';
+import PaymentCardDisplay from '../payment/paymentcarddisplay';
+import WebPagePayment from  '../payment/webpage'
+import images from '../assets/Themes/Images';
   
 
 
@@ -70,23 +75,31 @@ const HeaderBackButton =(nav)=> {
 
 return(
   <View style={{ marginRight:2,flexDirection:'row',justifyContent:'flex-start'}}>
-    
+     
     <View  style={{flexDirection:'row',justifyContent:'space-around'}}>
-      <Box>
+      <Box justifyContent={'space-around'}>
         <Badge // bg="red.400" 
-            colorScheme="danger" rounded="30"   mb={-4} mr={-4}   zIndex={1}
+        
+            colorScheme="danger"  rounded="30"   mb={-4} mr={-1}   zIndex={1}
             onPress={()=> navigation.navigate('Notifactionscreen') }
             variant="solid" alignSelf="flex-end" _text={{
-            fontSize: 7
-            }} >
+            fontSize: 7,
+             
+            }}  >
           {notifaction}
         </Badge>
-        <Ionicons name="notifications" size={25} color={"#F5F5F5"} style={{marginLeft:3}} onPress={()=> navigation.navigate('Notifactionscreen') } /> 
+        <TouchableOpacity onPress={()=> navigation.navigate('Notifactionscreen') } style={{marginHorizontal:10}} >
+          <Image source={images.billicon} resizeMode='contain' style={{width:22,height:22}} />
+        </TouchableOpacity>
+        {/* <Ionicons name="notifications" size={25} color={"#F5F5F5"} style={{marginLeft:3}} onPress={()=> navigation.navigate('Notifactionscreen') } />  */}
       </Box>
       
       <Box>
         {/* <Ionicons name="search" size={22} color={"#F5F5F5"} style={{marginLeft:20}} onPress={ ()=>navigation.navigate('SearchScreen')} />  */}
-        <Ionicons name="mail" size={22} color={"#F5F5F5"} style={{marginLeft:15}} onPress={ ()=>console.log("mail")} /> 
+        <TouchableOpacity onPress={ ()=>console.log("mail")}>
+          <Image source={images.emailicon} resizeMode='contain' style={{width:22,height:22}} />
+        </TouchableOpacity>
+        {/* <Ionicons name="mail" size={22} color={"#F5F5F5"} style={{marginLeft:15}}  />  */}
       </Box>
       
       
@@ -571,12 +584,12 @@ const StackNav = () => {
 
       <Stack.Screen name='WorkScreen' component={WorkScreen} 
       options={({route,navigation})=>({
-        headerTitle:Platform.OS==='android'?"تنبيه بقرب الحاضنه":"",
+        headerTitle:Platform.OS==='android'?"صفحة الخدمة":"",
         headerTransparent: true,
          headerStyle:{
            backgroundColor:Colors.hederup,
           },
-          headerBackTitle: "نبيه بقرب الحاضنه",
+          headerBackTitle: "صفحة الخدمة",
         // headerBackImageSource:Images.backButton,
         headerBackTitleStyle:{
           fontFamily:Fonts.type.medium,
@@ -645,9 +658,63 @@ const StackNav = () => {
          
          
       })} />
-       <Stack.Screen name="TelerPage" component={TelerPage} />
+       <Stack.Screen name="TelerPage" component={TelerPage} 
+        options={({route,navigation})=>({
+          headerTitle:Platform.OS==='android'? "الدفع":"",
+          headerTransparent: true,
+           headerStyle:{
+             backgroundColor:Colors.hederup,
+            },
+            headerBackTitle: "الدفع",
+          // headerBackImageSource:Images.backButton,
+          headerBackTitleStyle:{
+            fontFamily:Fonts.type.medium,
+            },
+            headerTitleStyle: {
+              fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+            },
+          headerLargeTitleShadowVisible:true,
+          headerTintColor:"#F5F5F5", headerTitle:Platform.OS==='android'? "الدفع":"",
+          headerTransparent: true,
+           headerStyle:{
+             backgroundColor:Colors.hederup,
+            },
+            headerBackTitle: "الدفع",
+          // headerBackImageSource:Images.backButton,
+          headerBackTitleStyle:{
+            fontFamily:Fonts.type.medium,
+            },
+            headerTitleStyle: {
+              fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+            },
+          headerLargeTitleShadowVisible:true,
+          headerTintColor:"#F5F5F5",
+        })}/>
+       <Stack.Screen name="HELPFOURM" component={HELPFOURM} 
+       options={({route,navigation})=>({
+        headerTitle:Platform.OS==='android'? "خدمة العملاء":"",
+        headerTransparent: true,
+         headerStyle:{
+           backgroundColor:Colors.hederup,
+          },
+          headerBackTitle: "خدمة العملاء",
+        // headerBackImageSource:Images.backButton,
+        headerBackTitleStyle:{
+          fontFamily:Fonts.type.medium,
+          },
+          headerTitleStyle: {
+            fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+          },
+        headerLargeTitleShadowVisible:true,
+        headerTintColor:"#F5F5F5", headerTitle:Platform.OS==='android'? "تقييم الحاضنه":"",
+         
+      })}/>
        
-       
+        <Stack.Screen name="HoldNottifaction" component={HoldNottifaction} />
+        
+        <Stack.Screen name="PaymentCardDisplay" component={PaymentCardDisplay} /> 
+        <Stack.Screen name="AddPaymentCard" component={AddPaymentCard} /> 
+        <Stack.Screen name="WebPagePayment" component={WebPagePayment} /> 
       {/* <Stack.Screen name="Paymentint" component={Paymentint} /> */}
       </Stack.Navigator>
   );

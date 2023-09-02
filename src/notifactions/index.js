@@ -3,10 +3,10 @@ import React,{useState,useRef, useEffect} from 'react';
 import {Center,Box,Text, Heading,VStack,Icon, HStack,Pressable,Avatar,ScrollView,Spacer,Spinner, Button, Stack} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
  import Ionicons  from 'react-native-vector-icons/Ionicons'
-import{Metrics,Colors,Images, Fonts} from '../assets/Themes/'
+import{Metrics,Colors,Images, Fonts,heightPixel,widthPixel, fontPixel} from '../assets/Themes/'
 import setItem from '../services/storage'
 import api from '../services/api';
- 
+import {URL_ws,URL} from '../services/links';
 const  Notifactionscreen =(props)=>{ 
 
   const[loading,setLoding]=useState(false)
@@ -31,7 +31,6 @@ const getNotifaction= async()=>{
     // const response =api.get(`/receivernotfications/${mother._id}`).then((res)=>{
     const response =api.post(`/notficationsread`,{receiverid:mother._id }).then((res)=>{
       console.log("test=== mother respons",(res.data))
-
       setnotifactions(res.data)
      
     }).finally(()=> {setLoding(true)}).catch((err)=>console.log("Eorr to load  load nottifaction",err))
@@ -75,25 +74,32 @@ const getNotifaction= async()=>{
                       marginRight:3,padding:7 }} 
                       //  onPress={()=>setoncliks(index)}
                         >
-                      <Box flexDirection={'row'}  w={Metrics.WIDTH*0.883}>
-                        <Stack w={"15%"} backgroundColor='#F38193' justifyContent={'center'} alignItems='center' 
-                          borderRadius={70} borderColor={'warmGray.200'} borderWidth={1} >
-                        <Ionicons  name='notifications' size={22} color={Colors.white}/>
-                    </Stack>
+                      <Box flexDirection={'row'}   justifyContent={'space-around'} w={Metrics.WIDTH*0.883}>
+                        <Stack  justifyContent={'center'} alignItems='center' 
+                          borderRadius={77} borderColor={'black'} borderWidth={1} >
+                            {/* <Ionicons  name='notifications' size={22} color={Colors.white}/> */}
+                            <Image source={{ uri: `${URL}/users/${item.sender}/avatar` }} resizeMode='contain' style={{height:heightPixel(77),width:widthPixel(77),
+                            alignItems:'center',borderRadius:77 }} />
+                        </Stack>
                     
-                    <VStack  alignItems={'flex-start'} ml={2} flexWrap={'wrap'} >
-                        <Text  mr={2} fontSize={18} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base} fontWeight='bold' >{item.title}</Text>
-                        <Text  mr={2} fontSize={12} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>{item.content}</Text>
-                    </VStack>
-                  <Spacer/>
+                        <VStack  alignItems={'flex-start'} ml={2} flexWrap={'wrap'} >
+                              <Text  mr={2} fontSize={fontPixel(18)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base} fontWeight='bold' color={Colors.newTextClr} >{item.title}</Text>
+                              <Text  mr={2} fontSize={fontPixel(12)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>{item.content}</Text>
+                              <Text  mr={2} fontSize={fontPixel(12)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>رقم الطلب #{item.orderid}</Text>
+                              
+                        </VStack>
+                        <Spacer/>
                   {/* <Stack alignItems={'center'} flexDirection='row' justifyContent={'space-between'} w={"24%"}  >
                   <Ionicons  name={Platform.OS==='ios'?'ios-eye-outline':"eye"} size={25} color={Colors.lightGray} style={{marginRight:25}}/>
                   <Ionicons  name={Platform.OS==='ios'?'close':"close"} size={25} color={Colors.red} style={{marginRight:7}}  />
                   </Stack> */}
-                  <Stack alignContent={'flex-end'} flexDirection='row' justifyContent={'flex-end'} w={"10%"}  >
-                    <Ionicons  name={Platform.OS==='ios'?'ios-eye-outline':"eye"} size={30} color={Colors.TexTPink} 
-                      onPress={()=>handelNotifcation(item._id)} style={{marginRight:1}}  />
-                  </Stack>
+                        <Stack alignContent={'center'} flexDirection='row' justifyContent={'center'}   >
+                          
+                            <Button variant={'outline'} colorScheme={'pink'} borderRightRadius={22} borderLeftRadius={22}
+                                    backgroundColor={'muted.200'} h={'12'} w={'16'}
+                                    onPress={()=>handelNotifcation(item._id)}
+                                    >قبول</Button>
+                        </Stack>
                   </Box>
                   {!oncliks===index&&<Stack mt={2} alignItems='flex-end'>
                    {/* <Button   bgColor={'green.100'} onPress={()=> console.log(index)}>testooo</Button> */}

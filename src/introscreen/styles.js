@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
     introImageStyle: {
-     width: Metrics.WIDTH*0.7872,
-      height: Metrics.HEIGHT*0.292,
-      marginTop: Metrics.HEIGHT*0.212,
+     width: Metrics.WIDTH ,
+      height: Metrics.HEIGHT  ,
+      // marginTop: Metrics.HEIGHT*0.212,
     },
     introTextStyle: {
       margin:3,
@@ -63,10 +63,16 @@ const styles = StyleSheet.create({
      // backgroundColor:"red"
     },
     paginationContainer: {
-      position: 'absolute',
-      bottom: 16,
-      left: 16,
-      right: 16,
+      ...StyleSheet.absoluteFillObject,
+      // position: 'absolute',
+      // bottom: 16,
+      // left: 16,
+      // right: 16,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.5)'
     },
     paginationDots: {
       height: 16,
@@ -99,6 +105,36 @@ const styles = StyleSheet.create({
       color:Colors.AmonaButtontext,
       fontSize:20
     },
+    buttonCircle: {
+      width: 66,
+      height: 37,
+      backgroundColor: Colors.AminaPinkButton,
+      borderRadius: 22,
+      justifyContent: 'center',
+      alignItems: 'center',
+       
+    },
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    fadingContainer: {
+      padding: 20,
+      backgroundColor: Colors.AminabackgroundColor,
+    },
+    fadingText: {
+      fontSize: 28,
+    },
+    buttonRow: {
+      flexBasis: 100,
+      justifyContent: 'space-evenly',
+      marginVertical: 16,
+    },
+    lottie:{
+      height:100,
+      width:100
+    }
   });
 
   export default styles;
