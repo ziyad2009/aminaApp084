@@ -4,7 +4,7 @@ import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown'
 import setItem from '../services/storage'
 import api from '../services/api'
 import { URL_ws,URL } from "../services/links";
-import { Colors } from '../assets/Themes/'
+import { Colors, Metrics } from '../assets/Themes/'
 import styles from '../SearchScreen/style'
 import { useNavigation } from '@react-navigation/native';
 
@@ -66,19 +66,19 @@ export const RemoteDataSetExample = memo((props) => {
         textInputProps={{
           placeholder: 'ابحثي عن حاضنة...',
           style: {
-            
-            backgroundColor:Colors.AminabackgroundColor,
-            color: Colors.greys,
+            borderRadius:22,
+            color: "rgba(239, 239, 239, 1)",
             paddingRight: 18,
             textAlign:'right'
           }
         }}
         debounce={600}
         inputContainerStyle={{
-          backgroundColor: Colors.white,
+          backgroundColor: "rgba(239, 239, 239, 1)",
           borderRadius: 18,
-          borderColor:Colors.gray,
+          borderColor:"rgba(239, 239, 239, 1)",
           borderWidth:0.5,
+          width:Metrics.WIDTH*0.9223361
          
         }}
         

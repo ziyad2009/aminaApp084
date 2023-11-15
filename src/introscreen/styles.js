@@ -1,5 +1,6 @@
 import { Platform, StyleSheet, I18nManager } from "react-native";
 import{Metrics,Fonts,Colors}from '../assets/Themes/'
+import { color } from "react-native-reanimated";
 const styles = StyleSheet.create({
     sectionContainer: {
       marginTop: 32,
@@ -38,13 +39,18 @@ const styles = StyleSheet.create({
     },
     introImageStyle: {
      width: Metrics.WIDTH ,
-      height: Metrics.HEIGHT  ,
-      // marginTop: Metrics.HEIGHT*0.212,
+      height: Metrics.HEIGHT *0.6332  ,
+      borderBottomLeftRadius:88,
+      borderBottomRightRadius:88,
+      borderColor:Colors.black,
+      borderWidth:1,
+      backgroundColor:Colors.red
+     // marginTop: Metrics.HEIGHT*0.0912,
     },
     introTextStyle: {
-      margin:3,
+     // margin:1,
       fontSize: 18,
-      color: '#214F5E',
+      color: Colors.black,
       textAlign: 'center',
       //paddingVertical: 30,
       fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.aminafonts,
@@ -54,10 +60,10 @@ const styles = StyleSheet.create({
     introTitleStyle: {
       fontSize: 30,
       fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base,
-      color: Colors.AminaButtonNew,
-  
+      color: Colors.textZahry,
       textAlign: 'center',
-      marginTop:20,
+      fontWeight:'700',
+      marginTop:1,
       marginBottom: 1,
       fontWeight:Platform.OS==='android'?'100':'700',
      // backgroundColor:"red"

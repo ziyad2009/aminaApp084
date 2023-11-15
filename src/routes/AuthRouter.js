@@ -56,6 +56,7 @@ import AddPaymentCard from '../payment/addpaymentcard';
 import PaymentCardDisplay from '../payment/paymentcarddisplay';
 import WebPagePayment from  '../payment/webpage'
 import images from '../assets/Themes/Images';
+import MonthlyBoking from '../fourmreq/calendersranges'
   
 
 
@@ -74,36 +75,27 @@ const HeaderBackButton =(nav)=> {
   const {notifaction} = React.useContext(UserContext);
 
 return(
-  <View style={{ marginRight:2,flexDirection:'row',justifyContent:'flex-start'}}>
+  <View style={{backgroundColor:Colors.transparent, marginRight:2,flexDirection:'row',justifyContent:'flex-start'}}>
      
-    <View  style={{flexDirection:'row',justifyContent:'space-around'}}>
-      <Box justifyContent={'space-around'}>
+    
+     <Box justifyContent={'space-between'} alignItems={'baseline'} flexDirection={'row'}  mb={'2'} >
         <Badge // bg="red.400" 
         
-            colorScheme="danger"  rounded="30"   mb={-4} mr={-1}   zIndex={1}
+           backgroundColor={Colors.textZahry}rounded="full" mb={-2} mr={-2} zIndex={1}  
             onPress={()=> navigation.navigate('Notifactionscreen') }
             variant="solid" alignSelf="flex-end" _text={{
-            fontSize: 7,
-             
+              fontSize: 8
             }}  >
           {notifaction}
         </Badge>
-        <TouchableOpacity onPress={()=> navigation.navigate('Notifactionscreen') } style={{marginHorizontal:10}} >
-          <Image source={images.billicon} resizeMode='contain' style={{width:22,height:22}} />
+        <TouchableOpacity onPress={()=> navigation.navigate('Notifactionscreen') } style={{alignItems:'center'}} >
+          <Image source={images.billicon} resizeMode='contain' style={{position:'absolute',top:1, width:30,height:30}} />
         </TouchableOpacity>
         {/* <Ionicons name="notifications" size={25} color={"#F5F5F5"} style={{marginLeft:3}} onPress={()=> navigation.navigate('Notifactionscreen') } />  */}
       </Box>
       
-      <Box>
-        {/* <Ionicons name="search" size={22} color={"#F5F5F5"} style={{marginLeft:20}} onPress={ ()=>navigation.navigate('SearchScreen')} />  */}
-        <TouchableOpacity onPress={ ()=>console.log("mail")}>
-          <Image source={images.emailicon} resizeMode='contain' style={{width:22,height:22}} />
-        </TouchableOpacity>
-        {/* <Ionicons name="mail" size={22} color={"#F5F5F5"} style={{marginLeft:15}}  />  */}
-      </Box>
-      
-      
-    </View>
+       
+       
      
     
     
@@ -358,7 +350,33 @@ const StackNav = () => {
          
       })} />
 
-      <Stack.Screen name="Poitment" component={Poitment} />
+      <Stack.Screen name="Poitment" component={Poitment}
+       options={({route,navigation})=>({
+        headerTitle: Platform.OS==='android'? route.params.productTitle:"",
+        headerTransparent: true,
+         headerStyle:{
+           backgroundColor:Colors.hederup,
+          
+         },
+         headerBackTitle:route.params.productTitle,
+        // headerBackImageSource:Images.backButton,
+        headerBackTitleStyle:{
+          fontFamily:Fonts.type.medium,
+         
+        },
+        headerTitleStyle: {
+          fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
+          
+        },
+        headerLargeTitleShadowVisible:true,
+        headerTintColor:"#F5F5F5",
+        headerRight:()=>{
+          return(
+              <HeaderBackButton  val={navigation}/>
+              )  
+        },
+      })}/>
+      
       <Stack.Screen name="BottomScreen" component={BottomScreen} />
       
       <Stack.Screen name="PrivecyScreen" component={PrivecyScreen}
@@ -660,12 +678,12 @@ const StackNav = () => {
       })} />
        <Stack.Screen name="TelerPage" component={TelerPage} 
         options={({route,navigation})=>({
-          headerTitle:Platform.OS==='android'? "الدفع":"",
+          headerTitle:Platform.OS==='android'? "ملخص الطلب":"",
           headerTransparent: true,
            headerStyle:{
              backgroundColor:Colors.hederup,
             },
-            headerBackTitle: "الدفع",
+            headerBackTitle: "ملخص الطلب",
           // headerBackImageSource:Images.backButton,
           headerBackTitleStyle:{
             fontFamily:Fonts.type.medium,
@@ -674,12 +692,12 @@ const StackNav = () => {
               fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
             },
           headerLargeTitleShadowVisible:true,
-          headerTintColor:"#F5F5F5", headerTitle:Platform.OS==='android'? "الدفع":"",
+          headerTintColor:"#F5F5F5", headerTitle:Platform.OS==='android'? "ملخص الطلب":"",
           headerTransparent: true,
            headerStyle:{
              backgroundColor:Colors.hederup,
             },
-            headerBackTitle: "الدفع",
+            headerBackTitle: "ملخص الطلب",
           // headerBackImageSource:Images.backButton,
           headerBackTitleStyle:{
             fontFamily:Fonts.type.medium,
@@ -706,7 +724,7 @@ const StackNav = () => {
             fontFamily:Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.medium,
           },
         headerLargeTitleShadowVisible:true,
-        headerTintColor:"#F5F5F5", headerTitle:Platform.OS==='android'? "تقييم الحاضنه":"",
+        headerTintColor:"#F5F5F5", headerTitle:Platform.OS==='android'? "خدمة العملاء":"",
          
       })}/>
        
@@ -715,6 +733,8 @@ const StackNav = () => {
         <Stack.Screen name="PaymentCardDisplay" component={PaymentCardDisplay} /> 
         <Stack.Screen name="AddPaymentCard" component={AddPaymentCard} /> 
         <Stack.Screen name="WebPagePayment" component={WebPagePayment} /> 
+        <Stack.Screen name="MonthlyBoking" component={MonthlyBoking} /> 
+        
       {/* <Stack.Screen name="Paymentint" component={Paymentint} /> */}
       </Stack.Navigator>
   );
@@ -734,19 +754,19 @@ const StackNav = () => {
           
           let Iconname;
           if(route.name ==="Home"){
-            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677668600/aminaicon/homeicon1_vre4ns.png";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1699876986/aminaicon/home_ggbwys.png";
             size=focused?28:22 ;
             color=focused? Colors.AminabackgroundColor:Colors.transparent
           }else if (route.name ==="Favourite"){
-            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677679812/aminaicon/fav2_cb9chw.png";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1699876986/aminaicon/fav_tfzla1.png";
             size=focused?28:22;
             color=focused? Colors.AminabackgroundColor:Colors.transparent
           }else if(route.name ==="Request"){
-            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677668600/aminaicon/requesticon_jzqvsg.png";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1699876986/aminaicon/request_pizuxj.png";
             size=focused?28:22;
              color=focused? Colors.AminabackgroundColor:Colors.transparent
           }else if(route.name ==="Wallet"){
-            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1677668600/aminaicon/acountlogo_r1ydbr.png";
+            Iconname="https://res.cloudinary.com/djzx0zqms/image/upload/v1699876986/aminaicon/acount_hulnnz.png";
             size=focused?28:22;
              color=focused? Colors.AminabackgroundColor:Colors.transparent 
           }else if(route.name==="Notification"){

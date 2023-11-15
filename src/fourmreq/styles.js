@@ -34,15 +34,16 @@ const styles = StyleSheet.create({
     },
     framView:{
         flexDirection:'column' ,
-         marginLeft:20,
-         marginRight:15,
-         borderColor:Colors.white,
-         borderWidth:.2,
+         marginLeft:44,
+         
+         borderColor:Colors.boarderColor,
+         borderWidth:.5,
+         borderRadius:36,
          marginTop:15,
          alignItems:'flex-start',
-         backgroundColor:Colors.white,
-         width:widthPixel(380),
-         height:heightPixel(100)
+         backgroundColor:Colors.yellowstack,
+         width:widthPixel(307),
+        //  height:heightPixel(100)
     },
     datapicker:{
 
@@ -60,14 +61,9 @@ const styles = StyleSheet.create({
      
     },
     datapicker2:{
-        height:Metrics.HEIGHT*0.0353,
-        width:Metrics.WIDTH*0.2299,
-         padding:2,
-       borderColor:"#214F5E",
-    //    borderRadius:10,
-    //    backgroundColor:Colors.white,
-    //    borderWidth:1,
-       justifyContent:'space-around'
+        height:Metrics.HEIGHT*0.03853,width:Metrics.WIDTH*0.2299,
+        borderColor:'black',
+        //backgroundColor:"rgba(243, 243, 243, 1)" ,
     },
     icon:{
       marginLeft:Metrics.HEIGHT*0.0221,
@@ -264,13 +260,21 @@ const styles = StyleSheet.create({
     },
      // Style for iOS ONLY...
   datePicker: {
-    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: Metrics.WIDTH ,
-    height: Metrics.HEIGHT*0.3921,
+    width: Metrics.WIDTH*0.650 ,
+    height: Metrics.HEIGHT*0.0921,
     display: 'flex',
-    backgroundColor:Colors.transparent
+    backgroundColor:Colors.yellow
+    
+  },
+  datePicker2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: Metrics.WIDTH*0.350 ,
+    height: Metrics.HEIGHT*0.03921,
+    display: 'flex',
+    backgroundColor:Colors.yellow
     
   },
   lottie:{

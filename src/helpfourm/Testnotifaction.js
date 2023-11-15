@@ -5,7 +5,7 @@ import { Metrics,Colors,Fonts } from '../assets/Themes';
   
 const HoldNottifaction=(props)=>{
     const appState = useRef(AppState.currentState);
-    const [appStateVisible, setAppStateVisible] = useState(appState.current);
+    const [appStateVisible, setVisible] = useState(appState.current);
     const[gender,setgender]=useState('0')
 
 

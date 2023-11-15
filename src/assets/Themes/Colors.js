@@ -79,7 +79,10 @@ const colors = {
   pinkystack:"#EFEEFF",
   yellowstack:"#FFF8E5",
   greentext:"#00ABB9",
-  goldText:"#FCEBD2"
+  goldText:"#FCEBD2",
+  boarderColor:"#00000026",
+  titleColor:"#02A6B3",
+  grayButton:"#F1F1F1"
 
   
 }

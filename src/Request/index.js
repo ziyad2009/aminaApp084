@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from 'react';
-import {View,TouchableOpacity,FlatList,Image, Alert, Platform} from 'react-native'
+import {View,TouchableOpacity,FlatList,Image, Alert,TextInput, Platform,Linking} from 'react-native'
 import {Box, Button,Heading,Spinner,HStack,Spacer,VStack,Text,Modal, Stack,Center,TextArea} from 'native-base';
 import styles from './styles';
 import {Metrics,Colors,Fonts,Images, pixelSizeHorizontal, widthPixel, heightPixel, pixelSizeVertical, fontPixel} from '../assets/Themes/';
@@ -15,6 +15,7 @@ import OutlaintButton from '../services/buttons/buttonsOutlain';
 import { sendNotifcation } from '../services/fucttions';
 import CanselForm from './canselform';
 import ResonForm from './resonform';
+ 
    
 
 const Request=(props)=>{
@@ -29,18 +30,32 @@ const Request=(props)=>{
     const [filterData,setFilterData]=useState({work:false})
     const data=[
         {id:1,status:"النشطة"},
-        {id:2,status:"القديمة"},
+        {id:2,status:"المكتملة"},
         {id:3,status:"الملغاة"}
     ]
+    const resonData=[
+        {id:1,text:"عدم وجود حاجة للخدمة"},
+        {id:2,text:"عدم بداء الخدمة من قبل الحاضنة"},
+        {id:3,text:"الحضانة غير مناسبة لاستقبال الطفل"},
+        {id:4,text:"اسباب اخرى"},
+       
+    ]
+    const[resonString,setresonString]=useState('')
+    const[resonSelect,setresonSelect]=useState(0)
+    const[showiCanselMsg,setshowiCanselMsg]=useState(false)
+    const[canselMsg,setcanselMsg]=useState('')
+    const[showinput,setshowinput]=useState(true)
     const[ShowModal,setShowModal]=useState(false)
+    const[ShowModal2,setShowModal2]=useState(false)
     const[resoncansel,setresoncansel]=useState('')
-    const[changeScreen,setchangeScreen]=useState(null)
+    const[changeScreen,setchangeScreen]=useState(false)
     const [temDdata,setTempdata]=useState(null)
+    const [textStatud,settextStatud]=useState('')
 
     const Item = ({title,i}) => { 
     return( 
         <Box flexDirection={'row'} alignItems='baseline'justifyContent={'center'} width={Metrics.WIDTH*0.299963} height={'16'} paddingBottom={'3'} backgroundColor={Colors.transparent}>
-         <TouchableOpacity style={{flexDirection:'row'  ,marginTop:8,borderColor:Colors.gray,borderWidth:.2,justifyContent:'center',alignItems:'center',borderRadius:15} } 
+         <TouchableOpacity style={{flexDirection:'row'  ,marginTop:8,borderColor:"rgba(241, 241, 241, 1)",borderWidth:.2,justifyContent:'center',alignItems:'center',borderRadius:15} } 
              key={title} onPress={()=>handleSelection(i,title)}> 
             <Stack alignItems={'center'}  justifyContent='center' borderRadius={'xl'}   backgroundColor={i===select?Colors.AminaPinkButton:"#F1F1F1"} height={'10'} width={'20'} > 
                     <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} textAlign='center'
@@ -67,18 +82,18 @@ const Request=(props)=>{
 
    const handleSelection = (id,title) => {
     
-        console.log( "test title ",title)
+        console.log( "ingretions catogries",title)
         setselect(id)
         setserviestype(title)
       switch (title.id,title.status){
         case  1 && "النشطة":
-            console.log("++start filter Actiive expeted Canceled++" )
+            console.log("++start filter Actiive Orders- expeted Canceled++" )
             handelREQActive()
             setFilterData({work:false})
            // setserviestype1("النشطة")
 
             break;
-        case  2 && "القديمة":
+        case  2 && "المكتملة":
             console.log("++start filter OLD request++")
             handelREQComplet()
             //setFilterData({statuse:"completed",work:true})
@@ -98,7 +113,6 @@ const Request=(props)=>{
     
       
     useEffect(()=>{
-       
         if(IsFetching){
             console.log("Start Feching Data",serviestype," and id servvice =",select)
         //     if(serviestype ==='النشطة'){ 
@@ -112,15 +126,13 @@ const Request=(props)=>{
            // handelREQ()
            handleSelection(select,serviestype)
         }
-
-        
     },[IsFetching])
 
     useEffect(()=>{
-        console.log("Have change?")
+        console.log("Firdt load catogries -Have change?")
         const intialData={id:1,status:"النشطة"}
         handleSelection(select,intialData)
-        console.log(" load ALL ORDERS++++++ filterData",intialData)
+        console.log(" load ALL ORDERS++++++ By filter-Data==",intialData)
     },[])  
 
     useEffect(  () => {
@@ -228,10 +240,10 @@ const Request=(props)=>{
         const token = await setItem.getItem('BS:Token');
         const motherData = JSON.parse(user)
         const motherID = motherData._id
-        console.log("TOKENS", token)
+        console.log("TOKENS", token,"and ",motherID)
         api.defaults.headers.Authorization = (`Bearer ${JSON.parse(token)}`);
         const response = await api.get(`${URL}/alllorderbyacctive/${motherID}`).then((res) => {
-            console.log("DATA, POST OK handelREQActive")
+            console.log("succsseful? Get allorder Active for mother",)
             //alll condtion expete filte
             // const ordersrq = res.data
             // orders1 = ordersrq.filter(function (item) {
@@ -251,7 +263,7 @@ const Request=(props)=>{
 
         })
 
-        console.log("Test Response DATA ",)
+        console.log("Test Response DATA  was loaded", )
         setmotherReq(response)
 
 
@@ -333,28 +345,31 @@ const Request=(props)=>{
 
 
     
-const stReq=(val,work)=>{
+const stReq=(val,work,item)=>{
             
    
             if(val==='pending'){
-              return  <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center'    justifyContent={'center'} >
-                <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular}   fontSize={12} textAlign='center' justifyContent={'center'} mt={4} >انتظار الدفع</Text> </Box>
+              return  <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew} justifyContent={'center'}  >
+                <TouchableOpacity onPress={()=>  props.navigation.navigate('TelerPage',paymentdata={ newData:item,paymentMethode:"mada",extrastatuse:false }) } style={{alignItems:'center',justifyContent:'center',backgroundColor:Colors.transparent,padding:3}}>
+                    <Text color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}   fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'} >بانتظار الدفع</Text> 
+                </TouchableOpacity>
+                </Box>
             }
             if (val==='processing'){
                 return  <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
-                     <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular}   fontSize={12} textAlign='center' justifyContent={'center'}>قيد الانتظار</Text></Box>
+                     <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}   fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'}>قيد الانتظار</Text></Box>
             }
             if (val==='canceled'){
                 return  <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
-                     <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular}    fontSize={12} textAlign='center' justifyContent={'center'} >طلب ملغي</Text></Box>
+                     <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}    fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'} >طلب ملغي</Text></Box>
             }   
             if (val==='completed'&& work===false){
                 return <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
-                     <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular}  fontSize={12} textAlign='center' justifyContent={'center'}> تم الحجز</Text></Box>
+                     <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}  fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'}> تم الدفع</Text></Box>
             }
             if (val==='completed'&& work===true){
                 return <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
-                     <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular}  fontSize={12} textAlign='center' justifyContent={'center'}>طلب مكتمل</Text></Box>
+                     <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}  fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'}>طلب مكتمل</Text></Box>
             }
             if (val==='failed'){
                 return <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew} fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular}   alignItems='center' justifyContent={'center'} >reservition</Box>
@@ -378,7 +393,7 @@ const stReq=(val,work)=>{
                 break;
             case "processing":
                 console.log(" wait for setter accssepted", 2)
-                Alert.alert("تنبيه", "بانتضار موافقة الحاضنه علي الطلب")
+                //Alert.alert("تنبيه", "بانتضار موافقة الحاضنه علي الطلب")
                 props.navigation.navigate('ConfirmRes', { data1: JSON.stringify(item), val: "chike" })
                 break;
             case "completed":
@@ -390,18 +405,18 @@ const stReq=(val,work)=>{
                 const alowedtime = (diffrenttime / timeinhours)
                 const nagitaveTime = Math.sign(diffrenttime)
                 //canseel order auto
-                if (Number(diffrenttime) <= 1 && item.work===false && item.status==="completed") {
-                    return Alert.alert("امينة", "سوف يتم الغاء الطلب تلقائي بسبب تجاوز الوقت"),addResonAutomatic(item._id,"تم الالغاء من النظام")
-                }
+                // if (Number(diffrenttime) <= 1 && item.work===false && item.status==="completed") {
+                //     return Alert.alert("امينة", "سوف يتم الغاء الطلب تلقائي بسبب تجاوز الوقت"),addResonAutomatic(item._id,"تم الالغاء من النظام")
+                // }
 
-                if (Number(diffrenttime) > 61) {
-                    console.log("tets time in hours >sexty", timeinhours)
-                    return setchangeScreen(false), setShowModal(!ShowModal)
-                }
+                // if (Number(diffrenttime) > 61) {
+                //     console.log("tets time in hours >sexty", timeinhours)
+                //     return setchangeScre en(false), setShowModal(!ShowModal)
+                // }
 
                 if (item.work === false) {
-                    props.navigation.navigate('Invoice', { data1: item })
-
+                    //props.navigation.navigate('Invoice', { data1: item })
+                    props.navigation.navigate('DDirctionMap',{data1:item,setter:item})
                 } else if (item.work === true) {
                     //Alert.alert("Rating screen")
                     props.navigation.navigate('FinleScreeen',{data1:item})
@@ -409,83 +424,60 @@ const stReq=(val,work)=>{
                 }
 
 
-                break;
+                break; 
             case "pending":
-                console.log("  Go Payment screen", 2)
+                console.log(" make call", item.opetion3)
                 //Alert.alert("Pinding screen")
                 //props.navigation.navigate('PaymentForm',{data1:item})
                 // const newData=item
                 // props.navigation.navigate('TelerPage',paymentdata={newData})
-                props.navigation.navigate('ConfirmRes', { data1: JSON.stringify(item), val: "chike" })
-
+                //props.navigation.navigate('ConfirmRes', { data1: JSON.stringify(item), val: "chike" })
+                Linking.openURL(`tel:${item.opetion3}`)
                 break;
 
         }
 
     }
 
+    const OrderStatuse = (item) => {
+         if(item.statuse==='pending'){
+              return 'اتصال'
+        }
+            if (item.statuse==='processing'){
+                return 'قيد الانتظار'
+            }
+                
+            // if (item.statuse==='completed'&& item.work===false&&item.active===true){
+            //     return 'قيد  التنفيذ'
+            // }
+            if (item.statuse==='completed'&& item.work===false){
+                return 'موقع الحاضنة'
+            }
+            if (item.statuse==='completed'&& item.work===true){
+                return 'تقييم'
+            }
+            if (item.statuse==='failed'){
+                return 'غير نشط'
+            }
+        }
+     
+
     const showCanselMsg = (val) => {
-       Alert.alert('',` سبب الغاء الحجز ${val}`)
-    }
-
-    const twoOptionAlertHandler = (item) => {
-        //function to make two option alert
-        Alert.alert(
-          //title
-          'امينة',
-          //body
-          'هل تريدي الغاء الحجز الحالي',
-          [
-            {
-              text: 'نعم',
-              onPress: () => canselRequest(item)
-            },
-            {
-              text: 'لا',
-              onPress: () => console.log('No Pressed'), style: 'cancel'
-            },
-          ],
-          {cancelable: false},
-          //clicking out side of alert will not cancel
-        );
-      };
-    
-
-    const canselRequest = async (item) => {
+        setShowModal2(!ShowModal2)
+        setshowiCanselMsg(!showiCanselMsg)
+        setcanselMsg(val)
       
-        setorderID(item._id)
-        var timeinhours = moment(item.start).diff(moment(item.end), 'minutes')
-        var diffrenttime = moment(item.start).diff(moment(), 'minutes')
-        const alowedtime = (diffrenttime / timeinhours)
-        const nagitaveTime = Math.sign(diffrenttime)
-
-        console.log("tets time in hours", timeinhours, "time in muint", diffrenttime)
-        console.log("tets alow time", alowedtime, "time finle", nagitaveTime)
-        if (Number(diffrenttime) <= 61 || Number(diffrenttime) >1 ) {
-            setchangeScreen(true)
-            setShowModal(!ShowModal)
-            setTempdata(item)
-        }
-        if (Number(diffrenttime) > 61) {
-            console.log("tets time in hours", timeinhours)
-            return setchangeScreen(false), setShowModal(!ShowModal)
-        }
-        if (Number(diffrenttime) < 1) { 
-            console.log("tets time in hours", timeinhours)
-            return setchangeScreen(false), setShowModal(!ShowModal)
-        }
-        // Alert.alert("تنبيه","سوف يتم الغاء الطلب بشكل نههائي")
-        // const orderId = id
-        // console.log("canssel", orderId)
-        // await api.delete(`/mother/order/${orderId}`).then((res) => {
-        //    console.log("test DELET FIILE",res.data)
-        // }).finally(() => sendNotifCansel())
-        //     .catch((err) => { console.log("ERORR DELET ORDER", err) })
-
+    }
+    
+    const canselRequest = async (item) => {
+      setorderID(item._id)
+      setTempdata(item)
+      setShowModal(!ShowModal)
     }
 
     const sendNotifCansel = () => {
-        console.log("TTEST DATA",temDdata)
+
+        //send notifaction to babysetter to infourm him 
         console.log("TTEST setter player id", temDdata.setterplayerid)
         const data = {
             receiver: temDdata.settterowner,
@@ -494,7 +486,7 @@ const stReq=(val,work)=>{
             orderid: temDdata.orderid,
             playerid: temDdata.setterplayerid
         }
-        console.log("Test Nortif beffrr++++", data)
+         
         sendNotifcation(data)
     }
 
@@ -502,22 +494,43 @@ const stReq=(val,work)=>{
 
     const canselformout = (val) => {
         setShowModal(!ShowModal)
-        setchangeScreen(null)
+        
          
+    }
+    const preAddReson=(value,indx)=>{
+        
+        setresonString(value)
+        setresonSelect(indx)
+        //if user write reson by typeing  
+        if(indx===3){
+            setshowinput(true)
+            console.log("tete area",value)
+        }else{
+            setshowinput(false)
+        }
+    }
+    const afterAddReson=( )=>{
+        
+        setresonSelect("")
+        setresonSelect(0)
+        
+        setShowModal(!ShowModal)
+        setchangeScreen(false)
     }
     
 
-    const addReson = async (value,userData) => {
+    const addReson = async () => {
         //first addreson=>canselorderbymother by oder ID
         const user = await setItem.getItem('BS:User');
         const token = await setItem.getItem('BS:Token');
         const orderId = orderID
         api.defaults.headers.Authorization = (`Bearer ${JSON.parse(token)}`);
         const response = await api.post("setterorderresone", {
-            reson: value, orderID: orderId
+            reson: resonString, orderID: orderId
         }).then((res) => {
             console.log('test resone response', res.data)
             sendNotifCansel()
+            setchangeScreen(true)
         }).finally(() => canselorderbymother()).catch((err) => console.log("ERORR from reson post", err))
     }
 
@@ -556,7 +569,7 @@ const stReq=(val,work)=>{
             orderID: orderId
         }).then((res) => {
             console.log('test ccansel order response', res.data)
-            canselformout()
+           setchangeScreen(true)
         }).finally(() => onRefresh()).catch((err) => console.log("ERORR from reson post", err))
     }
 
@@ -564,7 +577,6 @@ return(
     <View style={styles.wrapper}>
        <Box alignItems={'center'} justifyContent='center' height={'20'} p={2}  mt={'3'} ml={'3'} mr={'4'}   backgroundColor ={Colors.transparent} >
             <FlatList
-            // sections={subservice}
             data={data}
             keyExtractor={(item, index) => item + index}
             renderItem={({ item ,index}) => <Item title={item} i={index} />}
@@ -573,24 +585,24 @@ return(
             />
         </Box>
         
-        <Box alignItems={'center'}  >
-        
-        <Box  >
-         {loading?
+        <Box alignItems={'center'}>
             <Box>
-                <Text alignItems={'center'} fontSize='md' color={'gray.500'}>sory ther is no Request ?</Text>
-                <Button  variant={'link'}  onPress={()=>console.log(11)}>Refresh</Button>
-                <Spinner  size={'lg'} color={Colors.bloodOrange}/></Box>:
-            <Box backgroundColor={Colors.transparent}>
-                {/* <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize="lg"  p="2" pb="3" textAlign={'left'}> بيانات الطلبات</Text> */}
-                {loadingpage&&<Box width={"100%"}>
-                 <Spinner size={'lg'} animating={loadingpage?true:false} color={Colors.AminaPinkButton} />
-                </Box>}
-            <FlatList data={motherReq} renderItem={({item }) => (
-                    <Box  marginLeft={pixelSizeHorizontal(1)} mt={'0.5'} mb={4} flexDirection={'column'} borderRadius={'2xl'} borderColor={'gray.100'} borderWidth={'1'}
-                        width={widthPixel(380)} height={heightPixel(200 )} shadow={'3'} backgroundColor={'white'} alignItems='center'   >
-                     
-                    <Box flexDirection={'row'} ml={1} backgroundColor={Colors.transparent} marginTop={3} > 
+            {loading?
+                <Box>
+                    <Text alignItems={'center'} fontSize='md' color={'gray.500'}>sory ther is no Request ?</Text>
+                    <Button  variant={'link'}  onPress={()=>console.log(11)}>Refresh</Button>
+                    <Spinner  size={'lg'} color={Colors.bloodOrange}/>
+                </Box>:
+                <Box backgroundColor={Colors.transparent}>
+                    {/* <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize="lg"  p="2" pb="3" textAlign={'left'}> بيانات الطلبات</Text> */}
+                    {loadingpage&&<Box width={"100%"}>
+                        <Spinner size={'lg'} animating={loadingpage?true:false} color={Colors.AminaPinkButton} />
+                    </Box>}
+                    
+                    <FlatList data={motherReq} renderItem={({item }) => (
+                        <Box  marginLeft={pixelSizeHorizontal(1)} mt={'0.5'} mb={4} flexDirection={'column'} borderRadius={'2xl'} borderColor={'gray.100'} borderWidth={'1'}
+                            width={widthPixel(380)} height={heightPixel(200 )} shadow={'3'} backgroundColor={'white'} alignItems='center'   >
+                        <Box flexDirection={'row'} ml={1} backgroundColor={Colors.transparent} marginTop={3} > 
                         <Box justifyContent='center' alignItems={'center'} width={Metrics.WIDTH*0.21821} ml={'4'}   >
                             <Image source={{ uri: `${URL}/users/${item.settterowner}/avatar` }} resizeMode='contain' style={{height:90,width:90,
                              marginTop:1,marginRight:1,borderRadius:30 }} />
@@ -615,7 +627,7 @@ return(
                                     </Stack>
                                     <Stack flexDirection={'row'} alignItems='baseline' justifyContent='space-around'>
                                         <Image source={Images.clockgreennew} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'/>
-                                        <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(12),fontWeight:"700" ,color:Colors.newTextClr ,marginLeft:3}}>{moment(item.start).format("hh:mm a")} - {moment(item.end).format("hh:mm a")}</Text>
+                                        <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(12),fontWeight:"700" ,color:Colors.newTextClr ,marginLeft:3}}>{moment(item.starttime).format("hh:mm a")} - {moment(item.endtime).format("hh:mm a")}</Text>
                                     </Stack>
                                     <Stack flexDirection={'row'}alignItems='baseline' justifyContent='space-around' >
                                         <Image source={Images.chilednew} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'/>
@@ -631,7 +643,7 @@ return(
                     
                     <Box  flexDirection='row' alignItems={'center'}   width={widthPixel(377)} height={heightPixel(48)} borderRadius={'3xl'} mt={1} >
                             <Stack width={82} height={heightPixel(41)}  justifyContent='center' alignItems={'center'} borderRadius={'3xl'}  ml={2}>
-                             {stReq(item.statuse,item.work)}
+                             {stReq(item.statuse,item.work,item)}
                                  
                             </Stack>
                             
@@ -643,9 +655,10 @@ return(
                                         textStyle={{fontSize: 12,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.bold }}
                                         titleColor={Colors.white}
                                         margnBtn={1}
-                                        onPress={()=> twoOptionAlertHandler (item)}
+                                        onPress={()=>  canselRequest(item)}
                              /></Stack>}
-                        
+
+                              
                             
                        
 
@@ -664,9 +677,10 @@ return(
                                 :
                                 <CustomButton
                                         buttonColor= {Colors.AminaPinkButton}
-                                        title= {item.statuse==='completed'&& item.work===false?"بداء الخدمة":"تفاصيل الطلب"}
-                                        buttonStyle={{width:widthPixel(138) ,height:heightPixel(40),borderRadius:35 ,marginLeft:pixelSizeHorizontal(18)}}
-                                        textStyle={{fontSize: 16,fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold ,fontWeight:'700'}}
+                                        //title= {item.statuse==='completed'&& item.work===false?"بداء الخدمة":" تقييم"}
+                                        title={OrderStatuse(item)}
+                                        buttonStyle={{width:widthPixel(138) ,height:heightPixel(40),borderRadius:40 ,marginLeft:pixelSizeHorizontal(18)}}
+                                        textStyle={{fontSize: fontPixel(15),fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold ,fontWeight:'700'}}
                                         titleColor={Colors.white}
                                         margnBtn={1}
                                         onPress={()=> ConfimSetterData(item)}
@@ -682,23 +696,94 @@ return(
                 refreshing={IsFetching}/>
             </Box>}
             
-            </Box>
+        </Box>
           
       </Box> 
 
-      <Center >
+    <Center>
+        <Modal isOpen={ShowModal} onClose={() => setShowModal(!ShowModal)} borderColor={Colors.AminaButtonNew} borderWidth='1' backgroundColor={'white'} height={Metrics.HEIGHT*0.8213} mt={'24'}  borderTopRadius={44} justifyContent={"center"}>
+            <Modal.Content width={Metrics.WIDTH*0.9372 }  height={Metrics.HEIGHT*0.6813} >
+            <Modal.Body  alignItems={'center'}   >
+                {/* {changeScreen? <CanselForm hidemodal={(val)=> canselformout(val) }/>:<ResonForm done={true} addReson={(value)=>addReson(value) } hidemodal={(val)=> canselformout(val) } />} */}
+                {/* {changeScreen&&<ResonForm done={true} addReson={(value)=>addReson(value) } hidemodal={(val)=> canselformout(val) } />} */}
+               {!changeScreen?
+                <Box alignItems={'center'} flexDirection='column'>
+                    <Stack alignItems={'flex-start'} >
+                        <Text color={Colors.textZahry} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(22)} mt={1}>سبب الالغاء</Text>
+                    </Stack>
+                     
+                    <Stack alignItems={'center'} >
+                        <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(18)} mt={1}>حدد سبب الالغاء</Text>
+                    </Stack>
+                    <Box>
+                        <Stack >
+                            {resonData.map((value,index)=>{
+                                return(
+                                <TouchableOpacity key={value.id} onPress={()=>preAddReson((value.text).toString(),index) }
+                                    style={{backgroundColor:index===resonSelect?Colors.textZahry:Colors.grayButton,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:10}}>
+                                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:index===resonSelect?Colors.white:Colors.blacktxt, }}>{value.text}</Text>
+                                </TouchableOpacity> 
+                                )
+                            })}
+                        </Stack>
+                        <Stack alignItems={'center'} mt={'3'} >
+                            <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(18)} mt={1}>ملاحظات</Text>
+                        </Stack>
+                        <Stack mt={'4'}>
+                            {/* <TextArea isDisabled={showinput} totalLines={2} value={textAreaValue} placeholder="اكتبي ملاحظاتك هنا" ontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={18}   textAlign={'center'} borderTopRadius={'lg'} borderColor={Colors.text} borderWidth={'1'}  onChange={(e) => preAddReson(e,3) }/> */}
+                            <TextInput value={resonSelect===3?resonString:""} multiline={true} editable={showinput}
+                                        style={{backgroundColor:Colors.white,borderColor:Colors.text,borderWidth:1,borderRadius:22,height:Metrics.HEIGHT*0.10221,padding: 10,textAlign:'center'}} onChangeText={(text)=>preAddReson(text,3)}/>
+                        </Stack>
+                    </Box>
+                    <Box>
+                        <TouchableOpacity   onPress={()=>addReson()}
+                            style={{backgroundColor:Colors.textZahry,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:10}}>
+                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.white, }}>ارسال</Text>
+                        </TouchableOpacity> 
+                        <TouchableOpacity   onPress={()=>afterAddReson()}
+                            style={{backgroundColor:Colors.textZahry,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:10}}>
+                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.white, }}>الغاء</Text>
+                        </TouchableOpacity> 
+                    </Box>
+                </Box>:
+                <Box   height={"72"}flexDirection={'column'} alignItems={'center'} justifyContent={'space-around'} mt={'56'}>
+                    <Image source={Images.rightbinky} style={{height:100,width:100,marginTop:7}} resizeMode='stretch' />
+                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.textZahry,marginTop:4 }}>تم الغاء طلبك بنجاح</Text>
+                    <TouchableOpacity   onPress={()=>afterAddReson()}
+                            style={{backgroundColor:Colors.textZahry,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:14}}>
+                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.white, }}>عوده</Text>
+                        </TouchableOpacity> 
+                
+                </Box>}
+            </Modal.Body>
+            </Modal.Content>
+        </Modal>
+    </Center>
+    {showiCanselMsg&&<Center>
+        <Modal isOpen={ShowModal2} onClose={() => setShowModal2(!ShowModal)} borderColor={Colors.text} borderWidth='1' backgroundColor={Colors.transparent}    borderTopRadius={44} justifyContent={"center"}>
+            <Modal.Content width={Metrics.WIDTH*0.9372 }  height={Metrics.HEIGHT*0.2813} backgroundColor={Colors.transparent} >
+                <Box alignItems={'center'} flexDirection='column' backgroundColor={'white'} padding={'2'} borderRadius={'lg'}>
+                    <Stack alignItems={'center'}  >
+                        <Text color={Colors.textZahry} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(22)} mt={1}>سبب الالغاء</Text>
+                    </Stack>
+                    <Stack flexDirection={'column'} alignItems={'center'} padding={'1'} mt={'1'}>
+                        <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(14),fontWeight:'700',color:Colors.blacktxt,marginTop:4 }}>{canselMsg}</Text>
+                        <TouchableOpacity   onPress={()=>showCanselMsg()}
+                            style={{backgroundColor:Colors.textZahry,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:14}}>
+                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.white, }}>عوده</Text>
+                        </TouchableOpacity> 
 
-<Modal isOpen={ShowModal} onClose={() => setShowModal(false)} borderColor={Colors.AminaButtonNew} borderWidth='1'>
-<Modal.Content width={Metrics.WIDTH*0.9372 } >
-<Modal.Body alignItems={'center'} justifyContent='center' >
+                    </Stack>
+                        
 
- {changeScreen? <CanselForm hidemodal={(val)=> canselformout(val) }/>:<ResonForm done={true} addReson={(value)=>addReson(value) } hidemodal={(val)=> canselformout(val) } />}
+                </Box>
+             
+            </Modal.Content>
+        </Modal>
+    </Center>}
 
-</Modal.Body>
- 
-</Modal.Content>
-</Modal>
-</Center>
+
+    
     </View>
 )
 }

@@ -30,12 +30,13 @@ const styles = StyleSheet.create({
         backgroundColor:Colors.textZahry,
         alignItems:'center',
         alignContent:'center',
-        width:Metrics.WIDTH*0.900,
+        width:Metrics.WIDTH*0.83200,
         height:Metrics.HEIGHT*0.0640,
         marginTop:10,
         padding:1,
         //marginRight:Metrics.WIDTH*0.9
-             borderRadius:10
+             borderRadius:22,
+             letterSpacing:2
       },
       endButtonTxt:{
       paddingTop:4,
@@ -43,14 +44,17 @@ const styles = StyleSheet.create({
       marginTop:3,
       fontFamily:Fonts.type.base,
       fontWeight:Platform.OS==='android'?"500":null,
-      color:Colors.Milky,
+      color:Colors.white,
+     
       fontSize:18
     },
     timerText:{
+      
       color:Colors.newTextClr,
-      fontFamily:Platform.OS==='android'? Fonts.type.aminafonts: Fonts.type.base,
+      fontFamily:Platform.OS==='android'? Fonts.type.aminafonts: Fonts.type.bold,
       fontSize:18,
-      fontWeight:"400",
+      fontWeight:"600",
+      letterSpacing:1.8
       
     },
     timerText2:{
@@ -62,6 +66,7 @@ const styles = StyleSheet.create({
     },
     codecontiner:{
       direction:'ltr',
+     
        
     }
 })

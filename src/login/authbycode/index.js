@@ -175,13 +175,11 @@ const onCodechange=(val)=>{
                 containerPaddingHorizontal={50}
                 containerBackgroundColor={Colors.transparent}
                 codeViewBorderColor={"#214F5E"}
+                codeViewBorderRadius={17}
                 containerStyle={styles.codecontiner}
-                //codeViewStyle={{alignContent:'flex-start',textAlign:'right'}}
-                 focusedCodeViewBorderColor="#0000FF"
+                focusedCodeViewBorderColor="#0000FF"
                  warningTitle="الرجاء ادخال ارقام فقط"
                 codeViewBorderWidth={.4}
-                codeViewBorderRadius={5}
-                
             />
          
            
@@ -195,15 +193,15 @@ const onCodechange=(val)=>{
 
           <View style={{alignItems:'center',flexDirection:'row',}}>
             {isActive ? 
-            <Box flexDirection={'row'} mt={'4'} >
+            <Box  backgroundColor={Colors.grayButton} borderRadius={'xl'}flexDirection={'row'} mt={'6'} justifyContent={'space-around'} width={'64'} padding={'2'} >
             
-            <Text style={styles.timerText}>  اعادة الارسال  </Text>
-            <Text style={styles.timerText2}> {minutes_Counter}:{seconds}</Text>
+            <Text style={styles.timerText}>  اعادة الارسال بعد  </Text>
+            <Text style={styles.timerText2}>  {minutes_Counter} : {seconds}</Text>
             </Box>:
-            <Button variant={'ghost'}   mt={'2'} p={1} fontSize={18} color={Colors.rmadytext} fontFamily={Fonts.type.base}
+            <Button variant={'subtle'}  backgroundColor={Colors.grayButton} borderRadius={'xl'}  mt={'6'} p={1} fontSize={18} color={Colors.rmadytext} fontFamily={Fonts.type.base}
               onPress={()=>{renewCode()}} >
-              <Text style={{letterSpacing:1,fontSize:fontPixel(18) ,color:Colors.newTextClr,fontFamily:Platform.OS==='android'? Fonts.type.aminafonts: Fonts.type.base
-                            ,textDecorationLine:'underline'}} >اعادة ارسال الكود؟</Text>
+              <Text style={{letterSpacing:1,fontSize:fontPixel(18) ,color:Colors.newTextClr,fontFamily:Platform.OS==='android'? Fonts.type.aminafonts: Fonts.type.bold
+                            ,textDecorationLine:'none'}} >اعادة طلب الكود   </Text>
               </Button>}
           </View>
           {erorrmesage && <View style={{marginTop:4}}>

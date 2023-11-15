@@ -58,7 +58,7 @@ const Invoice=(props)=>{
         const token = await setItem.getItem('BS:Token');
         api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
         const response=await api.get(`/setter/${id}`).then((res)=>{
-            console.log("test RESPONSe",res.data.setter)
+            console.log("test RESPONSe Setter",res.data.setter)
             setsetterdata(res.data.setter)
         }).finally(()=>setloaddata(false)).catch(err=>{
             console.log("ERORR get dsetter dat from invoice",err),setloaddata(false)

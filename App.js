@@ -7,7 +7,7 @@
  */
 import 'react-native-gesture-handler';
 import React,{useState,useEffect} from 'react';
-import { Platform, NativeModules, Alert } from 'react-native'
+import { Platform, NativeModules, Alert, LogBox ,AppState} from 'react-native'
 import RNRestart from "react-native-restart";
 import SplashScreen from 'react-native-splash-screen';
 import {
@@ -34,11 +34,11 @@ import {I18nManager} from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 
 import OneSignal from 'react-native-onesignal';
-import {checkNotifications,openSettings,requestNotifications,check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {checkNotifications,openSettings,requestNotifications,check, PERMISSIONS, RESULTS,request} from 'react-native-permissions';
 import notifee, { EventType ,AuthorizationStatus} from '@notifee/react-native';
 import  {requestUserPermission,notifacttionlistener, notifeeConfige} from  './src/services/utils/notifactionservices'
- 
-import CodePush from "react-native-code-push"; 
+
+//import CodePush from "react-native-code-push"; 
 
 const appVersion='33'
 // // OneSignal Initialization
@@ -84,13 +84,22 @@ const App =() => {
     //   const key="pk_test_51NRjCPGwvmyvUe6o5AgiOgHL3ILqWU622BBFUoFYauj3vi1JBVvZPGdLh4mduITS1CDhWIXDuRpnh3kRRkCzlB8400tYXqjSEH"
     //   setPublishableKey(key);
     // };
+    
+    LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
    
-
+    // useEffect(() => {
+    //   let subscription = AppState.addEventListener('change', handleAppStateChange);
+    //   return () => {
+    //      subscription.remove();
+    //   };
+    // }, []);
+     
     useEffect(async() => {
           requestUserPermission()
           notifacttionlistener()
           SplashScreen.hide();
           requestUserPermissionNotfee()
+          askAdspermisionIOs()
         
           
         //   notifee.onForegroundEvent(({ type, detail }) => {
@@ -116,7 +125,7 @@ const App =() => {
     async function requestUserPermissionNotfee() {
           const settings = await notifee.requestPermission();
          if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-            console.log('Permission settings:  is alow', settings);
+            //console.log('Permission settings:  is alow', settings);
             await notifee.requestPermission({
               sound: true,
               announcement: true,
@@ -152,6 +161,23 @@ const App =() => {
           }
         }
 
+        const askAdspermisionIOs=( )=>{
+          
+            check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY)
+              .then(async (result) => {
+                if (result == RESULTS.GRANTED) {
+                  console.log('Tracking! suu');
+                  // do something related to tracking
+      
+                } else {
+                  console.log('Not Tracking! fial');
+                }
+              })
+              .catch((error) => {
+                console.log('error in request tracking permissions: ', error);
+              });
+            
+        }
         const askPermsionNotfaction=()=>{
           console.log("++++++++++++++++")
           if(Platform.OS==='android'){
@@ -323,4 +349,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default  CodePush(App);
+export default App;

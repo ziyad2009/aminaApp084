@@ -1,10 +1,10 @@
 
 import React, { useState, useRef, useEffect ,useContext} from 'react';
-import { Image, View, TouchableOpacity, TextInput, Platform, Alert, StyleSheet, SafeAreaView, Pressable, ActivityIndicator } from 'react-native';
+import { Image, View, TouchableOpacity, TextInput,Text, Platform, Alert, StyleSheet, SafeAreaView, Pressable, ActivityIndicator } from 'react-native';
 
 import TelrSdk from 'rn-telr-sdk';
 import { Metrics, Colors, Fonts,fontPixel,Images, widthPixel, heightPixel } from '../assets/Themes/';
-import { Stack, Box, Text, HStack, VStack, Spinner, Button ,Modal,Center} from 'native-base';
+import { Stack, Box, HStack, VStack, Spinner, Button ,Modal,Center} from 'native-base';
 import setItem from '../services/storage/index'
 import api from '../services/api';
 import { sendNotifcation } from '../services/fucttions';
@@ -381,21 +381,22 @@ const telrModalClose = () => {
 
   }
 
-
+const wetingloadPage=()=>{
+  setloadpage(true)
+  setTimeout(() => {
+    setloadpage(false)
+  }, 4000);
+}
   return (
     <SafeAreaView style={styles.backgroundStyle}>
       {/* <TelrSdk backButtonText={"Back"} buttonBackStyle={styles.buttonBackStyle} buttonBackColor={styles.buttonBackColor} backButtonTextStyle={styles.backButtonTextStyle} paymentRequest={paymentRequest} telrModalVisible={telrModalVisible} telrModalClose={telrModalClose} didFailWithError={didFailWithError} didPaymentSuccess={didPaymentSuccess} /> */}
       {!loading ? <View style={styles.centeredView}>
-      {pass === "processed" && <Box w={"90%"} height={Metrics.HEIGHT*0.332}  backgroundColor={Colors.AminabackgroundColor} borderRadius={40} borderColor={'black'} borderWidth={.2} mt={'12'} shadow={'5'} ml={'4'}>
+      {pass === "processed" && <Box w={"90%"} height={Metrics.HEIGHT*0.332}  backgroundColor={Colors.AminabackgroundColor} borderRadius={40} borderColor={'black'} borderWidth={.2} mt={'12'} shadow={'8'} ml={'4'}>
           <Stack alignItems={'center'} justifyContent='center'  backgroundColor={Colors.transparent} >
-            <Image source={Images.MainLogo1} style={{width:widthPixel(200),height:heightPixel(100), borderRadius:16}} resizeMode='center' />
+            <Image source={Images.MainLogo1} style={{width:widthPixel(200),height:heightPixel(100), borderRadius:16}} resizeMode='contain' />
           </Stack>
-
-           
-
-          <Box borderColor={Colors.greys} borderBottomWidth={1} h={"5%"} w={"100%"} />
-          
-          <Box alignItems={'center'}>
+            
+          <Box alignItems={'center'} mt={'4'} justifyContent={'space-around'}>
             <Stack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'} >
               <Text style={styles.billRighttext}>المبلغ</Text>
               <Text style={styles.billLifttext}> SR {newdatta.totalprice}</Text>
@@ -409,7 +410,7 @@ const telrModalClose = () => {
               <Text style={styles.billRighttext}>طريقة الدفع</Text>
               <Text style={styles.billLifttext}>بطاقة مدى</Text>
             </Stack> */}
-            <Stack borderColor={Colors.newTextClr} borderBottomWidth={1} mt={'6'} h={"5%"} w={"60%"} />
+            <Stack borderColor={Colors.newTextClr} borderBottomWidth={1} mt={'3'} h={"5%"} w={"60%"} />
 
             <Stack flexDirection={'row'} mt={2} w="80%" justifyContent={'space-between'}>
               <Text style={styles.billRighttext}>المبلغ الاجمالي</Text>
@@ -421,7 +422,7 @@ const telrModalClose = () => {
             <Pressable
             style={[styles.buttonPay, styles.buttonPayment]}
             onPress={() => makePaymment()}>
-            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.bold} fontSize={fontPixel(16)} textAlign='center' mt={'2'} color={Colors.white}  >اكمل عملية الدفع</Text>
+            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(16),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.white }} >اكمل عملية الدفع</Text>
             </Pressable>
           </Box>
 
@@ -437,12 +438,12 @@ const telrModalClose = () => {
                 <Image source={Images.wowimage} style={{width:200,height:200}} resizeMode='contain' />
             </Stack>
             <Stack  mt={2}>
-                <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(36)}  > تم الدفع بنجاح</Text> 
+                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(22),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.greentext }}  > تم الدفع بنجاح</Text> 
             </Stack></Box>
             <Pressable
               style={[styles.buttonPay, styles.buttonPayment]}
               onPress={() => props.navigation.navigate('Request')}>
-              <Text  fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.bold} fontSize={fontPixel(16)} textAlign='center' mt={'2'} color={Colors.white}>طلباتي</Text>
+              <Text  style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(16),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.white }}>طلباتي</Text>
             </Pressable>
              
 
@@ -455,12 +456,12 @@ const telrModalClose = () => {
                 <Image source={Images.canselorder} style={{width:widthPixel(200),height:heightPixel(200)}} />
             </Stack>
             <Stack  mt={2}>
-                <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(36)}  >عملية الدفع  ملغية</Text> 
+                <Text  style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(22),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.black }}  >عملية الدفع  ملغية</Text> 
             </Stack></Box>
             <Pressable
               style={[styles.buttonPay, styles.buttonPayment]}
               onPress={() => props.navigation.navigate('Request') }>
-              <Text  fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.bold} fontSize={fontPixel(16)} textAlign='center' mt={'2'} color={Colors.white}> طلباتي</Text>
+              <Text  style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(16),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.white }}> طلباتي</Text>
             </Pressable>
             
 
@@ -472,12 +473,12 @@ const telrModalClose = () => {
                 <Image source={Images.canselorder} style={{width:widthPixel(200),height:heightPixel(200)}} />
             </Stack>
             <Stack  mt={2}>
-                <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(36)}  >عملية الدفع  مرفوضه الرجاء التاكد من بيانات البطاقة</Text> 
+                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(22),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.bloodOrange }} >عملية الدفع  مرفوضه الرجاء التاكد من بيانات البطاقة</Text> 
             </Stack></Box>
             <Pressable
               style={[styles.buttonPay, styles.buttonPayment]}
               onPress={() => props.navigation.navigate('Request') }>
-              <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.bold} fontSize={fontPixel(16)} textAlign='center' mt={'2'} color={Colors.white}> طلباتي</Text>
+              <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(16),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.white }}> طلباتي</Text>
             </Pressable>
             
 
@@ -502,7 +503,7 @@ const telrModalClose = () => {
                    
                 <Modal.Content backgroundColor={'amber.100'}  width={Metrics.WIDTH}  height={Metrics.HEIGHT*0.4833}  >
                     <WebView
-                    onLoad={()=>setloadpage(true)}
+                    onLoad={()=>wetingloadPage()}
                     onLoadEnd={() => { setloadpage(false) }}
                     onShouldStartLoadWithRequest={event => {
                         return true;
@@ -517,11 +518,11 @@ const telrModalClose = () => {
                         console.log("check before call succss")
                         setloadpage(false)
                       } else if (navState.url.includes("https://secure.telr.com/gateway/details.html")) {
-                        setloadpage(true)
+                        wetingloadPage()
                     
                        } else if (navState.url.includes("https://secure.telr.com/gateway/process_framed.html?o=DE2A01B9830458AFEE36A7863B8A3BC1E09BC76FC18033B055E37DE50BA9A818")) {
                         console.log("check before call Loadding to auths")
-                        setloadpage(true)
+                        wetingloadPage()
                        }
                    }} 
                       
@@ -553,7 +554,7 @@ const telrModalClose = () => {
 
 const styles = StyleSheet.create({
   backgroundStyle: {
-    backgroundColor:Colors.gray,
+    backgroundColor:Colors.AminabackgroundColor,
     flex: 1
   },
   centeredView: {
@@ -572,23 +573,28 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   buttonPay: {
-    borderRadius: 10,
+    borderRadius: 33,
     padding: 4,
     elevation: 1,
-    width:widthPixel(250),
-    height:heightPixel(50),
+    width:widthPixel(330),
+    height:heightPixel(60),
+    alignItems:"center",
+    justifyContent:'center'
+     
    
   },
   buttonPayment: {
     backgroundColor: Colors.AminaPinkButton,
     marginTop: 20,
     alignContent:'center',
-    alignItems:'center'
+    alignItems:'center',
+    fontWeight: '700',
   },
   payButtonTextStyle: {
     color: Colors.white,
-    fontWeight: 'normal',
-    textAlign: "center"
+    fontWeight: '700',
+    textAlign: "center",
+    
   },
   buttonBackStyle: {
     borderRadius: 10,
@@ -626,8 +632,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'red'
   },
   billRighttext: {
-    fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular,
-    fontWeight: '400',
+    fontFamily: Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold,
+    fontWeight: '700',
     color: Colors.black,
     fontSize: 16,
     marginStart: 10,

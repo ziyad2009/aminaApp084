@@ -8,7 +8,7 @@ import images from '../assets/Themes/Images';
 import  api from '../services/api'
 import  {UserContext} from '../services/UserContext';
 import CustomButton from '../services/buttons/buttton';
-import { Spinner, Stack ,Button,Text,Modal,FormControl,Input,Box} from 'native-base';
+import { Spinner, Stack ,Button,Text,Modal,FormControl,Input,Box,Center} from 'native-base';
 import api2 from '../services/api'; 
 import DeviceInfo from 'react-native-device-info';
 import notifee, { AndroidImportance } from '@notifee/react-native';
@@ -32,6 +32,7 @@ const Singin=(props)=>{
     const [placement, setPlacement] = useState(undefined);
     const [open, setOpen] = useState(false);
     const [result,setresult]=useState([])
+    const[ShowModal,setShowModal]=useState(false)
     let buildNumber = DeviceInfo.getBuildNumber();
   const appName=DeviceInfo.getApplicationName();
   const app_version=DeviceInfo.getVersion()
@@ -87,18 +88,19 @@ const updaterVersioApp=( )=>{
 }
 
 const handeAppUpddate=(data)=>{
-  console.log("taaa",data.appid)
+  console.log("taaa login",data.appid)
   if(data.appid!=buildNumber){
      console.log('update app please')
-   Alert.alert(
-    "تطبيق أمينة",
-    "الرجاء تحديث التطبيق من  المتجر للاسففادة من المزايا الجديده",
-    [
+  //  Alert.alert(
+  //   "تطبيق أمينة",
+  //   "الرجاء تحديث التطبيق من  المتجر للاسففادة من المزايا الجديده",
+  //   [
        
-      { text: "الاستمرار", onPress: ()=> directoStor() }
-    ],
-    { cancelable: false }
-  );
+  //     { text: "الاستمرار", onPress: ()=> directoStor() }
+  //   ],
+  //   { cancelable: false }
+  // );
+    setShowModal(true)
  
   }
 }
@@ -211,7 +213,7 @@ const directoStor=()=>{
             style={ styles.mainlogo} />
          
         <Stack mt={'12'} alignItems={'center'} justifyContent={'center'}>
-          <Text fontFamily={Fonts.type.medium} fontSize={fontPixel(24)} color={"#214F5E"}>تطبيق أمينة</Text>
+          <Text fontFamily={Fonts.type.medium} fontSize={fontPixel(12)} color={"#214F5E"}>Version:{app_version}</Text>
         </Stack>
         
         <View style={styles.inputFieldSec} >
@@ -236,7 +238,7 @@ const directoStor=()=>{
             placeholder="5xxxxxxxx" 
              textContainerStyle={{backgroundColor:Colors.white,marginTop:2}}
              textInputStyle={{fontSize:Platform.OS==='android'?18: 20,color:"rgb(40, 40, 43)    "}}
-            containerStyle={{ backgroundColor:Colors.white ,alignContent:'flex-end'}} 
+            containerStyle={{ backgroundColor:Colors.white ,alignContent:'flex-end',borderRadius:22}} 
             withDarkTheme
             withShadow
             autoFocus
@@ -249,13 +251,14 @@ const directoStor=()=>{
             buttonColor={Colors.textZahry}
             titleColor={Colors.white}
             title="تسجيل الدخول"
-            buttonStyle={{width: '80%', alignSelf: 'center',borderRadius:10}}
+            buttonStyle={{width: '80%', alignSelf: 'center',borderRadius:22}}
             textStyle={{fontFamily:Fonts.type.medium,fontSize:fontPixel(16)}}
             onPress={()=> isValidNo()}
           />
             
-          <View style={{marginTop:14}}>
-              <Text  fontFamily={Fonts.type.regular} fontSize={fontPixel(14)} color={Colors.newTextClr} >بالتسجيل انتي توافقين على شروط واحكام تطبيق امينة </Text>
+          <View style={{marginTop:14,flexDirection:'row'}}>
+              <Text  fontFamily={Fonts.type.regular} fontSize={fontPixel(14)} color={Colors.newTextClr} >بالتسجيل انتي توافقين على</Text>
+             <Text  fontFamily={Fonts.type.regular} fontSize={fontPixel(14)} color={"rgba(0, 171, 185, 1)"} > شروط واحكام تطبيق امينة</Text>
           </View>
 
              
@@ -270,16 +273,29 @@ const directoStor=()=>{
           <View style={{justifyContent:'center'}}>
                   {loadform&&<Spinner size={'lg'} color={Colors.loginGreen}   />}
           </View>
-                
+               
         </View>
+        <Center>
+          <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} borderColor={Colors.transparent} borderWidth='1'  justifyContent={'space-around'} alignItems={'center'}>
+            <Modal.Content width={Metrics.WIDTH}  backgroundColor={Colors.AminabackgroundColor} >
+              <Modal.Body alignItems={'center'} justifyContent='center'>
+                <Image source={Images.aminaLogoEmpty} style={{width:60,height:60,borderColor:Colors.black,borderWidth:.1 }} resizeMode='contain'  />
+                 <Box mt={'1'} p={'1'}>
+                    <Text fontFamily={Fonts.type.bold} flexWrap={'wrap'} fontWeight={600} fontSize={fontPixel(22)} alignSelf={'center'}  color={Colors.newTextClr} letterSpacing={1.6}>الرجاء تحديث التطبيق من المتجر للاستفادة من المزايا الجديده</Text>
+                 </Box>
+                 <Stack width={Metrics.WIDTH*0.99321} alignItems={'center'} justifyContent={'center'}       >
+                      <TouchableOpacity  style={{width:Metrics.WIDTH*0.5433,height:Metrics.HEIGHT*0.05123,borderRadius:10,alignItems:'center', justifyContent:"center",marginBottom:3,marginTop:3,backgroundColor:Colors.textZahry}} onPress={()=> directoStor()}>
+                        <Text fontFamily={Platform.OS==='android'? Fonts.type.base:Fonts.type.medium}  fontWeight={600} fontSize={fontPixel(15)} shadow={'4'} alignSelf={'center'}  letterSpacing={1} color={Colors.white}>موافق</Text></TouchableOpacity>
+                    </Stack>
+              </Modal.Body>
+                  
+
+            </Modal.Content>
+          </Modal>
+        </Center>
 
         
-              
-      <Toast
-        position='top'
-        topOffset={20}
-        visibilityTime={10000}
-      />
+         
 
     </View>
     )

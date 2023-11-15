@@ -3,7 +3,7 @@ const images = {
   women: require("../images/women.png"),
   introimage:require("../images/Aminahchar.png"),
   MainLogo: require("../images/MainLogo.png"),
-  MainLogo1: require("../images/MainLogo1.jpeg"),
+  MainLogo1: require("../images/MainLogo1.png"),
   MainLogo3: require("../images/MainLogo3.png"),
   caption1: require("../images/caption1.png"),
   caption2: require("../images/caption2.png"),
@@ -86,9 +86,42 @@ const images = {
   clockgreennew:require("../images/clockgreennew.png"),
   emailicon:require("../images/emailicon.png"),
   billicon:require("../images/billicon.png"),
+  aminaLogoEmpty:require("../images/aminaLogoE.png"),
+  grreenCalendrnew:require("../images/grreenCalendrnew.png"),
+  greenclocknew:require("../images/greenclocknew.png"),
+  blackCalendernew:require("../images/blackCalendernew.png"),
+  blackOclock:require("../images/blackOclock.png"),
   
-  
+  babyiconnew:require("../images/babyiconnew.png"),
+  homeiconnew:require("../images/homeiconnew.png"),
+  starswhite:require("../images/starswhite.png"),
+  rightbinky:require("../images/rightbinky.png"),
+  aminawbaby:require("../images/aminawbaby.png"),
+  acompany:require("../images/acompany.png"),
+  dollar:require("../images/dollar.png"),
+  noteRed:require("../images/noteRed.png"),
+  certfcateRed:require("../images/certfcateRed.png"),
+  intro11:require("../images/intro1.png"),
+  intro12:require("../images/intro12.png"),
+  intro13:require("../images/intro13.png"),
 
+  greenbabyface:require("../images/greenbabyface.png"),
+  cardname:require("../images/cardname.png"),
+  greenclander:require("../images/greenclander.png"),
+  greenclock:require("../images/greenclock.png"),
+  greenmoney:require("../images/greenmoney.png"),
+  greenmonies:require("../images/greenmonies.png"),
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   

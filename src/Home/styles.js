@@ -45,7 +45,25 @@ const styles = StyleSheet.create({
     ratingContainerStyle:{
         backgroundColor:Colors.transparent,
         
-    }
+    },
+    slideContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'white',
+    },
+    image: {
+      width: 200,
+      height: 200,
+    },
+    title: {
+      fontSize: 24,
+      marginTop: 16,
+    },
+    text: {
+      fontSize: 16,
+      marginTop: 8,
+    },
   });
   
   export default styles;

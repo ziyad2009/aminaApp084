@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, SafeAreaView, View } from 'react-native';
+import { Alert, Platform, SafeAreaView, View } from 'react-native';
 
 import { Form, FormItem, Picker, PinInput } from 'react-native-form-component';
 import { Fonts ,Metrics,Colors,fontPixel} from '../assets/Themes';
@@ -75,7 +75,7 @@ const sendReeq=async()=>{
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor:Colors.AminabackgroundColor, padding: 24 }}>
-      <View style={{ padding: 24 }}>
+      <View style={{ padding: 24 ,marginTop:Platform.OS==='android'? 18:1}}>
         <Form buttonStyle={{backgroundColor:Colors.AminaPinkButton}} buttonText="ارسال الطلب" onButtonPress={() => sendReeq()}>
           <FormItem
             value={firstname}
@@ -106,7 +106,7 @@ const sendReeq=async()=>{
               
             type="modal"
             itemLabelStyle={{backgroundColor:Colors.transparent}}
-            buttonStyle={{backgroundColor:Colors.AminaButtonNew}}
+            buttonStyle={{backgroundColor:Colors.grayButton}}
           />
 
           {/* <Picker

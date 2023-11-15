@@ -267,30 +267,23 @@ const Mapscreen = ({ route ,navigation}) => {
                onPress={()=>prepareSreen()}/> */}
               
             </View>
+            
           </View> 
          
           </View>
-     
+          
     
           <Center >
 
-            <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} borderColor={Colors.AminaButtonNew} borderWidth='1'>
-              <Modal.Content width={Metrics.WIDTH*0.9372 } >
-               
-              <Modal.Header  backgroundColor={Colors.amin1Button1}>
-                  <Modal.CloseButton    />
-                  <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={'md'} alignSelf={'center'} color={'white'}>رسالة تنبيه</Text>
-              </Modal.Header> 
+            <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} backgroundColor={Colors.transparent}  >
+              <Modal.Content width={Metrics.WIDTH*0.9372 } backgroundColor={Colors.transparent} >
               <Modal.Body alignItems={'center'} justifyContent='center' >
-                <Stack flexDirection={"column"} alignItems='flex-start'  w="95%" padding={2}   >
-                  <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts: Fonts.type.base} fontSize={18} fontWeight="medium" textAlign={"center"} >
-                  لكي نتمكن من خدمتك بشكل افضل سوف يتم حفظ موقعك بشكل دائم</Text>
-                </Stack>
+                 
                 <Box alignItems={'center'}  w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>
                 <CustomButton
-                  buttonColor={Colors.AminaPinkButton}
-                  title="استمرار"
-                  buttonStyle={{width: '77%', alignSelf: 'center',marginTop:1}}
+                  buttonColor={Colors.AminaButtonNew}
+                  title="تحديد"
+                  buttonStyle={{width: '77%', alignSelf: 'center',marginTop:1,borderRadius:12}}
                   textStyle={{fontSize: 20,color:Colors.white}}
                   onPress={() => saveLocation()}
                 />

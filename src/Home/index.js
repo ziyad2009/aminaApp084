@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { View, Text, Image, TouchableOpacity, Platform, PermissionsAndroid, RefreshControl, Alert, Linking } from 'react-native';
-import { Skeleton, StatusBar, VStack, Center, Box, Button, FlatList, Stack, Heading, Input, Icon, Spinner, Spacer } from 'native-base'
+import { Skeleton, StatusBar, VStack, Center, Box, Button, FlatList, Stack, Heading, Input, Icon, Spinner, Spacer,Modal } from 'native-base'
 import { UserContext } from '../services/UserContext';
 import api from '../services/api';
 import { Fonts, Metrics, Colors, Images, fontPixel, pixelSizeHorizontal, pixelSizeVertical, widthPixel, heightPixel } from '../assets/Themes';
@@ -19,6 +19,11 @@ import api2 from '../services/api';
 import DeviceInfo from 'react-native-device-info';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import {RemoteDataSetExample} from './autocompleate'
+import appsFlyer from 'react-native-appsflyer';
+import moment from 'moment/moment';
+import {SliderBox} from './components/SliderBox';
+import FastImage from 'react-native-fast-image';
+import Disprofile from '../services/utils/disprofile';
 page = 0
 //sound setting 
 Sound.setCategory('Playback');
@@ -34,6 +39,132 @@ var ding = new Sound(Platform.OS === 'android' ? 'notification.mp3' : "IphoneNot
 
 let myloc = null
 let MOTHERID = null
+
+
+
+var onInstallConversionDataCanceller = appsFlyer.onInstallConversionData(
+  (res) => {
+      if (JSON.parse(res.data.is_first_launch) == true) {
+          if (res.data.af_status === 'Non-organic') {
+              var media_source = res.data.media_source;
+              var campaign = res.data.campaign;
+              console.log('This is first launch and a Non-Organic install. Media source: ' + media_source + ' Campaign: ' + campaign);
+          } else if (res.data.af_status === 'Organic') {
+              console.log('This is first launch and a Organic Install');
+          }
+      } else {
+          console.log('This is not first launch');
+      }
+  },
+);
+
+
+ var onAppOpenAttributionCanceller =()=>{
+   appsFlyer.onAppOpenAttribution((res) => {
+  console.log("appsFlyer  onAppOpenAttribution ",res);
+});
+}
+
+
+   // AppsFlyer initialization flow. ends with initSdk.
+   appsFlyer.initSdk(
+    {
+      devKey: 'zvsFgDrB4ZqMP8N92apjrU',
+      isDebug: true, // set to true if you want to see data in the logs 
+      appId: '1642193505', // iOS app id
+      onInstallConversionDataListener: true,
+      timeToWaitForATTUserAuthorization: 10,
+      onDeepLinkListener: true,
+    },
+    (result) => {
+      console.log("Test aap flayer2 from HOME ",result);
+    },
+    (error) => {
+      console.error("Test aap flayer  Erorr",error);
+    }
+  );
+
+
+ 
+
+  const workday_count=( start,end,workWithWeekend)=> {
+    let calcDone=false
+    var Start = moment(start);
+    var End = moment(end);
+
+    const timedate =moment("2023-10-06").format("YYYY-MM-DD")
+    var timeStart=moment(`${timedate} 08:50:35`) 
+    var timeToEnd= moment(`${timedate} 14:50:35`) 
+   
+   if(Start.isSame(End)){
+    console.log("is samme day")
+     return;
+   }
+   
+  const totalDay=moment.duration(End.diff(Start)).asDays()
+  const totaTime=moment.duration(timeToEnd.diff(timeStart)).asHours()
+  const searchLimit = totalDay;
+  let businessDay=0
+  let weekend=0
+  let dateTodayStr=moment(Start).format('dddd')
+  
+  for (let index = 0; index < searchLimit+1; index++) {
+    businessDay+=1
+    console.log("ttt====>OK",businessDay)
+    console.log("ttt====>OK",dateTodayStr)
+     
+    if(dateTodayStr==='السبت'||dateTodayStr==='الجمعة'){
+        console.log("Is holday ^^ ",dateTodayStr)
+       //add counter to weekend
+        weekend+=1
+      }  
+      //increase counter day
+       dateTodayStr=moment(Start).add(businessDay,'day').format('dddd')
+       if(searchLimit===index){
+        calcDone=true
+        console.log("Is loop done ^^ ")
+       }
+    }
+    if(calcDone){
+      const workdayWithoutweekend=businessDay-weekend
+      const workday=businessDay
+      const totalTimework=totaTime
+      const price=15
+      const typeWork=workWithWeekend
+      if (typeWork){
+        console.log("مجموع ايام العمل", workday ,
+                "السعر النهائي لليوم الواحد ",price*totalTimework,
+                "السعر لكامل الايام   ",workday*(price*totalTimework)
+                ,"تبد الخدمة ",Start.format('LLL')
+                ,"service End  to ",End.format("LLL"))
+        }else{
+          console.log(" مجموع ايام العمل مع ايام العطل", workdayWithoutweekend ,
+                "السعر النهائي لليوم الواحد ",price*totalTimework,
+                "السعر لكامل الايام   ",workdayWithoutweekend*(price*totalTimework)
+                ,"تبد الخدمة ",Start.format('LLL')
+                ,"تنتهي الخدمة ",End.format("LLL"))
+        }
+      
+  
+    }
+   
+ 
+  } // 
+
+  const testdays=()=>{
+      var ftest = {date:'2023-09-01',start:1,end:7};
+  var ltest = {date:'2023-09-10',start:2,end:8};
+  var f = 'YYYY-MM-DD';
+  for(var z=ftest.start; z<=ftest.end; ++z) {
+    var start = moment(ftest.date + z);
+    for(var y=ltest.start; y<=ltest.end; ++y) {
+      var end = moment(ltest.date + y);
+      var wd = workday_count(start,end);
+      console.log('from: '+start.format(f),'to: '+end.format(f),'is '+wd+' workday(s)');
+    }
+}
+  }
+
 const Home = (props) => {
   const [services, setservices] = useState({})
   const [loading, setloding] = useState(false)
@@ -55,12 +186,85 @@ const Home = (props) => {
   const appName = DeviceInfo.getApplicationName();
   const app_version = DeviceInfo.getVersion()
   const app_type = Platform.OS === 'android' ? "android" : "ios"
-
+  const[ShowModal,setShowModal]=useState(false)
   const socket = useRef(null);
   socket.current = SOKITIOSetter;
 
-  useEffect(async () => {
 
+
+  const sendEventToappsFlyer=()=>{
+    console.log("starrt send event ")
+    const eventName = "af_login";
+    const eventValues = {
+      af_success: "af_success",
+       
+    };
+    appsFlyer.logEvent(
+      eventName,
+      eventValues,
+      (res) => {
+        console.log("appsFlyer event Test",res);
+      },
+      (err) => {
+        console.error("appsFlyer Error Event",err);
+      }
+    );
+  
+  }
+  const sendEvent2=()=>{
+    const eventName2 = 'af_add_to_cart';
+      const eventValues2 = {
+        af_content_id: 'id123',
+        af_currency: 'SAR',
+        af_revenue: '2',
+      };
+
+      appsFlyer.logEvent(
+        eventName2,
+        eventValues2,
+        (res) => {
+          console.log("Send to cart evvvent",res);
+        },
+        (err) => {
+          console.error("Errorr=>cart evvvent",err);
+        }
+      );
+
+  }
+
+  const sendEvent3=()=>{
+    appsFlyer.getAppsFlyerUID((err, appsFlyerUID) => {
+      if (err) {
+        console.error("Erorr=>getAppsFlyerUID  ",err);
+      } else {
+        console.log('on getAppsFlyerUID: ' + appsFlyerUID);
+      }
+    });
+  }
+      
+  useEffect(() => {
+    return () => {
+        // Optionaly remove listeners for deep link data if you no longer need them after componentWillUnmount
+        if (onInstallConversionDataCanceller) {
+          onInstallConversionDataCanceller();
+          console.log('unregister onInstallConversionDataCanceller');
+          onInstallConversionDataCanceller = null;
+        }
+        if (onAppOpenAttributionCanceller) {
+          onAppOpenAttributionCanceller();
+          console.log('unregister onAppOpenAttributionCanceller');
+          onAppOpenAttributionCanceller = null;
+        }
+    };
+});
+ 
+
+
+  useEffect(async () => {
+    const StartTimeService=moment("2023-10-06").format("YYYY-MM-DD")
+    const EndTimeService=moment("2023-10-13").format("YYYY-MM-DD")
+    const workWithWeekend=true
+    workday_count(StartTimeService,EndTimeService,workWithWeekend)
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
 
@@ -103,9 +307,13 @@ const Home = (props) => {
 
     if (fcmToken = !null) {
       api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-      console.log("test new token from Mothers", newToken)
+      //console.log("test new token from Mothers", newToken)
+      appsFlyer.updateServerUninstallToken(newToken,(success)=>{
+        console.log("token firbase update inappsFlyer ",success)
+      })
+
       await api.patch(`mother/${motherId}`, { playerid: newToken }).then((res) => {
-        console.log("test Update player ID++ for mother profile ", res.data)
+      //  console.log("test Update player ID++ for mother profile ", res.data)
       }).catch((err) => {
         console.log("ERORR Upate profile +رخفهبشذفهخر", err)
       })
@@ -128,6 +336,7 @@ useEffect(async () => {
     }).catch((err) => {
     console.log("Errorr from get app info", err)
   })
+     sendEventToappsFlyer()
 
 }, [])
 
@@ -215,19 +424,10 @@ if(result.appid <= buildNumber){
 }
 
 const handeAppUpddate=(data)=>{
-console.log("taaa",data.appid)
+console.log("taaa Home",data.appid)
 if(data.appid!=buildNumber){
    console.log('update app please')
- Alert.alert(
-  "تطبيق أمينة",
-  "الرجاء تحديث التطبيق من  المتجر للاسففادة من المزايا الجديده",
-  [
-     
-    { text: "الاستمرار", onPress: ()=> directoStor() }
-  ],
-  { cancelable: false }
-);
-
+ //setShowModal(true)
 }
 }
 
@@ -372,7 +572,7 @@ const directoStor=()=>{
       return <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(12), color: Colors.newTextClr, marginLeft: 5 }}>{distatnkm} KM</Text>
     }
 
-  }
+  } 
 
   const movToProfileScreen = (setterdata, settername) => {
     //block reservion from it self 
@@ -382,88 +582,93 @@ const directoStor=()=>{
     props.navigation.navigate('Shrtcutprofile', { data1: setterdata, settertTitle: settername })
   }
 
+  const movToProfileScreen2 = (servData) => {
+    //Main block reservion 
+    const  OrderData={
+      mainservice:servData.maineservice,
+      serviestype: servData.maineservice==="حضانة منزلية"?"حاضنة":"حاضنة",
+      order:servData.order
+    }
+    props.navigation.navigate('Babysetesrs',{ setterdata: JSON.stringify(OrderData) })
+  }
+
   const Item = ({ setterdata }) => (
+     <TouchableOpacity style={{alignItems:'center', marginTop:1}} onPress={()=>movToProfileScreen(setterdata, setterdata.name) } >
+       <Disprofile data={setterdata} width={Metrics.WIDTH*0.79273}  height={Metrics.HEIGHT*0.321} movScreen={()=>movToProfileScreen(setterdata, setterdata.name) }/>
+     </TouchableOpacity>
+     
+   
+    )
 
-    <TouchableOpacity onPress={() => movToProfileScreen(setterdata, setterdata.name)}
-      style={{
-        alignItems: 'center', justifyContent: 'center', borderColor: setterdata.accompany ? Colors.bloodOrange : Colors.veryLightGray, borderBottomWidth: 1,
-        height: Metrics.HEIGHT * 0.163, width: Metrics.WIDTH * 0.8211, marginLeft: 30
-      }}>
-      <Box onTouchStart={() => console.log("UUUU", setterdata.owner)} borderColor={"#FFFFFF"} borderWidth={1} borderRadius='lg' marginLeft={'4'} flexDirection={'row'}
-        width={Platform.OS === 'android' ? widthPixel(300) : widthPixel(360)} height={heightPixel(129)} backgroundColor={'#FFFFFF'}   >
-        <Box mt='3'>
-          <Image source={{ uri: `${URL}/users/${setterdata.owner}/avatar` }} resizeMode='contain' style={{
-            height: heightPixel(77), width: widthPixel(77),
-            marginTop: 18, marginRight: 3, borderRadius: 10
-          }} />
-        </Box>
-        <Box onflexDirection={'column'} width={Metrics.WIDTH * 0.550} ml={'2'} p={'1.5'} backgroundColor={"#FFFFFF"} marginTop={'3'} justifyContent='space-around' >
-          <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
-            <Stack flexDirection={'row'} justifyContent='space-around' alignItems={'baseline'}>
-              <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(16), color: Colors.newTextClr }}>{setterdata.displayname}</Text>
-              <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(12), color: "#FB5353", marginLeft: pixelSizeHorizontal(4) }} >{setterdata.mainservice}</Text>
-            </Stack>
-            <Image source={Images.save} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
-          </Box>
-          <Box flexDirection={'row'} justifyContent="space-between" alignItems={'baseline'}  >
-            <Stack flexDirection={'row'} justifyContent={'space-between'} >
-              <Stack flexDirection={'row'} justifyContent={'space-between'} ml={'2'}>
-                <Image source={Images.locationblack} resizeMode='contain' style={{ height: 18, width: 18 }} />
-                <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(10), color: Colors.newTextClr, marginLeft: 2 }} >{setterdata.district}</Text>
-              </Stack>
-              <Stack ml={'4'} space={3}>
-                {setterdata.accompany ?
-                  <Image source={Images.accompany} resizeMode='contain' style={{ height: 20, width: 20, marginLeft: 10, padding: 1 }} /> : <Spacer />}
-              </Stack>
-            </Stack>
-            <Stack position={'relative'} bottom={1} >
-              <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(10), color: Colors.rmadytext, marginLeft: pixelSizeHorizontal(2) }}>حفظ  </Text>
-            </Stack>
+  // const Item = ({ setterdata }) => (
 
-          </Box>
+  //   <TouchableOpacity onPress={() => movToProfileScreen(setterdata, setterdata.name)}
+  //     style={{
+  //       alignItems: 'center', justifyContent: 'center', borderColor: setterdata.accompany ? Colors.bloodOrange : Colors.veryLightGray, borderBottomWidth: 1,
+  //       height: Metrics.HEIGHT * 0.163, width: Metrics.WIDTH * 0.8211, marginLeft: 30
+  //     }}>
+  //     <Box onTouchStart={() => console.log("UUUU", setterdata.owner)} borderColor={"#FFFFFF"} borderWidth={1} borderRadius='lg' marginLeft={'4'} flexDirection={'row'}
+  //       width={Platform.OS === 'android' ? widthPixel(300) : widthPixel(360)} height={heightPixel(129)} backgroundColor={'#FFFFFF'}   >
+  //       <Box mt='3'>
+  //         <Image source={{ uri: `${URL}/users/${setterdata.owner}/avatar` }} resizeMode='contain' style={{
+  //           height: heightPixel(77), width: widthPixel(77),
+  //           marginTop: 18, marginRight: 3, borderRadius: 10
+  //         }} />
+  //       </Box>
+  //       <Box onflexDirection={'column'} width={Metrics.WIDTH * 0.550} ml={'2'} p={'1.5'} backgroundColor={"#FFFFFF"} marginTop={'3'} justifyContent='space-around' >
+  //         <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
+  //           <Stack flexDirection={'row'} justifyContent='space-around' alignItems={'baseline'}>
+  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(16), color: Colors.newTextClr }}>{setterdata.displayname}</Text>
+  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(12), color: "#FB5353", marginLeft: pixelSizeHorizontal(4) }} >{setterdata.mainservice}</Text>
+  //           </Stack>
+  //           <Image source={Images.save} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
+  //         </Box>
+  //         <Box flexDirection={'row'} justifyContent="space-between" alignItems={'baseline'}  >
+  //           <Stack flexDirection={'row'} justifyContent={'space-between'} >
+  //             <Stack flexDirection={'row'} justifyContent={'space-between'} ml={'2'}>
+  //               <Image source={Images.locationblack} resizeMode='contain' style={{ height: 18, width: 18 }} />
+  //               <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(10), color: Colors.newTextClr, marginLeft: 2 }} >{setterdata.district}</Text>
+  //             </Stack>
+  //             <Stack ml={'4'} space={3}>
+  //               {setterdata.accompany ?
+  //                 <Image source={Images.accompany} resizeMode='contain' style={{ height: 20, width: 20, marginLeft: 10, padding: 1 }} /> : <Spacer />}
+  //             </Stack>
+  //           </Stack>
+  //           <Stack position={'relative'} bottom={1} >
+  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(10), color: Colors.rmadytext, marginLeft: pixelSizeHorizontal(2) }}>حفظ  </Text>
+  //           </Stack>
 
-          <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
-              {/* <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{setterdata.price} ر.س/ساعة</Text> */}
-              <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{setterdata.price} ر.س/ساعة</Text>
-            </Stack>
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.whites} flexDirection='row'>
-              <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{setterdata.rate}</Text>
-              <Image source={Images.starticon} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
+  //         </Box>
 
-            </Stack>
+  //         <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
+  //           <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+  //             {/* <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{setterdata.price} ر.س/ساعة</Text> */}
+  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{setterdata.price} ر.س/ساعة</Text>
+  //           </Stack>
+  //           <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.whites} flexDirection='row'>
+  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{setterdata.rate}</Text>
+  //             <Image source={Images.starticon} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
 
-            <TouchableOpacity onPress={() => movToProfileScreen(setterdata, setterdata.name)} style={{ borderColor: Colors.white, borderWidth: 1 }}>
-              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack} flexDirection='row' >
-                <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>احجزي الان</Text>
-              </Stack>
-            </TouchableOpacity>
-          </Box>
-        </Box>
+  //           </Stack>
+
+  //           <TouchableOpacity onPress={() => movToProfileScreen(setterdata, setterdata.name)} style={{ borderColor: Colors.white, borderWidth: 1 }}>
+  //             <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack} flexDirection='row' >
+  //               <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>احجزي الان</Text>
+  //             </Stack>
+  //           </TouchableOpacity>
+  //         </Box>
+  //       </Box>
 
 
 
-      </Box>
+  //     </Box>
 
-    </TouchableOpacity>
-  );
+  //   </TouchableOpacity>
+  // );
 
 
   //direct to main service data
-  const Req1 = (val) => {
-    //console.log("service id ",val)
-
-    props.navigation.push('Fourm1', { productTitle: val.maineservice, serviceid: val._id, serviceNmae: val.maineservice, orderId: val.order })
-  }
-
-  const myItemSeparator = () => {
-    return (
-      <View
-        style={{ height: 1, backgroundColor: "gray", marginHorizontal: 10 }}
-      />
-    );
-  };
-
+  
   const palysound = () => {
     ding.setVolume(1)
     ding.play(success => {
@@ -481,69 +686,94 @@ const directoStor=()=>{
     //setserch(search)
 
   };
+  const slideImages=[
+    // 'https://res.cloudinary.com/di6ghy1su/image/upload/v1697850567/amina/intro3_cozmlp.png',
+    'https://res.cloudinary.com/di6ghy1su/image/upload/v1697850875/amina/AdobeStock_73114024_dnoeqq.jpg',
+    'https://res.cloudinary.com/di6ghy1su/image/upload/v1697850958/amina/vdnnosi423ava7s6rdte.jpg',
+    'https://images.unsplash.com/photo-1446059004666-8148312ba98b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1540544660406-6a69dacb2804?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1431&q=80',
+    require('../assets/images/motherbanner.png')
+  ]
 
   return (
     <View style={{ backgroundColor: Colors.AminabackgroundColor, marginTop: 0, flex: 1 }} >
       <StatusBar barStyle="light-content" backgroundColor={Colors.AminaButtonNew} />
        
-      <Box mb={'1'} mt={'1'}>
+      <Box mb={'1'} mt={'1'} alignItems={'center'}>
         
          <RemoteDataSetExample props={props}/>
       </Box>
       
-      <Box flexDirection={'row'} alignItems={'center'} height={'141'} width="90%" marginLeft={pixelSizeHorizontal(4)} marginRight={pixelSizeHorizontal(4)} backgroundColor={Colors.bannerColor} marginTop={pixelSizeVertical(10)} borderRadius={20}>
-        {/* <Text style={{ paddingTop: 20, fontWeight: Platform.OS === 'android' ? "300" : "700", fontFamily: Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.base, fontSize: 22, marginLeft: 5, marginBottom: 2 }} >اختر الخدمة</Text>
-        <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.light : Fonts.type.light, fontSize: 18, marginBottom: 10 }}>الرجاء اختيار نوع الخدمه والبدء بانشاء طلبك</Text> */}
-        <Box flex={2}>
-          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(24), textAlign: 'left', color: "#F5F5F5", marginLeft: pixelSizeHorizontal(23) }}>أمينة على أطفالك</Text>
-        </Box>
-        <Image source={Images.motherbanner} style={{ height: 141, flex: 1.2, backgroundColor: Colors.transparent, marginRight: pixelSizeHorizontal(22) }} resizeMode='cover' />
+      <SliderBox
+          ImageComponent={FastImage}
+          images={slideImages}
+          sliderBoxHeight={200}
+          onCurrentImagePressed={index =>
+            console.warn(`image ${index} pressed`)
+          }
+          
+          //currentImageEmitter={index => console.warn(`image ${index} pressed`)}
+          dotColor="#FFEE58"
+          inactiveDotColor="#90A4AE"
+          paginationBoxVerticalPadding={20}
+          paginationBoxStyle={{
+            position: 'absolute',
+            bottom: 0,
+            padding: 0,
+            alignItems: 'center',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            paddingVertical: 10,
+          }}
+          dotStyle={{
+            width: 10,
+            height: 10,
+            borderRadius: 5,
+            marginHorizontal: 0,
+            padding: 0,
+            margin: 0,
+            backgroundColor: 'rgba(128, 128, 128, 0.92)',
+          }}
+          autoplay
+          circleLoop
+          ImageComponentStyle={{borderRadius: 15, width: '88%', marginTop: 5}}
+          imageLoadingColor="#2196F3"
+        />
+      <Box alignItems={'center'} alignContent={'center'} mt={'5'}>
+      <Text style={{ fontSize: fontPixel(22), fontFamily: Fonts.type.bold, color: Colors.AminaButtonNew  }}>
+                       اختاري طلبك
+                      </Text>
       </Box>
-
-
-      <View style={{
-        backgroundColor: Colors.white, flexDirection: 'row', marginTop: Metrics.HEIGHT * 0.05755, marginLeft: 10,
-        width: Metrics.WIDTH * 0.92852, height: Metrics.HEIGHT * 0.07994, justifyContent: 'space-around'
-      }}>
+ 
+     <Box backgroundColor={Colors.transparent} flexDirection={'row'} mt={'5'} ml={Metrics.WIDTH*0.17600}   width={Metrics.WIDTH * 0.62852} 
+                   display={'flex'} height={Metrics.HEIGHT * 0.152994} justifyContent={'space-around'} borderTopLeftRadius={'2xl'} borderTopRightRadius={'2xl'}  >
         {services.length > 1 &&
           services.map((serv, index) => {
             return (
-
               <TouchableOpacity key={serv._id} style={{
-                backgroundColor: Colors.transparent,
-                width: Metrics.WIDTH * 0.43425
-              }} onPress={() => Req1(serv)}>
-
-                <Box flexDirection={'row'} width={widthPixel(177)} height={50}  >
-                  <Box justifyContent={'center'} alignItems='center' width={Metrics.WIDTH * 0.253}  >
-                    <Text style={{ fontSize: fontPixel(16), fontFamily: Fonts.type.regular, color: Colors.newTextClr, margin: 3 }}>
-                      {serv.maineservice}
-                    </Text>
-                    <Text style={{ fontSize: fontPixel(10), fontFamily: Fonts.type.light, color: "#000000", }}>
-                      {serv.maineservice === "حضانة منزلية" ? "في منزل الحاضنه" : "في منزل الاسرة"}
-                    </Text>
-
+                  backgroundColor:index === 1 ? Colors.AminaButtonNew:"rgba(239, 239, 239, 1)",borderRadius:44,borderColor:Colors.transparent,borderWidth:1,
+                  alignItems:'center',alignContent:'center', 
+                }} onPress={() => movToProfileScreen2(serv)}>
+                  <Box flexDirection={'column'} width={widthPixel(146)} height={widthPixel(166)} alignItems={'center'} alignContent={'center'} >
+                    <Stack backgroundColor={index === 1 ?Colors.AminaButtonNew:"rgba(239, 239, 239, 1)"} alignItems='center' justifyContent={'center'} borderTopRightRadius={20} borderTopLeftRadius={20} 
+                          borderBottomRightRadius={20} borderBottomLeftRadius={20} height={'20'} width={'20'}  >
+                      <Image source={index === 1 ? Images.babyiconnew : Images.homeiconnew} resizeMode='contain' style={{ height: heightPixel(59), width: widthPixel(58), backgroundColor: Colors.transparent, marginTop:3  }} />
+                    </Stack>
+                    <Stack justifyContent={'center'} alignItems='center' width={Metrics.WIDTH * 0.253}  >
+                      <Text style={{ fontSize: fontPixel(16), fontFamily: Fonts.type.regular, color:index === 1 ?"rgba(255, 255, 255, 1)": Colors.AminaButtonNew, margin: 3 }}>
+                        {serv.maineservice}
+                      </Text>
+                    </Stack>
                   </Box>
-
-                  <Box backgroundColor={Colors.AminaButtonNew} alignItems='center' justifyContent={'center'} borderRadius={20} height={'20'} width={'20'} mr={pixelSizeHorizontal(1)} >
-                    <Image source={index === 0 ? Images.babyicon : Images.homeicon} resizeMode='contain' style={{ height: heightPixel(34), width: widthPixel(34), backgroundColor: Colors.transparent, marginRight: pixelSizeHorizontal(2) }} />
-                  </Box>
-                </Box>
               </TouchableOpacity>
 
             )
           })
         }
-        {/* <Box>
-          <Button onPress={()=> props.navigation.navigate('PaymentForm') }>chat</Button>
-        </Box> */}
-        {/* <TouchableOpacity style={{backgroundColor:Colors.amin1Button1,width:100,height:100}} >
-          <TelerPage  />
-        </TouchableOpacity> */}
-
-      </View>
-      <Box ml={4} mt={10}  >
-        <Text style={{ alignSelf: 'flex-start', fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(16) }}>الافضل لك </Text>
+        
+      </Box>
+      <Box ml={4} mt={'3'}  >
+        <Text style={{ alignSelf: 'center', fontFamily: Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold, fontSize: fontPixel(16),fontWeight:'700',color:"rgba(244, 128, 147, 1)" }}>الافضل لك </Text>
 
       </Box>
       {loading2 ?
@@ -557,18 +787,16 @@ const directoStor=()=>{
           </VStack>
         </Center> :
         <Stack>
-
           {babseters.length < 1 &&
             <Box width={Metrics.WIDTH} height={Metrics.HEIGHT * 0.121}
-
-              mt={10} padding={1}
+             mt={10} padding={1}
               alignItems={'center'}>
               {isFetching ? <Spinner color={Colors.textZahry} size={'lg'} /> :
                 <EvilIcons name='refresh' size={100} onPress={() => onRefresh()} style={{ alignItems: 'center' }} color={Colors.AminaButtonNew} />
               }
 
             </Box>}
-          <Box h={'64'}   >
+          <Box h={'64'}>
             <FlatList
               data={babseters}
               keyExtractor={(item, index) => item + index}
@@ -593,6 +821,27 @@ const directoStor=()=>{
 
         </Stack>
       }
+        <Center>
+          <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} borderColor={Colors.        AminaButtonNew} borderWidth='1'  justifyContent={'space-around'} alignItems={'center'}>
+            <Modal.Content width={Metrics.WIDTH} height={Metrics.HEIGHT*0.3111} backgroundColor={Colors.AminabackgroundColor} >
+              <Modal.Body alignItems={'center'} justifyContent='center' mt={'2'} mb={'1'}  >
+                <Image source={Images.aminaLogoEmpty} style={{width:100,height:50 }} resizeMode='contain'  />
+                 <Box p={'1'}  alignItems={'center'} justifyContent={"center"}>
+                    <Text style={{fontFamily:Platform.OS==='android'? Fonts.type.regular:Fonts.type.bold,flexWrap:'wrap',fontWeight:Platform.OS==="android"?"normal":"400", fontSize:fontPixel(24), alignSelf:'center', color:Colors.newTextClr , letterSpacing:1.5 }} >الرجاء تحديث التطبيق من المتجر للاستفادة من المزايا الجديده</Text>
+                 </Box>
+              </Modal.Body>
+                  <Modal.Footer alignItems={'center'} justifyContent={'center'}  backgroundColor={Colors.AminabackgroundColor} borderColor={"white"}>
+                  <Stack  width={ Metrics.WIDTH*0.99321} alignItems={'center'} justifyContent={'center'}       >
+                    <TouchableOpacity  style={{width:Metrics.WIDTH*0.5433,height:Metrics.HEIGHT*0.05123,
+                      shadowOpacity:.4,shadowColor:Colors.lightGray,borderRadius:10,alignItems:'center', justifyContent:"center",backgroundColor:Colors.textZahry}} onPress={()=> directoStor()}>
+                      <Text style={{ fontFamily:Platform.OS==='android'? Fonts.type.base:Fonts.type.medium,fontWeight:'600',fontSize:fontPixel(15), alignSelf:'center',color:Colors.white}}  >موافق</Text></TouchableOpacity>
+                    </Stack>
+                  </Modal.Footer>
+              
+
+            </Modal.Content>
+          </Modal>
+        </Center>
 
     </View>
 

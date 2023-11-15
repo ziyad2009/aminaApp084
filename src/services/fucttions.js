@@ -16,7 +16,7 @@ import  {UserContext} from '../services/UserContext';
 
 export const sendNotifcation= async(data)=>{
   
-    console.log("start send notifcation",data)
+    console.log("START send notifcation ===",data)
     const token = await setItem.getItem('BS:Token');
     const motherData = await setItem.getItem('BS:User');
     

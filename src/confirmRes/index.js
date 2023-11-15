@@ -20,7 +20,7 @@ import ReturnFourm from './returnForm';
 import sendbyWhats from '../services/utils/whatsup';
 import CountdownTimer from '../workscreen/CountdownTimer';
   import CountDownTimer from  './counttim'
-  
+  import appsFlyer from 'react-native-appsflyer';
   
 let interval = null;
 
@@ -42,23 +42,48 @@ const ConfirmRes=(props)=>{
     
  
    const[timeservicce,settimservice]=useState(0)
+   const[orderExp,setorderExp]=useState(false)
    // Timer References
   const refTimer = useRef();
 
   // For keeping a track on the Timer
   const [timerEnd, setTimerEnd] = useState(false);
 
+  const sendEvent=(orderID,babysettername)=>{
+    const eventName = 'af_add_payment_info';
+      const eventValues = {
+        af_order_id: orderID,
+        af_num_adults:babysettername
+      };
+
+      appsFlyer.logEvent(
+        eventName,
+        eventValues,
+        (res) => {
+          console.log("Send to cart evvvent",res);
+        },
+        (err) => {
+          console.error("Errorr=>cart evvvent",err);
+        }
+      );
+
+  }
 
   
-  const timerCallbackFunc = (timerFlag) => {
+  const timerCallbackFunc = async(timerFlag) => {
     // Setting timer flag to finished
+    console.log("tesst remain time,time" ,timerFlag)
     setTimerEnd(timerFlag);
+    
+    Alert.alert("time was  end ")
     console.warn(
       'You can alert the user by letting him know that Timer is out.',
     );
+    await setItem.removeItem('@SERVICETIME')
   };
 
     useEffect(async()=>{
+      //  await setItem.removeItem('@SERVICETIME')
         timeAccsspetOrder()
         //get Mother Profile
         setbabyseters(JSON.parse(props.route.params.data1))
@@ -67,9 +92,10 @@ const ConfirmRes=(props)=>{
         const token = await setItem.getItem('BS:Token');
         api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
         const response= await api.get("/mothers/me").then((res)=>{
+            console.log("MaMMMMM", res.data)
             return res.data
         }).catch((err)=>{
-            onsole.log("Erorr",err)
+            console.log("Erorr",err)
             Alert.alert("تنبيه","غير قادر على جلب  بينات البروفايل")
         })
        
@@ -81,7 +107,7 @@ const ConfirmRes=(props)=>{
     useEffect(()=>{
         const data= JSON.parse(props.route.params.data1)
         const chikeRequestStuse=props.route.params.val
-       
+        console.log("cheak is run ",data)
         if(chikeRequestStuse==='chike'){
             console.log("cheak is run ")
             setTimeWating(2000)
@@ -116,12 +142,12 @@ const handelREQ= async(id)=>{
     const token = await setItem.getItem('BS:Token');
 
     interval = setInterval(async() => {
-        console.log("setInterval==",id)
+        
         api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
         const response= await  api.post(`${URL}/serchorders`,{
          orderID:id
        }).then((res)=>{
-         console.log("DATA, POST OK")
+         console.log("check babysetter order",id)
         if(!res.data.accepted&&res.data.statuse==='canceled'){
             //Alert.alert("تنبيه","تم الاعتذار عن قبول الطلب من قبل الحاض   نه")
             clearInterval(interval)
@@ -164,27 +190,27 @@ const handelREQ= async(id)=>{
 }
     
    const confirmRequest=async()=>{
-   const appname="تطبيق أمينة"
-   const  orderId=babseters.orderid
+    const appname="تطبيق أمينة"
+    const  orderId=babseters.orderid
     const location= await setItem.getItem('BS:Location')
     const token = await setItem.getItem('BS:Token');
     const motherData = await setItem.getItem('BS:User');
-    
     const coordinates=JSON.parse(location)
     const motherdata2=JSON.parse(motherData)
-    //check if mother exisit 
-    // const motherisplayname=motherprofile.mother.displayname
-    console.log("TEST ERoor",orderId)
     const motherName=motherprofile.mother.name
     const motherDisplayName=motherprofile.mother.displayname
     const mothernames=`${motherName} ${motherDisplayName}`
     const motherPhone=motherprofile.mother.phone
    // const motherPhone=motherdata2.phone
-   //stor time of end reservition 
+   //stor time of END reservition 
    const timeRes=moment(new Date)
-   const extratime1= moment(timeRes).add(6,'hours')
-   await setItem.setItem('@SERVICETIME',extratime1)
-    
+   const extratime1= moment(timeRes)
+   await setItem.setItem('@SERVICETIME',extratime1).then(()=>{
+    console.log("start store Reserviton Time",extratime1)
+    setorderExp(false)
+   })
+   
+
     //   console.log("test price",babseters.totalprice ,"hours",babseters.hours )
     //   console.log("test phon",motherPhone,"mothe n",mothernames)
     api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
@@ -201,20 +227,27 @@ const handelREQ= async(id)=>{
         settername:babseters.settername,
         mothername:mothernames,
         motherphone:motherPhone,
-        setterphone:babseters.setterphone,
+        opetion3:babseters.setterphone,
         address:coordinates.formatted,
         statuse:"processing",
         reson:"",
         read:false,
         start:babseters.start,
         end:babseters.end,
+        starttime:babseters.starttime,
+        endtime:babseters.endtime,
         potementdate:babseters.potementdate,
         settterfaileid:babseters.settterfaileid,
         price:babseters.price,
         hours:babseters.hours,
         totalprice: babseters.totalprice ,
         totalhours:babseters.totalhours,
+        selectType:babseters.selectType,
+        selectname:babseters.selectname,
+        workday:babseters.workday,
+        endPriceOnday:babseters.endPriceOnday,
         rreservioninfo:babseters.rreservioninfo,
+        accompany:babseters.accompany,
         motherplayerid:babseters.motherplayerid,
         setterplayerid:babseters.setterplayerid,
     }).then((res)=>{
@@ -224,13 +257,15 @@ const handelREQ= async(id)=>{
         
         setchangeScreen(true)
         sendNotif(babseters.orderid)
-
+        sendEvent(babseters.orderid,babseters.displayname)
+        //send to babysetter whatsup
         const Bodytext=`عزيزتي مستخدم {{1}} لديك تحديثات على طلبك {{2}}`
         const Tomobaile=`+${babseters.setterphone}`
         const FromMobaile = "whatsapp:+15076390092"
         sendbyWhats(Bodytext,Tomobaile,FromMobaile,appname,orderId)
+        
     }).catch(err=> console.log("Erorr:",err ))
-     
+    
    }    
    
 // const sendbyWhats = async () => {
@@ -251,7 +286,7 @@ const handelREQ= async(id)=>{
    
    const canselRequest = async () => {
         const orderId = (newData._id).toString()
-        console.log("canssel", orderId)
+       
         await api.delete(`/mother/order/${orderId}`).then((res) => {
             SETOK(false)
         }).finally(() => sendNotifCansel())
@@ -261,8 +296,8 @@ const handelREQ= async(id)=>{
     }
 
     const addResonAutomatic = async ( ) => {
-        console.log("sart aoto===")
-       const value="تم الالغاء من قبل الام"
+       
+       const value="تم الالغاء من قبل الام لعدم الدفع"
        const user = await setItem.getItem('BS:User');
        const token = await setItem.getItem('BS:Token');
        const orderId = (newData._id).toString()
@@ -300,8 +335,6 @@ const handelREQ= async(id)=>{
 
  //notifaction fuctions
    const sendNotif= ()=>{
-
-    console.log("TTEST setter player id",babseters.setterplayerid)
     const data={
         receiver:babseters.settterowner,
         content:"لقد تم اضافة طلب جديد",
@@ -309,12 +342,12 @@ const handelREQ= async(id)=>{
         orderid:babseters.orderid,
         playerid:babseters.setterplayerid
     }
-    console.log("Test Nortif beffrr++++",data)
+     
     sendNotifcation(data)
    }
 
    const sendNotifCansel= ()=>{
-    console.log("TTEST setter player id",babseters.setterplayerid)
+    
     const data={
         receiver:babseters.settterowner,
         content:"لقد تم الغاء الطلب من الام",
@@ -322,7 +355,7 @@ const handelREQ= async(id)=>{
         orderid:babseters.orderid,
         playerid:babseters.setterplayerid
     }
-    console.log("Test Nortif beffrr++++",data)
+    
     sendNotifcation(data)
    }
 
@@ -356,19 +389,37 @@ const handelREQ= async(id)=>{
     const finalAddress=address.replace("saudi Arabia","")
   }
   const timeAccsspetOrder= async()=>{
-    const val=  setItem.getItem("@SERVICETIME")
-    const oldtime=moment(val)
+    const EndServ= await setItem.getItem("@SERVICETIME")
+    const extratime1=   moment(EndServ).add(6,'hours')
+    
+    if (EndServ ===null){
+        console.log("value of endServ null")
+        setorderExp(true)
+        return ;
+    }else if(moment(extratime1).isBefore(moment(new Date))){
+        var testtime=moment(extratime1  ).isBefore(moment(new Date),'seconds')
+        console.log("value of endServ less 1  sec",testtime)
+       setorderExp(true)
+       await setItem.removeItem('@SERVICETIME')
+       return ;
+    }
+    
     const timenow=moment(new Date) 
-    const resultH=moment(timenow).diff(val,'hours')
-    const resultM=moment(timenow).diff(val,'minutes')
-    const resultS=moment(timenow).diff(val,'seconds') 
+    const resultH=moment(extratime1).diff(timenow,'hours')
+    const resultM=moment(timenow).diff(extratime1,'minutes')
+    const resultS=moment(timenow).diff(extratime1,'seconds') 
      //const val2=moment(result).format("hh:mm:ss")
      //const valToform=moment(val).format('hh:mm:ss')
+     let diff = extratime1.diff(timenow);
+        const diiff2=moment.duration(diff).as('seconds')
+    
      
-     console.log("222",resultS)
+
+    //  const timeRes=moment(new Date)
+    //  const extratime1=   moment(timeRes).add(3,'hours')
      
-     console.log("222--old",resultH)
-     settimservice(resultS)
+     //console.log("222--old", EndServ)
+     settimservice( parseInt(diiff2))
     
   }
   
@@ -390,7 +441,7 @@ const handelREQ= async(id)=>{
         </Box> */}
         <Box flexDirection={'row'} alignItems='flex-start' mt={'2'}>
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
-                <Image source={Images.chiledgreen} style={{width:widthPixel(19),height:heightPixel(22)}} resizeMode='contain'/>
+                <Image source={Images.greenbabyface} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
             <Stack>
             <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}>{babseters.childeaccount}طفل</Text>
             </Stack>
@@ -399,7 +450,7 @@ const handelREQ= async(id)=>{
         </Box>
         <Box flexDirection={'row'} alignItems='flex-start' mt={'2'}>
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
-                <Image source={Images.chileid} style={{width:widthPixel(18),height:heightPixel(22)}} resizeMode='contain'/>
+                <Image source={Images.cardname} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
             <Stack>
                 {loading ?<Box flexDirection={'row'} >
                 {chld.childe.map((item,index)=>{
@@ -413,22 +464,26 @@ const handelREQ= async(id)=>{
                 
                 </Box>:null }
             </Stack>
+             
             </Stack> 
         </Box>
         
         <Box flexDirection={'row'} alignItems='flex-start' mt={'2'}  >
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
-                <Image source={Images.ccalendrgreen2} style={{width:widthPixel(18),height:heightPixel(22)}} resizeMode='contain'/>
-            <Stack>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}> {moment(babseters.potementdate).format('LL')}</Text>
+                <Image source={Images.greenclander} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
+            <Stack flexDirection={'row'}>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={"3"}> {moment(babseters.start).format('LL')}</Text>
+                {babseters.selectname!="يومي"&&<Box flexDirection={'row'} alignItems={'baseline'}><Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr} ml={"3"} > الى </Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr} ml={'3'} > {moment(babseters.end).format('LL')}</Text>
+                    </Box>}
             </Stack>
             </Stack> 
         </Box>
         <Box flexDirection={'row'} alignItems='flex-start' mt={'2'}  >
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
-                <Image source={Images.clockgreen} style={{width:widthPixel(18),height:heightPixel(22)}} resizeMode='contain'/>
+                <Image source={Images.greenclock} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
             <Stack>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}>{moment(babseters.start).format('hh:mm a')} "الى "{moment(babseters.end).format('hh:mm a')}</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}>{moment(babseters.starttime).format('hh:mm a')} الى{moment(babseters.endtime).format('hh:mm a')}</Text>
             </Stack>
             </Stack>
         
@@ -438,59 +493,84 @@ const handelREQ= async(id)=>{
         
         <Box flexDirection={'row'} alignItems='flex-start' mt={'2'}>
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
-                <Image source={Images.locationgreen} style={{width:widthPixel(18),height:heightPixel(22)}} resizeMode='contain'/>
+                <Image source={Images.calender} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
             <Stack>
-            <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={ Colors.newTextClr}  ml={3}>{babseters.address}</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={ Colors.newTextClr}  ml={3}t> عدد ايام الحجز {babseters.workday} ايام</Text>
+                {/* <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={ Colors.newTextClr}  ml={3}>{babseters.address}</Text> */}
             </Stack>
-                
+             
             </Stack> 
+        </Box>
+        {/* <Box alignItems={'flex-start'} mt={'2'}>
+             {babseters.selectType&&<Stack>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(12)} color={ Colors.red}  ml={3}>الحجز شامل ايام العطل</Text>
+            </Stack>  } 
+        </Box> */}
+        <Box>
+            <Stack alignItems={'center'} flexDirection={'row'} >
+                    <Image source={Images.greenmoney} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
+                <Stack>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.price} ريال</Text>
+                </Stack>
+            </Stack>   
         </Box>
 
         <Box alignItems={'center'} mt={'2'} mb={1}>
             <Stack borderTopColor={'light.100'} borderWidth={1} width={widthPixel(314)} mt={2} />
         </Box>
+        
         <Box flexDirection={'column'} alignItems='flex-start'    mt={2}>
             <Stack flexDirection={'column'} justifyContent='flex-start'    >
-            <Stack alignItems={'center'} flexDirection={'row'} >
-                    <Image source={Images.moneygreen} style={{width:widthPixel(18),height:heightPixel(22)}} resizeMode='contain'/>
-                <Stack>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.price} ريال</Text>
-                </Stack>
-            </Stack>   
+                <Stack alignItems={'center'} flexDirection={'row'} >
+                    <Image source={Images.greenmonies} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
+                    <Stack justifyContent={'space-between'} flexDirection={'row'}>
+                        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>المبلغ</Text>
+                        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.totalprice} ريال</Text>
+                    </Stack>
+                </Stack>   
+            </Stack> 
             <Stack flexDirection={'row'} justifyContent={'space-around'} mt={"3"} >
                 <Stack>
-                    <Image source={Images.moneylistgreen} style={{width:widthPixel(18),height:heightPixel(22)}} resizeMode='contain'/>
+                    <Image source={Images.moneylistgreen} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
                 </Stack>
                 <Stack flexDirection={'row'}>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>اجمالي المبلغ</Text>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{Number(babseters.totalprice)*.015 +Number(babseters.totalprice)} ريال </Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>اجمالي قيمة الحجز</Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{Number(babseters.totalprice/100)*(15) +Number(babseters.totalprice)} ريال </Text>
                 </Stack>
-                
             </Stack>
-                
-            </Stack> 
         </Box>
         </Box>
+
         <VStack alignItems={'center'}>
-            {OK?<Center>
+            {OK?
+            <Center>
                 <Box flexDirection={'row'} alignItems='flex-start' mt={'4'}>
                     <Stack flexDirection={'row'} justifyContent='center' alignItems={'center'} width={widthPixel(382)} height={heightPixel(40)} backgroundColor={Colors.infotextbackground} borderRadius={'lg'} >
-                            <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr}  ml={3}>تم ارسال الطلب وفي انتظار قبول الحاضنة</Text>
+                          {!orderExp?
+                          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr}  ml={3}>تم ارسال الطلب وفي انتظار قبول الحاضنة</Text>:
+                          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr}  ml={3}>عذرا  تم تجاوز وقت قبول الطلب من الحاضنه</Text>
+                          }  
                     </Stack> 
                 </Box>
                 <Box flexDirection={'row'} alignItems='flex-start' mt={'4'}>
                     <Stack flexDirection={'row'} justifyContent='center' alignItems={'center'} width={'96'} height={heightPixel(40)}  >
-                            <Text flexWrap={'wrap'} fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr} fontWeight={'700'}  ml={3}> في حال لم يتم الموافقة  خلال ٦ ساعات  سيتم الغاءالطلب </Text>
+                    {!orderExp? <Text flexWrap={'wrap'} fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr} fontWeight={'700'}  ml={3}> في حال لم يتم الموافقة  خلال ٦ ساعات  سيتم الغاءالطلب </Text>:
+                        <Box>
+                            <Button variant={'subtle'}  backgroundColor={"#6BB05A"}shadow={'2'} size={'xs'} borderRadius={'lg'} onPress={() =>props.navigation.navigate('Home') }>
+                            <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(16)} textAlign='center' color={Colors.white} fontWeight={'700'} >الرجاء التوجة الى الصفحة  الرئيسية والبحث عن حاضنة</Text></Button>
+                    </Box>}
                     </Stack> 
                 </Box>
                     
                 <Box mt={4}>
+                    {timeservicce >= 1&&
                     <CountDownTimer
                     ref={refTimer}
-                    timestamp={21600}
+                    timestamp={timeservicce}
                     //timestamp={timeservicce}
                     //timestamp={timeservicce}
                     timerCallback={timerCallbackFunc}
+                    
                     containerStyle={{
                         height: 56,
                         width: Metrics.WIDTH*0.7211,
@@ -506,9 +586,10 @@ const handelREQ= async(id)=>{
                         fontFamily:Fonts.type.bold,
                         letterSpacing: 2,
                     }}
-                    />
+                    />}
                      </Box>
-            </Center>:
+            </Center>
+            :
             <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' mt={5} rounded='lg'>
                      {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
                         onPress={() => {confirmRequest() }}> احجز</Button> */}
@@ -519,6 +600,7 @@ const handelREQ= async(id)=>{
                     textStyle={{ fontFamily:Fonts.type.bold,fontSize: 22 }}
                     onPress={() => confirmRequest()} 
                 />
+                
             </Box>}
             
             {OK&&<Center>
@@ -534,15 +616,14 @@ const handelREQ= async(id)=>{
                         />
                 </Box>
                 
-            </Center>}
+                </Center>
+            }
         </VStack>
 
         <Center>
-            
             <Modal isOpen={showModal}   onClose={() => setShowModal(!showModal)}  
                 backgroundColor={Colors.transparent}  borderColor={"#a3a2a2"} opacity={1} 
-                  justifyContent="flex-end" bottom="2"
-                 >
+                  justifyContent="flex-end" bottom="2" >
                    
                 <Modal.Content backgroundColor={'white'}  width={Metrics.WIDTH}  height={Metrics.HEIGHT*0.4833}  justifyContent='center' alignItems='center'>
                 

@@ -1,6 +1,6 @@
 import  React,{ useEffect, useState ,useRef} from 'react';
  
-import { Spacer, VStack ,HStack,Avatar,Box,Text,Center,Button,Modal, Stack,Fab, Spinner} from 'native-base';
+import { Spacer,Actionsheet,HStack,Box,Text,Center,Button,Modal, Stack,Fab, Spinner,useDisclose} from 'native-base';
 
 import {View,StyleSheet, Platform,SafeAreaView, Alert,PermissionsAndroid,Linking,Image, TouchableOpacity} from 'react-native'
 import MapView,{Marker ,PROVIDER_GOOGLE,Callout } from 'react-native-maps';
@@ -58,8 +58,20 @@ const GOOGLE_MAPS_APIKEY = "AIzaSyBtKLEuD_50bKofX67ZV2hfLWvjPaY3aac";
       const[loadingcords,setloadingcords]=useState(null)
       const [erorrMSg,setErorrMsg]=useState(null)
       const [originData,setoriginData]=useState()
+      const [startServiceStatus,setstartServiceStatus]=useState(false)
+      const [Activeservice,setActiveservice]=useState(false)
+
+      
       const mapRef = useRef(null);
       const watchId = useRef(null)
+
+      const {
+        isOpen,
+        onOpen,
+        onClose
+      } = useDisclose();
+    
+      
     //  const LATITUDE_DELTA = 0.08;
     //  const LONGITUDE_DELTA = LATITUDE_DELTA * (width /height );  
     const ASPECT_RATIO = Metrics.WIDTH / Metrics.HEIGHT;  
@@ -232,7 +244,9 @@ useEffect( async()=>{
      //logFrames()
      
     },[getlocatin])
-    
+    useEffect(()=>{
+      setShowModal(true)
+    },[])
 
     useEffect(
       () => props.navigation.addListener('beforeRemove', (e) => {
@@ -353,40 +367,41 @@ const GotoOpenMap = async (cords, label='نقطة الوصول') => {
   }
 }
 
+const startService=()=>{
+  setstartServiceStatus(true)
+  
+}
+const preActivetedService=(id)=>{
+  setActiveservice(true)
+  //order now is start 
+  makeOrderAcctive(id)
+}
+
+const ActivetedService=()=>{
+  onClose()
+  props.navigation.popToTop()
+}
+
+const makeOrderAcctive=async(ID)=>{
+  const token = await setItem.getItem('BS:Token');
+  api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+      await api.patch("/Activeorder",{
+      orderId:ID,
+      opt:true
+    }).then((res)=>{
+      console.log("response for acive ordder",res.data)
+    
+    }).catch((err)=>console.log('erorr:',err)
+    )
+}
 
 
 return(
-  <SafeAreaView style={{flex:1}}>
-    <View style={styles.container2}>
-    <Box  width={widthPixel(388)}  height={heightPixel(456)} alignItems='center'  ml={2} mt={Platform.OS==='android'? '24':'3'} >
-       {/* infoboxe */}
-        <Box flexDirection='row' justifyContent='space-between' mb={'3'} >
-          <Box flexDirection={'row'}   width={widthPixel(260)}  >
-            <Image  source={{uri:`${URL}/users/${babysetter.settterowner}/avatar`}}
-              style={{width:70 ,height:70,marginRight:2}} />
-            <Stack flexDirection={'column'} alignItems='flex-start' ml={3} >
-              <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr}  mt="3">{babysetter.settername}</Text>
-              <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={"#FB5353"} >{babysetter.serviestype}</Text>
-            </Stack>
-          </Box>
-          <Box backgroundColor={'amber.100'} h="20">
-          
-          </Box>
-          <Box  flexDirection={'row'} >
-            <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr} mt={3} >رقم الطلب</Text>
-              <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr} mt={3}  >{ORDERID}</Text>
-          </Box>
-
-         
-      
-        </Box>
-      
-      
-        {!loadingcords?
-            <Box>
-
-              <MapView
-                style={styles.map}
+  <SafeAreaView>
+    <View style={styles.container}>
+    {!loadingcords?
+      <MapView
+                style={styles.map2}
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE} 
                 //pointerEvents={false}
@@ -461,102 +476,142 @@ return(
                     <Text fontSize={18} color="black" textAlign={'center'}>التوجه الى موقع الحاضنه</Text>
                   </Callout>
                   </Marker>
-            </MapView>
-
-            </Box>:
+            </MapView>:
             <Box> <Spinner size={'lg'} color={Colors.black} marginTop={Metrics.HEIGHT*0.07173} alignItems='center' />
             </Box>}
 
-            <Box flexDirection={"column"} alignItems="baseline" mt={5} mb={4}>
-              {babysetter.serviestype === "حضانة منزلية" ?
-                <Stack>
-                  <TouchableOpacity onPress={() => GotoOpenMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude })}>
-                    <Stack flexDirection={'row'} alignItems='baseline'>
-
-                      {loading ?
-                        <Box flexDirection={'row'} justifyContent='space-around'>
-                          <Image source={images.locationblack} style={{ width: 11, height: 16, marginRight: 2 }} />
-                          <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr} ml={3} >للتوجه للحاضنة المنزلية</Text>
-                        </Box>
-
-                        : <Spinner size={'lg'} color={Colors.bloodOrange} />}
-                    </Stack>
-                  </TouchableOpacity>
-                </Stack> :
-                <Stack>
-                  {loading ?<TouchableOpacity onPress={() =>  setShowModal(true)}>
-                    
-                    <Stack flexDirection={'row'} alignItems='baseline'>
-                      <Image source={images.caricon2} style={{ width: 20, height: 20, marginRight: 2 }} />
-                      <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr} ml={3} >لمعرفة الوقت المقدر لوصول الحاضنة</Text>
-                    </Stack>
-                  </TouchableOpacity>:<Spinner size={'lg'} color={Colors.bloodOrange} />}
-                </Stack>}
-
-              <HStack background={'#214F5E'} borderRadius={10}
-                mr="3" ml='3' w={widthPixel(356)} h={Metrics.HEIGHT * 0.0131} mt={5} />
-
-            </Box>
-            <Box  flexDirection={'row'}     width={Metrics.WIDTH*0.932}  >
-                <CountdownTimer targetDate={moment(babysetter.start).valueOf()}/>
-            </Box>
-
-            <Box>
-
-      <Box flexDirection={'row'}  justifyContent='space-between'>
-
-      <Box alignItems={'center'} w={Metrics.WIDTH} rounded='lg'>
-          {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full'
-                            onPress={() => {ReternScreeen() }}> صفحة بداء الخدمة</Button> */}
-          <CustomButton
-            buttonColor={Colors.AminaPinkButton}
-            title="الرجوع للخلف"
-            buttonStyle={{ width: '90%', alignSelf: 'center' }}
-            textStyle={{ fontSize: 15 }}
-            onPress={() => ReternScreeen()}
-          />
-          
-        </Box> 
-        </Box>
-
-
-      </Box>
-      </Box>
-            <Center >
-
-            <Modal isOpen={showModal} onClose={() => setShowModal(false)} borderColor={Colors.AminaButtonNew} borderWidth='1'>
-            <Modal.Content width={Metrics.WIDTH*0.9372 } >
-            <Modal.Body alignItems={'center'} justifyContent='center' >
-
-            <Box alignItems={'center'} >
-                  <Stack backgroundColor={Colors.transparent} borderRadius={22} mt={5} p={10}>
-                    <Image source={Images.samilogo} style={{width:200,height:200}} resizeMode='contain' />
+            <Actionsheet isOpen={true} onClose={onClose}>
+            {Activeservice?
+              <Actionsheet.Content>
+                <Box alignItems={'center'} flexDirection={'column'}>
+                  <Stack alignItems={'center'}>
+                    <Image source={images.rightbinky} style={{height:120,width:120,padding:1,marginTop:7,marginBottom:2}} resizeMode='contain' />
                   </Stack>
-                  <Stack  mt={5}>
-                    <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(17)}  >الوقت المتوقع لوصول الحاضنه من الموقع</Text> 
+                  <Stack  alignItems={'center'} mt={'5'} mb={'2'}>
+                  <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(20) }color={Colors.textZahry} letterSpacing={1.2} fontWeight={'700'} >تم بدء الخدمة بنجاح</Text>
                   </Stack>
-                  <Stack backgroundColor={Colors.transparent}>
-                    <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(14)} mt={4}>مسافة الطريق{Distance} km  و الوقت المتوقع للوصول {Time} دقيقه</Text>
-                  </Stack>
-                  
-                  <Stack flexDirection={'row'} alignItems={'center'}   w={Metrics.WIDTH * 0.840} justifyContent='center' ml='3' mr='4' mt={3}  >
-                        <CustomButton
-                          buttonColor={Colors.AminaPinkButton}
-                          title="رجوع"
-                          buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:10 }}
-                          textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium }}
-                          onPress={() => setShowModal(false) }
-                        />
-                      
-                      
+                  <Stack width={'96'}>
+                    <CustomButton
+                        buttonColor={Colors.AminaPinkButton}
+                        title="عودة"
+                        titleColor={Colors.white}
+                        buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:20 }}
+                        textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium }}
+                        onPress={() => ActivetedService() }
+                      />
                   </Stack>
                 </Box>
-                
-            </Modal.Body>
+            </Actionsheet.Content>:
 
-            </Modal.Content>
-            </Modal>
-            </Center>
+            <Actionsheet.Content >
+            <Box flexDirection='row' justifyContent='space-between' mb={'3'} >
+              <Box flexDirection={'row'}   width={widthPixel(320)} >
+                <Image  source={{uri:`${URL}/users/${babysetter.settterowner}/avatar`}}
+                  style={{width:80 ,height:80,marginRight:2,borderRadius:44}} />
+                <Stack flexDirection={'column'} marginLeft={'3'}>
+                  <Stack flexDirection={'column'}  alignItems={'flex-start'}>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(18) }color={Colors.newTextClr} fontWeight={'700'}>{babysetter.settername}</Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(18)} color={"#FB5353"} >{babysetter.serviestype}</Text>
+                  </Stack>
+                  <Stack  flexDirection={'row'} >
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(18) }color={Colors.newTextClr} >رقم الطلب</Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(18) }color={Colors.newTextClr}  >{ORDERID}</Text>
+                  </Stack>
+                </Stack>
+              </Box>
+            </Box>
+              <Box alignItems={'baseline'} flexDirection={'column'}>
+                <Stack flexDirection={'row'}justifyContent={'space-between'}  w={widthPixel(355)} ml={'3'}>
+                  <Text>{moment(babysetter.starttime).format("hh:mm a")}</Text>
+                  <Text>{moment(babysetter.endtime).format("hh:mm a")}</Text>
+                </Stack>
+                <HStack background={'#214F5E'} borderRadius={10}
+                  mr="3" ml='3' w={widthPixel(356)} h={Metrics.HEIGHT * 0.0131}  
+                />
+              </Box>
+            
+            
+            <Box>
+                  {startServiceStatus?
+                  <Box alignItems={'center'}>
+                    <Stack  flexDirection={'column'} alignItems={'center'} justifyContent={'space-around'} mt={'3'}>
+                      <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(18) }color={Colors.newTextClr} fontWeight={'700'}>الرجاء تزويد الحاضنة بكود الخدمة</Text>
+                      <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={'5xl'}color={Colors.newTextClr} fontWeight={'700'} letterSpacing={'2xl'} >{babysetter.scurtycode}</Text>
+                      <Stack width={'96'}>
+                        <CustomButton
+                          buttonColor={Colors.AminaPinkButton}
+                          title="عودة"
+                          titleColor={Colors.white}
+                          buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:33 }}
+                          textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium }}
+                          onPress={() => preActivetedService(babysetter._id) }
+                        />
+                      
+                      </Stack>
+                    </Stack>
+                  </Box>:
+                  <Box flexDirection={'column'} alignItems={'center'}   w={Metrics.WIDTH * 0.840} justifyContent='center' ml='3' mr='4' mt={3}  >
+                     {babysetter.serviestype === "حضانة منزلية" ?
+                      <Box  w={Metrics.WIDTH * 0.840}>
+                        <CustomButton
+                        buttonColor={Colors.grayButton}
+                        title="فتح خريطة الموقع"
+                        titleColor={Colors.textZahry}
+                        buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:33 }}
+                        textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium}}
+                        onPress={() => GotoOpenMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude })}
+                        />
+                        <CustomButton
+                        buttonColor={Colors.AminaPinkButton}
+                        title="بدء الخدمة"
+                        titleColor={Colors.white}
+                        buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:33 }}
+                        textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium }}
+                        onPress={() => startService() }
+                        />
+                      </Box>:
+                      <Box alignItems={'center'} justifyContent={'space-around'}>
+                        <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr} ml={3} > الوقت المقدر لوصول الحاضنة بناد على موقعها</Text>
+                        <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(14)} mt={4}>مسافة الطريق{Distance} km  و الوقت المتوقع للوصول {Time} دقيقه</Text>
+                        <Stack width={'96'}>
+                          <CustomButton
+                          buttonColor={Colors.greentext}
+                          title="الحاضنه وصلت"
+                          titleColor={Colors.white}
+                          buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:33 }}
+                          textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium }}
+                          onPress={() => startService() }
+                          />
+                          <CustomButton
+                          buttonColor={Colors.AminaPinkButton}
+                          title="رجوع"
+                          titleColor={Colors.white}
+                          buttonStyle={{ width: '90%', alignSelf: 'center',borderRadius:33 }}
+                          textStyle={{ fontSize: fontPixel(18) ,fontFamily:Platform.OS==='android'? Fonts.type.medium:Fonts.type.medium }}
+                          onPress={() =>  props.navigation.popToTop() }
+                          />
+                        </Stack>
+                      </Box>}
+
+                 </Box>
+                    
+                   
+                }
+                
+              </Box>
+            </Actionsheet.Content>
+            
+            }
+            
+            </Actionsheet>
+              
+
+
+
+          
+ 
+      
+     
       
     
     
@@ -568,26 +623,25 @@ return(
  }
 
  const styles = StyleSheet.create({
+  container:{
+    height:Metrics.HEIGHT,
+    width:Metrics.WIDTH
+  },
   container2: {
-      height: Metrics.HEIGHT,
+    ...StyleSheet.absoluteFillObject,
+     height: Metrics.HEIGHT,
       width: Metrics.WIDTH,
-       
-      flexDirection:'column',
-       //justifyContent: 'center',
-       alignItems: 'center',
-      // alignSelf: "center",
-      marginBottom: 20,
-      // marginTop:2,
-      backgroundColor:Colors.AminabackgroundColor
+      
   },
   map: {
       width:widthPixel(388),
       height:Metrics.HEIGHT*0.380
   },
   map2: {
-    flex:1,
-     ...StyleSheet. absoluteFillObject,
-      
+    ...StyleSheet. absoluteFillObject,
+    height: Metrics.HEIGHT*0.5342,
+    width: Metrics.WIDTH,
+    
   },
   leftText:{
     fontFamily:Fonts.type.base,
@@ -612,117 +666,81 @@ export default DDirctionMap;
  
 
 
-// <View style={styles.container2}>
-      
-// <Box  width={widthPixel(388)}  height={heightPixel(456)} backgroundColor={Colors.AminabackgroundColor} ml={2} mt={Platform.OS==='android'? '24':'1'} >
-//  {/* infoboxe */}
-//   <Box flexDirection='row' justifyContent='space-between' mb={'3'} >
-//     <Box flexDirection={'row'}   width={widthPixel(260)}  >
-//       <Image  source={{uri:`${URL}/users/${babysetter.settterowner}/avatar`}}
-//         style={{width:70 ,height:70,marginRight:2}} />
-//       <Stack flexDirection={'column'} alignItems='flex-start' ml={3} >
-//         <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr}  mt="3">{babysetter.settername}</Text>
-//         <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16)} color={"#FB5353"} >{babysetter.serviestype}</Text>
-//       </Stack>
-//     </Box>
-//     <Box backgroundColor={'amber.100'} h="20">
-    
-//     </Box>
-//     <Box  flexDirection={'row'} >
-//       <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr} mt={3} >رقم الطلب</Text>
-//         <Text fontFamily={Platform.OS==='android'?Fonts.type.regular: Fonts.type.regular} fontSize={fontPixel(16) }color={Colors.newTextClr} mt={3}  >{ORDERID}</Text>
-//     </Box>
 
-// </Box>
+{/* <MapView
+style={styles.map2}
+ref={mapRef}
+provider={PROVIDER_GOOGLE} 
+//pointerEvents={false}
+zoomEnabled={true}
+getMarkersFrames='true'
+//onRegionChange={(e)=>console.log("location change",e)}
+followsUserLocation={true}
+showsUserLocation={true}
+region={{
+  latitude: latitudeX,
+  longitude: longitudeY,
+  latitudeDelta: latDelta,
+  longitudeDelta: longDelta,
+}}
+>
+<MapViewDirections
+  origin={originData}
+  destination={SETTERLOCATION[0]}
+  apikey={GOOGLE_MAPS_APIKEY}
+  strokeWidth={4}
+  strokeColor={Colors.amin1Button1}
+  //optimizeWaypoints={true}
+  onStart={params => {
+console.log(
+  `Started routing between "${params.origin}" and "${params.destination
+  }"${params.waypoints.length
+    ? ' using waypoints: ' + params.waypoints.join(', ')
+    : ''
+  }`,
+);
+}}
+mode={'DRIVING'}
+onReady={(result)=>{
+setDistance(Math.ceil(result.distance));
+setTime(Math.ceil(result.duration));
+setinfo( `المسافه" ${Distance} الوقت ${Time} `)
+setloading(true)
+mapRef.current.fitToCoordinates(result.coordinates, {
+  edgePadding: {
+    right: (Metrics.WIDTH / 10),
+    bottom: (Metrics.HEIGHT / 10),
+    left: (Metrics.WIDTH / 10),
+    top: (Metrics.HEIGHT / 10),
+  }
+});
+}}
 
-// {getlocatin?
-// <MapView
-// style={styles.map}
-//   ref={mapRef}
-//   provider={PROVIDER_GOOGLE} 
-//   //pointerEvents={false}
-//   zoomEnabled={true}
-//   getMarkersFrames='true'
-//   //onRegionChange={(e)=>console.log("location change",e)}
-//   followsUserLocation={true}
-// showsUserLocation={true}
-// region={{
-//   latitude: motherLocation.latitude,
-//   longitude: motherLocation.longitude,
-//   latitudeDelta: latDelta,
-//   longitudeDelta: longDelta,
-// }}
-// >
-//     <MapViewDirections
-//   origin={MOTHERLOCATION[0]}
-//   destination={SETTERLOCATION[0]}
-//   apikey={GOOGLE_MAPS_APIKEY}
-//   strokeWidth={4}
-//   strokeColor={Colors.amin1Button1}
-//   optimizeWaypoints={true}
-//   onStart={params => {
-//     console.log(
-//       `Started routing between "${params.origin}" and "${params.destination
-//       }"${params.waypoints.length
-//         ? ' using waypoints: ' + params.waypoints.join(', ')
-//         : ''
-//       }`,
-//     );
-//   }}
-//   mode={'DRIVING'}
-//   onReady={(result)=>{
-//     setDistance(Math.ceil(result.distance));
-//     setTime(Math.ceil(result.duration));
-//     setinfo( `المسافه" ${Distance} الوقت ${Time} `)
-
-//     // mapRef.current.fitToCoordinates(result.coordinates, {
-//     //   edgePadding: {
-//     //     right: (Metrics.WIDTH / 20),
-//     //     bottom: (Metrics.HEIGHT / 20),
-//     //     left: (Metrics.WIDTH / 20),
-//     //     top: (Metrics.HEIGHT / 20),
-//     //   }
-//     // });
-//   }}
-  
-//   onError={errorMessage => {
-//     console.log("DIRCTION eroor",errorMessage);
-//   }}
-  
-  
-// /> 
-
-// <Marker coordinate={motherLocation} 
-//   pinColor={Colors.TexTPink}
-//   identifier={'mrk1'}
-//   key={Math.floor(1000 + Math.random() * 90000)} />
-// <Marker coordinate={SETTERLOCATION[0]} 
-//       key={Math.floor(1000 + Math.random() * 90000)} 
-//       // image={Images.maplogo} style={{height:20,width:20}}
-//       pinColor={Colors.AminaButtonNew}
-//       title='التوجه الى موقع الحاضنه'
-//       identifier={'mrk2'}
-//       description={info}
-//       //onCalloutPress={()=> openMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude })}
-//       onCalloutPress={()=> openMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude }) }
-//       >
-//       <Callout
-//         onPress={()=>GotoOpenMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude }) }
-//         style={{width:Metrics.WIDTH*0.4322 , height:Metrics.HEIGHT*0.09212  ,alignItems:'center'}}>
-//         <Text fontSize={18} color="black" textAlign={'center'}>التوجه الى موقع الحاضنه</Text>
-//       </Callout>
-//       </Marker>
-// </MapView>:
-// <Box marginTop={Metrics.HEIGHT*0.4321}>
-//   <Spinner size={'lg'} color={Colors.black} marginTop={Metrics.HEIGHT*0.07173} alignItems='center' />
-// </Box>
-
-// }
-// </Box>
+onError={errorMessage => {
+console.log("DIRCTION eroor",errorMessage);
+}}
 
 
+/> 
 
-
-
-            
-// </View>
+<Marker coordinate={motherLocation} 
+pinColor={Colors.TexTPink}
+identifier={'mrk1'}
+key={Math.floor(1000 + Math.random() * 90000)} />
+<Marker coordinate={SETTERLOCATION[0]} 
+  key={Math.floor(1000 + Math.random() * 90000)} 
+  // image={Images.maplogo} style={{height:20,width:20}}
+  pinColor={Colors.AminaButtonNew}
+  title='التوجه الى موقع الحاضنه'
+  identifier={'mrk2'}
+  description={info}
+  //onCalloutPress={()=> openMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude })}
+  onCalloutPress={()=> openMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude }) }
+  >
+  <Callout
+    onPress={()=>GotoOpenMap({ latitude: SETTERLOCATION[0].latitude, longitude: SETTERLOCATION[0].longitude }) }
+    style={{width:Metrics.WIDTH*0.4322 , height:Metrics.HEIGHT*0.09212  ,alignItems:'center'}}>
+    <Text fontSize={18} color="black" textAlign={'center'}>التوجه الى موقع الحاضنه</Text>
+  </Callout>
+  </Marker>
+</MapView> */}

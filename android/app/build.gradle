@@ -137,8 +137,8 @@ android {
         applicationId "com.amenid084"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 46
-        versionName "1.46.0"
+        versionCode 53
+        versionName "1.53.0"
     }
     splits {
         abi {

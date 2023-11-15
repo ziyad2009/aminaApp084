@@ -214,7 +214,7 @@ const BabysetesrsProfile = (props) => {
         
         <Box alignItems='flex-start' backgroundColor={Colors.transparent} ml={3} mt={1}>
           <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >نبذه مختصره</Text>
-          <TextArea  width={"100%"} placeholder="نبذه عن الحاضنه" value={babseters.bio} isReadOnly={true} borderColor={'gray.100'}
+          <TextArea  width={"100%"} placeholder= "لا توجد تفاصيل " value={babseters.bio} isReadOnly={true} borderColor={'gray.100'}
              numberOfLines={20} lineHeight='lg'   fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontWeight={'700'}
             fontSize={fontPixel(16)} textAlign={'right'} color={Colors.newTextClr}  />
       

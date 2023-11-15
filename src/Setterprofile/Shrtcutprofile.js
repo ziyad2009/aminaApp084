@@ -39,26 +39,24 @@ useEffect( async()=>{
 useEffect(async () => {
   HOURSWORK=0 
  //getLocattionDetails(props.route.params.data1.location)
-  const from=props.route.params.data1.start
-  const to =props.route.params.data1.end
+  // const from=props.route.params.data1.start
+  // const to =props.route.params.data1.end
   const owner=props.route.params.data1.owner
   setTimeout(() => {
     readWorkhours(props.route.params.data1.owner)
-    cheakOrder(owner,from,to)
+    cheakOrder(owner)
     sethourswork(true)
   }, 1000);
 }, [props.route.params.data1])
 
  
-const cheakOrder=async(owner,from,to)=>{
+const cheakOrder=async(owner)=>{
  
   const token = await setItem.getItem('BS:Token');
   const motherData = await setItem.getItem('BS:User');
   const mother=JSON.parse(motherData)
   const motheerId=mother._id
-  // const start =moment(from).toISOString()
-  // const end =moment(to).toISOString()
- 
+  
   api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
   const response=await api.post("checkorder",{
     SETTEROWNER:owner,
@@ -69,8 +67,6 @@ const cheakOrder=async(owner,from,to)=>{
   }).catch((err)=>{
     console.log("Erorr Cjeak order",err)
   })
-  
-    
   if(response.length >=1){
     console.log("test res",response.length)
     DATAHOLDE=response
@@ -78,9 +74,13 @@ const cheakOrder=async(owner,from,to)=>{
     setdisButton(true)
    }
 }
+
+
 const confirmReservisionTime =()=>{
  // props.navigation.navigate('ConfirmRes',{data1:JSON.stringify(babseters)})
-  props.navigation.push('Fourm1',{productTitle: babseters.mainservice, serviceid:null ,serviceNmae:babseters.service,data1:babseters,orderId:3})
+// props.navigation.push('Fourm1',{productTitle: babseters.mainservice, serviceid:null ,serviceNmae:babseters.service,data1:babseters,orderId:3})
+  
+ props.navigation.push('Poitment',{productTitle: babseters.mainservice, serviceid:null ,serviceNmae:babseters.service,data1:babseters,orderId:3})
 }
  
 const readWorkhours = async (id) => {
@@ -186,10 +186,10 @@ console.log("test llll",loc);
 
 }
 return(
-  <Box  backgroundColor={Colors.white}  h={"100%"} w={"99%"}>
-    <Box backgroundColor={Colors.white} mt={Platform.OS==='android'?'16':'32'}    height={"100%"}  >
+  <ScrollView  backgroundColor={Colors.white}  h={"100%"} w={"99%"}>
+    <Box backgroundColor={Colors.AminabackgroundColor} mt={Platform.OS==='android'?'16':'32'}      >
      
-       <Box  borderColor={Colors.veryLightGray} borderRadius={10} marginLeft={'4'} marginTop={2}   paddingBottom={2} flexDirection={'row'} justifyContent={"space-around"} 
+       <Box  borderColor={Colors.AminabackgroundColor} borderRadius={10} marginLeft={'4'} marginTop={2}   paddingBottom={2} flexDirection={'row'} justifyContent={"space-around"} 
             width={ Platform.OS==='android'? Metrics.WIDTH*0.8902: widthPixel(391)} backgroundColor={Colors.AminabackgroundColor} >
         <Box>
           <Image source={{ uri:`${URL}/users/${babseters.owner}/avatar` }} resizeMode='contain' style={{
@@ -229,42 +229,86 @@ return(
                   {hourswork && <Text fontFamily={Platform.OS === 'android' ? Fonts.type.base : Fonts.type.base} fontSize={fontPixel(12)} color={Colors.newTextClr}>{HOURSWORK} ساعه عمل</Text>}
             </Stack>
           </Box>
-        </Box>
+        </Box> 
           
           
       </Box>
 
       <Box  alignItems='flex-start' ml={3}     backgroundColor={Colors.white} mt={2}>
-      <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >نبذه مختصره</Text>
-      <TextArea  width={"100%"} placeholder="نبذه عن الحاضنه" value={babseters.bio} isReadOnly={true} borderColor={'gray.100'}
-             numberOfLines={20} lineHeight='lg'  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontWeight={'700'} 
-            fontSize={fontPixel(16)} textAlign={'right'} color={Colors.newTextClr}  />
-          </Box>
-
-          <Box mt={3} ml={1} alignItems={'baseline'}>
-              <Text  numberOfLines={2}  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >العنوان</Text>
-            <Stack flexDirection={'row'} justifyContent='space-around'  ml={3}>
-              <Image source={Images.locationgreen} style={{width:widthPixel(16),height:heightPixel(22)}}  />
-              <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(13)} fontWeight={'700'} color={Colors.newTextClr} ml={'2'} >{babseters.address}</Text>
-            </Stack>
-          </Box>
-          <Box mt={'3'} ml={'3'}   >
-
+        <Stack alignItems={'flex-start'} flexDirection={'row'} ml={2} >
+                <Image source={Images.noteRed} style={{ width: widthPixel(17), height: heightPixel(17) }} resizeMode='contain' />
+                <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red}ml={'2'} >نبذه مختصره</Text>
+        </Stack>
+              
+        <TextArea  width={"100%"} placeholder="نبذه عن الحاضنه" value={babseters.bio} isReadOnly={true} borderColor={'gray.100'}
+              numberOfLines={20} lineHeight='lg'  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontWeight={'700'} 
+              fontSize={fontPixel(16)} textAlign={'right'} color={Colors.newTextClr}  />
+      </Box>
+      <Box mt={'3'} ml={'3'}>
             <Stack flexDirection={'column'}  >
               <Stack alignItems={'flex-start'} flexDirection={'row'} ml={2} >
-                <Image source={Images.cirtfcate} style={{ width: widthPixel(17), height: heightPixel(17) }} resizeMode='contain' />
+                <Image source={Images.certfcateRed} style={{ width: widthPixel(17), height: heightPixel(17) }} resizeMode='contain' />
                 <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red}  ml={'2'}>شهادات ودورات مهنية</Text>
               </Stack>
               <Stack>
-                <TextArea mt={1} mb={2} ml={5} placeholder="  الشهادات والموهلات الحاضنه" value={babseters.certificate} isReadOnly={true} borderColor={'white'}
+                <TextArea mt={1} mb={2} ml={5} placeholder="شهادات ودورات مهنية" value={babseters.certificate} isReadOnly={true} borderColor={'white'}
                   width={"100%"} height={20} numberOfLines={20} fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontWeight={'700'}
                   fontSize={12} textAlign={'right'} textDecorationLine='underline' />
               </Stack>
-
             </Stack>
-        
+          </Box>
+
+          <Box mt={3} ml={1} flexDirection={'column'} >
+              <Stack alignItems={'flex-start'} ml={'4'} >
+                <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >العنوان</Text>
+              </Stack>
+              <Box alignItems={'baseline'} flexDirection={'row'}>
+                <Stack flexDirection={'row'}    alignItems={'baseline'} ml={3}>
+                  <Image source={Images.locationred} style={{width:widthPixel(16),height:heightPixel(22)}}/>
+                </Stack>
+                <Stack flexDirection={'row'}    alignItems={'baseline'} ml={3}>
+                  <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(12)} fontWeight={'700'} color={Colors.newTextClr} ml={'2'}>{babseters.district}</Text>
+                  <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(12)} fontWeight={'700'} color={Colors.newTextClr} ml={'2'}> - {babseters.city}</Text>
+                </Stack>
+              </Box>
+          </Box>
+          <Box mt={3} ml={1} alignItems={'baseline'}>
+              <Stack flexDirection={'row'} alignItems={'baseline'}  ml={3}>
+                <Image source={Images.acompany} style={{width:widthPixel(16),height:heightPixel(16),marginRight:6}}resizeMode='contain'  />
+                <Text  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(14)} fontWeight='bold' color={Colors.red} >امكانية مرافقة الام</Text>
+              </Stack>
+              <Stack flexDirection={'row'} alignItems={'baseline'}  ml={3}>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(18)} fontWeight={'700'} color={Colors.newTextClr} ml={'2'} >{babseters.accompany?"متاح":"غير متاح"}</Text>
+              </Stack>
+          </Box>
+          <Box mt={3} ml={1} alignItems={'baseline'}>
+              <Stack flexDirection={'row'} alignItems={'baseline'}  ml={3}>
+                <Image source={Images.dollar} style={{width:widthPixel(16),height:heightPixel(16),marginRight:6}}resizeMode='contain'  />
+                <Text  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >سعر  الساعة يومي</Text>
+              </Stack>
+              <Stack flexDirection={'row'} alignItems={'baseline'}  ml={3}>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(18)} fontWeight={'700'} color={Colors.newTextClr} ml={'2'} >{babseters.price}</Text>
+              </Stack>
+          </Box>
+          <Box mt={3} ml={1} alignItems={'baseline'}>
+              <Stack flexDirection={'row'} alignItems={'baseline'}  ml={3}>
+                <Image source={Images.dollar} style={{width:widthPixel(16),height:heightPixel(16),marginRight:6}}resizeMode='contain' />
+                <Text  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >سعر  الساعة اسبوعي</Text>
+              </Stack>
+              <Stack flexDirection={'row'} alignItems={'baseline'}  ml={3}>
+               <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(18)} fontWeight={'700'} color={Colors.newTextClr} ml={'2'} >{babseters.weeklyprice}</Text>
+              </Stack>
+          </Box>
+          <Box mt={3} ml={1} alignItems={'baseline'}>
+              <Stack Stack flexDirection={'row'} alignItems={'baseline'}  ml={3}>
+                <Image source={Images.dollar} style={{width:widthPixel(16),height:heightPixel(16),marginRight:6}}resizeMode='contain' />
+                <Text  fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(18)} fontWeight='bold' color={Colors.red} >سعر  الساعة شهري</Text>
+              </Stack>
+              <Stack flexDirection={'row'} alignItems={'baseline'}  ml={3}>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(18)} fontWeight={'700'} color={Colors.newTextClr} ml={'2'} >{babseters.monthlyprice}</Text>
+              </Stack>
+          </Box>
           
-        </Box>
       
      
 {/* 
@@ -332,13 +376,13 @@ return(
         horizontal={true}
         />
         </View>
-        <Box alignItems={'center'} w={Metrics.WIDTH*0.934} ml='3' mr='4' mb={Platform.OS==='android'?4:1}  >
+        <Box alignItems={'center'} justifyContent={'center'} mb={'5'}   >
           {/* <Button bgColor={Colors.AminaButtonNew} size={'lg'} mb='1.5' w='full' 
             onPress={() => {confirmReservisionTime( ) }} > احجز</Button> */}
             <CustomButton
                         buttonColor={Colors.AminaPinkButton}
                         title="احجزي الان"
-                        buttonStyle={{width: '90%', alignSelf: 'center',borderRadius:10}}
+                        buttonStyle={{width: '88%', alignSelf: 'center',borderRadius:33}}
                         textStyle={{fontSize: 16}}
                         disabled={disButton}
                         onPress={() =>  confirmReservisionTime()}
@@ -440,7 +484,7 @@ return(
       </Modal.Footer>
     </Modal>
     </Center>
-    </Box>
+    </ScrollView>
 )
 
 }

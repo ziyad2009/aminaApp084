@@ -135,11 +135,11 @@ return(
             })}
             
         </Box>:
-            <Box alignItems={'center'}  mt={40} ml='3' mr={3}>
-                <Heading>
-                    <Text fontFamily={Platform.OS==='android'? Fonts.type.aminafonts: Fonts.type.base} fontWeight='400' fontSize={22} color={Colors.blacktxt} textAlign='center'>عفوا لاتوجد لديك اضافات في المفضله !</Text>
+            <Box alignItems={'center'} justifyContent={'center'} >
+                <Box   mt={'64'}>
+                    <Text fontFamily={Platform.OS==='android'? Fonts.type.bold: Fonts.type.bold} fontWeight='700' fontSize={22} color={"rgba(204, 204, 204, 1)"} textAlign='center'>لا توجد لديك اضافات في المفضلة حتى الان</Text>
                     
-                </Heading>
+                </Box>
             </Box> 
         }
         

@@ -14,6 +14,7 @@ import CustomButton from '../services/buttons/buttton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDistance ,convertDistance} from 'geolib';
 import { useCallback } from 'react';
+import Disprofile from '../services/utils/disprofile';
 let pageNumber=0
 let limitNumber=3
 const Babysetesrs=(props)=>{
@@ -43,7 +44,7 @@ useEffect( async ()=>{
    //})
   
 //})
-
+ 
   // setterData()
   setterApisrch(limitNumber)
 
@@ -132,60 +133,12 @@ const getDate=async()=>{
   };
 
    
-
-
-// const setterData= async()=>{
-//   let babySeterData=null
-//   const {mainservice,serviestype}=JSON.parse(props.route.params.setterdata)
-//   const user = await setItem.getItem('BS:User');
-//   const token = await setItem.getItem('BS:Token');
-//   const location= await setItem.getItem('BS:Location') 
-//   const  existLocation=JSON.parse(location)
-//   console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
-
-//   api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-//   const socket = SocketIOClient(URL_ws, {
-//     jsonp: false,
-//   });
-//   const motherDtat=JSON.parse(user)
-
-//   const data={
-//     "id":motherDtat._id,
-//     "name":motherDtat.name?motherDtat.name:"DEMOUSER",
-//     "mainservice":mainservice,
-//     "service":serviestype?serviestype:"",
-//     "coordinates":[existLocation.lat,existLocation.lon],
-//     "token":JSON.parse(token) ,
-//     "limit":20,
-//     "skip":page
-
-// }
-// socket.on("connect", () => {
-//     socket.on("welcome", (data) => {
-//         console.log("welcom from Soket ",data);
-        
-//       });
-//       socket.emit("setterlocation",(data))
-        
-//        socket.on("seteeslocation", (loc) => {
-//         console.log("setter ddata",loc);
-//          setbabyseters(loc)
-//          if(loc.length >= 1){
-//           setLoading(false)
-//         }
-//         setLoading(false)
-//       })
-  
-     
-
-//     });
-   
-   
-//   }
+ 
 
   const setterApisrch=async(limitval)=>{
     setLoading(true)
     const {mainservice,serviestype}=JSON.parse(props.route.params.setterdata)
+    
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
     const location= await setItem.getItem('BS:Location') 
@@ -193,7 +146,7 @@ const getDate=async()=>{
     const motherDtat=JSON.parse(user)
     
     const skip=0
-    console.log("tets limt",limitval,"and page",skip)
+    console.log("tets limt", "mainservice =<",mainservice,"  -" ,serviestype)
      
       api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
       const response=await  api.post(`${URL}/setterlocation?limit=${limitval}&skip=${skip}`,{
@@ -201,6 +154,7 @@ const getDate=async()=>{
         "mainservice":mainservice,
         "service":serviestype?serviestype:"",
     }).then((res)=>{
+      console.log("tets limt",res.data)
       return  res.data
        
     }).finally(()=>{ setLoading(false)}
@@ -214,49 +168,9 @@ const getDate=async()=>{
   
   }
     
-  const ConfimSetterData=(item)=>{
-    setSelectedId(item._id)
-    const prevReservion= JSON.parse(props.route.params.setterdata)
-    const  num = prevReservion.hours;
-    const  hours = (num / 60); //convert minutes to hours
-    const  rhours = Math.floor(hours);
-    // const  minutes = (hours - rhours) * 60;
-    // const  rminutes = Math.round(minutes);
-   // console.log( num + " minutes = " + rhours + " hour(s) and " + rminutes + " minute(s).")
-    const totPrice=Number(rhours*item.price)
-    const securenumber =  Math.floor(1000 + Math.random() * 9000);
-    const orderid= Math.floor(1000 + Math.random() * 90000);
-    //console.log("securenumber",rhours)
-     
-    
-    //move new data and merag with old data
-    const newOrder={
-      ...prevReservion,
-     // serviestype:item.service, 
-      scurtycode:securenumber,
-      orderid:orderid,
-      serviestype:item.mainservice,
-      settername:item.name,
-      imagesInWork:item.imagesInWork,
-      displayname:item.displayname,
-      address:item.address,
-      statuse:"processing", 
-      reson:"", 
-      read:false,
-      settterowner:item.owner,
-      price:item.price,
-      settterfaileid:item._id,
-      totalprice:totPrice,
-      totalhours:rhours,
-      bio:item.bio,
-      rate:item.rate,
-      certificate:item.certificate,
-      setterplayerid:item.playerid
-
-    }
-    console.log("Babysetesrs Final data=",item.playerid)
-     props.navigation.navigate('BabysetesrsProfile',{data1:newOrder,settertTitle: item.displayname})
-    
+  const movToProfileScreen=(item)=>{
+ 
+     props.navigation.navigate('Shrtcutprofile', { data1: item, settertTitle: item.name })
   }
 
   const calcDistance=  (locat)=>{
@@ -329,60 +243,69 @@ const getDate=async()=>{
       Loading...
     </Text>
   );
-  
-   const renderItem = ({item}) => {
-     const backgroundColor = item._id === selectedId ? Colors.Milky : Colors.white;
-    // const color = item.id === selectedId ? 'white' : 'black';
+  const renderItem = ({item}) => {
+    return(
+      <Box alignItems={'center'}>
+       <Disprofile  data={item} width={Metrics.WIDTH*0.79273}  height={Metrics.HEIGHT*0.8321} movScreen={()=> movToProfileScreen(item) }/>
+      </Box>
+    )
+    
+   
+  }
 
-    return (
-        <Box key={item._id} backgroundColor={backgroundColor} borderColor={Colors.border}  marginLeft={4} marginTop={ Platform.OS==='android'?"5":21 }   paddingBottom={2} flexDirection={'row'} 
-            width={Platform.OS==='android'? widthPixel(371): widthPixel(371)} height={'24'}  >
-          <Box>
-            <Image source={{ uri:`${URL}/users/${item.owner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),
-              marginTop:6,marginLeft:1,borderRadius:10 }} />
-          </Box>
+  //  const renderItem = ({item}) => {
+  //    const backgroundColor = item._id === selectedId ? Colors.Milky : Colors.white;
+  //   // const color = item.id === selectedId ? 'white' : 'black';
+
+  //   return (
+  //       <Box key={item._id} backgroundColor={backgroundColor} borderColor={Colors.border}  marginLeft={4} marginTop={ Platform.OS==='android'?"5":21 }   paddingBottom={2} flexDirection={'row'} 
+  //           width={Platform.OS==='android'? widthPixel(371): widthPixel(371)} height={'24'}  >
+  //         <Box>
+  //           <Image source={{ uri:`${URL}/users/${item.owner}/avatar` }} resizeMode='contain' style={{height:heightPixel(109),width:widthPixel(109),
+  //             marginTop:6,marginLeft:1,borderRadius:10 }} />
+  //         </Box>
           
-          <Box flexDirection={'column'}   width={Metrics.WIDTH*0.560} ml={3} backgroundColor={Colors.transparent} marginTop={3} > 
-            <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
-              <Stack flexDirection={'row'} justifyContent='space-around' >
-                <Text   >{item.name}</Text>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontsize={fontPixel(16)} color={"#FB5353"} marginLeft='1' >{item.mainservice}</Text>
-              </Stack>
-              <TouchableOpacity   onPress={()=>ifExists(item._id)?onRemoveFavorite(item._id): savedataTofav(item) }>
-                      <Image source={ifExists(item._id)? images.like1:images.like} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'  />
-              </TouchableOpacity>
+  //         <Box flexDirection={'column'}   width={Metrics.WIDTH*0.560} ml={3} backgroundColor={Colors.transparent} marginTop={3} > 
+  //           <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
+  //             <Stack flexDirection={'row'} justifyContent='space-around' >
+  //               <Text   >{item.name}</Text>
+  //               <Text fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular} fontsize={fontPixel(16)} color={"#FB5353"} marginLeft='1' >{item.mainservice}</Text>
+  //             </Stack>
+  //             <TouchableOpacity   onPress={()=>ifExists(item._id)?onRemoveFavorite(item._id): savedataTofav(item) }>
+  //                     <Image source={ifExists(item._id)? images.like1:images.like} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'  />
+  //             </TouchableOpacity>
                     
-            </Box>
-            <Box flexDirection={'row'} justifyContent="space-between">
-              <Stack flexDirection={'row'} >
-                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.hourstotal}</Text>
-                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr ,marginLeft:pixelSizeHorizontal(2)}}>ساعة عمل</Text>
-              </Stack>
-              <Stack>
-                {calcDistance(item.location) }
-              </Stack>
-              <Stack position={'relative'} bottom={1} >
-                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium,fontSize:fontPixel(10),color:Colors.rmadytext ,marginLeft:pixelSizeHorizontal(2)} }>حفظ  </Text>
-              </Stack>
-            </Box>
-            <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
-              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
-                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.price} ر.س/ساعة</Text>
-              </Stack>
-              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
-                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.rate}</Text>
-                <Image source={Images.starticon} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
-              </Stack>
-              <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.AminaPinkButton} flexDirection='row' >
-                <Button onPress={() => ConfimSetterData(item)} bgColor={Colors.AminaPinkButton} variant='link' >
-                <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.white }}>احجزي الان</Text>
-                </Button>
-              </Stack>
-            </Box>
-          </Box>
-    </Box>
-    );
-  };
+  //           </Box>
+  //           <Box flexDirection={'row'} justifyContent="space-between">
+  //             <Stack flexDirection={'row'} >
+  //               <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.hourstotal}</Text>
+  //               <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr ,marginLeft:pixelSizeHorizontal(2)}}>ساعة عمل</Text>
+  //             </Stack>
+  //             <Stack>
+  //               {calcDistance(item.location) }
+  //             </Stack>
+  //             <Stack position={'relative'} bottom={1} >
+  //               <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium,fontSize:fontPixel(10),color:Colors.rmadytext ,marginLeft:pixelSizeHorizontal(2)} }>حفظ  </Text>
+  //             </Stack>
+  //           </Box>
+  //           <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
+  //             <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
+  //               <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.price} ر.س/ساعة</Text>
+  //             </Stack>
+  //             <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
+  //               <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{item.rate}</Text>
+  //               <Image source={Images.starticon} style={{width:widthPixel(20),height:heightPixel(20)}} resizeMode='contain'/>
+  //             </Stack>
+  //             <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.AminaPinkButton} flexDirection='row' >
+  //               <Button onPress={() => ConfimSetterData(item)} bgColor={Colors.AminaPinkButton} variant='link' >
+  //               <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.white }}>احجزي الان</Text>
+  //               </Button>
+  //             </Stack>
+  //           </Box>
+  //         </Box>
+  //   </Box>
+  //   );
+  // };
 const keyExtractor_k=useCallback((item)=>`${item._id}`)
 return(
 <Box backgroundColor={Colors.AminabackgroundColor}  mt={Platform.OS==='android'?66:94} flex={1}>
