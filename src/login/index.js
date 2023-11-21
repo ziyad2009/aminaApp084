@@ -14,6 +14,7 @@ import DeviceInfo from 'react-native-device-info';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import Toast from 'react-native-toast-message';
 import setItem from '../services/storage'
+
 const Singin=(props)=>{
     
     const [auth,setauth]=useState(true)
@@ -278,10 +279,10 @@ const directoStor=()=>{
         <Center>
           <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} borderColor={Colors.transparent} borderWidth='1'  justifyContent={'space-around'} alignItems={'center'}>
             <Modal.Content width={Metrics.WIDTH}  backgroundColor={Colors.AminabackgroundColor} >
-              <Modal.Body alignItems={'center'} justifyContent='center'>
-                <Image source={Images.aminaLogoEmpty} style={{width:60,height:60,borderColor:Colors.black,borderWidth:.1 }} resizeMode='contain'  />
-                 <Box mt={'1'} p={'1'}>
-                    <Text fontFamily={Fonts.type.bold} flexWrap={'wrap'} fontWeight={600} fontSize={fontPixel(22)} alignSelf={'center'}  color={Colors.newTextClr} letterSpacing={1.6}>الرجاء تحديث التطبيق من المتجر للاستفادة من المزايا الجديده</Text>
+              <Modal.Body alignItems={'center'} justifyContent={'space-around'}>
+                <Image source={Images.aminaLogoEmpty} style={{width:77,height:77 ,position:'relative',left:1,top:1 }} resizeMode='contain'  />
+                 <Box mt={'1'} mb={'2'}>
+                    <Text fontFamily={Fonts.type.bold} flexWrap={'wrap'} fontWeight={"600"} fontSize={fontPixel(18)} alignSelf={'flex-start'}  color={Colors.newTextClr} letterSpacing={1.3}>الرجاء تحديث التطبيق من المتجر </Text>
                  </Box>
                  <Stack width={Metrics.WIDTH*0.99321} alignItems={'center'} justifyContent={'center'}       >
                       <TouchableOpacity  style={{width:Metrics.WIDTH*0.5433,height:Metrics.HEIGHT*0.05123,borderRadius:10,alignItems:'center', justifyContent:"center",marginBottom:3,marginTop:3,backgroundColor:Colors.textZahry}} onPress={()=> directoStor()}>

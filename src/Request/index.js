@@ -54,12 +54,12 @@ const Request=(props)=>{
 
     const Item = ({title,i}) => { 
     return( 
-        <Box flexDirection={'row'} alignItems='baseline'justifyContent={'center'} width={Metrics.WIDTH*0.299963} height={'16'} paddingBottom={'3'} backgroundColor={Colors.transparent}>
-         <TouchableOpacity style={{flexDirection:'row'  ,marginTop:8,borderColor:"rgba(241, 241, 241, 1)",borderWidth:.2,justifyContent:'center',alignItems:'center',borderRadius:15} } 
+        <Box flexDirection={'row'} alignItems='baseline'justifyContent={'center'} width={Metrics.WIDTH*0.289963}   backgroundColor={Colors.transparent}>
+         <TouchableOpacity style={{flexDirection:'row'  ,marginTop:1,borderColor:"rgba(241, 241, 241, 1)",borderWidth:.2,justifyContent:'center',alignItems:'center',borderRadius:15} } 
              key={title} onPress={()=>handleSelection(i,title)}> 
-            <Stack alignItems={'center'}  justifyContent='center' borderRadius={'xl'}   backgroundColor={i===select?Colors.AminaPinkButton:"#F1F1F1"} height={'10'} width={'20'} > 
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} textAlign='center'
-                    fontSize={fontPixel(16)}   color={i===select?Colors.white:Colors.newTextClr}>{title.status}</Text>
+            <Stack alignItems={'center'}  justifyContent='center' borderRadius={'xl'}   backgroundColor={i===select?Colors.AminaPinkButton:"#F1F1F1"} height={'10'} width={'24'} > 
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}  fontWeight={Platform.OS==="android"?"600":"700"} textAlign='center'
+                        fontSize={fontPixel(16)}   color={i===select?Colors.white:Colors.newTextClr}>{title.status}</Text>
             </Stack>
         </TouchableOpacity>
         </Box>   
@@ -349,30 +349,30 @@ const stReq=(val,work,item)=>{
             
    
             if(val==='pending'){
-              return  <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew} justifyContent={'center'}  >
+              return  <Box w={'20'} height={'9'} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew} justifyContent={'center'}  >
                 <TouchableOpacity onPress={()=>  props.navigation.navigate('TelerPage',paymentdata={ newData:item,paymentMethode:"mada",extrastatuse:false }) } style={{alignItems:'center',justifyContent:'center',backgroundColor:Colors.transparent,padding:3}}>
                     <Text color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}   fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'} >بانتظار الدفع</Text> 
                 </TouchableOpacity>
                 </Box>
             }
             if (val==='processing'){
-                return  <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
+                return  <Box w={'20'} height={"9"} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
                      <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}   fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'}>قيد الانتظار</Text></Box>
             }
             if (val==='canceled'){
-                return  <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
+                return  <Box w={'20'} height={"9"} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
                      <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}    fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'} >طلب ملغي</Text></Box>
             }   
             if (val==='completed'&& work===false){
-                return <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
+                return <Box w={'20'} height={"9"} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
                      <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}  fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'}> تم الدفع</Text></Box>
             }
             if (val==='completed'&& work===true){
-                return <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
+                return <Box w={'20'} height={"9"} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew}  alignItems='center' justifyContent={'center'} >
                      <Text  color={Colors.white} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}  fontSize={11} textAlign='center'  fontWeight={'700'} justifyContent={'center'}>طلب مكتمل</Text></Box>
             }
             if (val==='failed'){
-                return <Box w={'20'} height={9} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew} fontFamily={Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular}   alignItems='center' justifyContent={'center'} >reservition</Box>
+                return <Box w={'20'} height={"9"} borderRadius={'3xl'} borderWidth={.2} borderColor={'gray.100'} bgColor={Colors.AminaButtonNew} fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}   alignItems='center' justifyContent={'center'} >reservition</Box>
             }
         }
 
@@ -593,55 +593,53 @@ return(
                     <Button  variant={'link'}  onPress={()=>console.log(11)}>Refresh</Button>
                     <Spinner  size={'lg'} color={Colors.bloodOrange}/>
                 </Box>:
-                <Box backgroundColor={Colors.transparent}>
-                    {/* <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize="lg"  p="2" pb="3" textAlign={'left'}> بيانات الطلبات</Text> */}
+                <Box backgroundColor={Colors.transparent} height={Metrics.HEIGHT*0.74152}>
                     {loadingpage&&<Box width={"100%"}>
                         <Spinner size={'lg'} animating={loadingpage?true:false} color={Colors.AminaPinkButton} />
                     </Box>}
-                    
                     <FlatList data={motherReq} renderItem={({item }) => (
-                        <Box  marginLeft={pixelSizeHorizontal(1)} mt={'0.5'} mb={4} flexDirection={'column'} borderRadius={'2xl'} borderColor={'gray.100'} borderWidth={'1'}
-                            width={widthPixel(380)} height={heightPixel(200 )} shadow={'3'} backgroundColor={'white'} alignItems='center'   >
-                        <Box flexDirection={'row'} ml={1} backgroundColor={Colors.transparent} marginTop={3} > 
-                        <Box justifyContent='center' alignItems={'center'} width={Metrics.WIDTH*0.21821} ml={'4'}   >
-                            <Image source={{ uri: `${URL}/users/${item.settterowner}/avatar` }} resizeMode='contain' style={{height:90,width:90,
-                             marginTop:1,marginRight:1,borderRadius:30 }} />
-                        </Box>
-                        {/* all boxess */}
-                        <Box alignItems={'center'} justifyContent={'center'} ml={1} mr={'7'} >
-                            <Box flexDirection={'row'} width={widthPixel(260)} justifyContent='space-between' alignItems={'baseline'}  >
-                                 <Stack flexDirection={'row'} justifyContent='space-around' >
-                                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:'700',color:Colors.newTextClr }}> {item.settername}</Text>
-                                </Stack>
-                                <Image source={Images.hartgray} style={{width:widthPixel(20),height:heightPixel(20),marginRight:8}} resizeMode='contain'/>
-                            </Box>
+                        <Box flex={'1'}  mt={'1'} mb={'1'} flexDirection={'column'} borderRadius={'2xl'} borderColor={'gray.100'} borderWidth={'1'}
+                                width={'96'} height={Platform.OS==='android'?'40':'48'} shadow={'3'} backgroundColor={'white'} alignItems='center'    >
+                            <Box flexDirection={'row'} ml={1} backgroundColor={Colors.transparent} marginTop={3} > 
+                                <Box justifyContent='center' alignItems={'center'} width={Metrics.WIDTH*0.21821} ml={'4'}   >
+                                    <Image source={{ uri: `${URL}/users/${item.settterowner}/avatar` }} resizeMode='contain' style={{height:90,width:90,
+                                    marginTop:1,marginRight:1,borderRadius:30 }} />
+                                </Box>
+                                {/* all boxess */}
+                                <Box alignItems={'center'} justifyContent={'center'} ml={1} mr={'7'} >
+                                    <Box flexDirection={'row'} width={widthPixel(260)} justifyContent='space-between' alignItems={'baseline'}  >
+                                        <Stack flexDirection={'row'} justifyContent='space-around' >
+                                            <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(18)} fontWeight={Platform.OS==='android'?"600":"700"} color={Colors.newTextClr} > {item.settername}</Text>
+                                        </Stack>
+                                        <Image source={Images.hartgray} style={{width:widthPixel(20),height:heightPixel(20),marginRight:8}} resizeMode='contain'/>
+                                    </Box>
 
-                            <Box flexDirection={'column'} width={widthPixel(250)} alignItems={'flex-start'}justifyContent={'space-around'} mt={'0.5'}  >
-                                <Stack flexDirection={'row'} justifyContent='space-around' >
-                                   <Text  style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),color:"#00ABB9", }} >{item.serviestype}</Text>
-                                </Stack>
-                                <Stack flexDirection={'column'} alignItems={'flex-start'} >
-                                    <Stack flexDirection={'row'} alignItems='baseline'>
-                                        <Image source={Images.ccalendrgreen2} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'/>
-                                        <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(10),fontWeight:"700" ,color:Colors.newTextClr ,marginLeft:3}}>{moment(item.potementdate).format("LL")}</Text>
-                                    </Stack>
-                                    <Stack flexDirection={'row'} alignItems='baseline' justifyContent='space-around'>
-                                        <Image source={Images.clockgreennew} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'/>
-                                        <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(12),fontWeight:"700" ,color:Colors.newTextClr ,marginLeft:3}}>{moment(item.starttime).format("hh:mm a")} - {moment(item.endtime).format("hh:mm a")}</Text>
-                                    </Stack>
-                                    <Stack flexDirection={'row'}alignItems='baseline' justifyContent='space-around' >
-                                        <Image source={Images.chilednew} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'/>
-                                        <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(10),fontWeight:'700',color:Colors.newTextClr ,marginLeft:3 }}>{item.childeaccount} طفل</Text>
-                                    </Stack>
+                                    <Box flexDirection={'column'} width={widthPixel(250)} alignItems={'flex-start'}justifyContent={'space-around'} mt={'0.5'}  >
+                                        <Stack flexDirection={'row'} justifyContent='space-around' >
+                                        <Text  style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),color:"#00ABB9", }} >{item.serviestype}</Text>
+                                        </Stack>
+                                        <Stack flexDirection={'column'} alignItems={'flex-start'} >
+                                            <Stack flexDirection={'row'} alignItems='baseline'>
+                                                <Image source={Images.ccalendrgreen2} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'/>
+                                                <Text  fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(10)} fontWeight={Platform.OS==="android"?"600":"700"} color={Colors.newTextClr} marginLeft={"3"} >{moment(item.potementdate).format("LL")}</Text>
+                                            </Stack>
+                                            <Stack flexDirection={'row'} alignItems='baseline' justifyContent='space-around'>
+                                                <Image source={Images.clockgreennew} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'/>
+                                                <Text  fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(10)} fontWeight={Platform.OS==="android"?"600":"700"} color={Colors.newTextClr} marginLeft={"3"} >{moment(item.starttime).format("hh:mm a")} - {moment(item.endtime).format("hh:mm a")}</Text>
+                                            </Stack>
+                                            <Stack flexDirection={'row'}alignItems='baseline' justifyContent='space-around' >
+                                                <Image source={Images.chilednew} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'/>
+                                                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontSize={fontPixel(10)} fontWeight={Platform.OS==="android"?"600":"700"} color={Colors.newTextClr} marginLeft={"3"} >{item.childeaccount} طفل</Text>
+                                            </Stack>
+                                            
+                                        </Stack>
+                                        
+                                    </Box>
                                     
-                                </Stack>
-                                 
+                                </Box>
                             </Box>
-                             
-                        </Box>
-                    </Box>
                     
-                    <Box  flexDirection='row' alignItems={'center'}   width={widthPixel(377)} height={heightPixel(48)} borderRadius={'3xl'} mt={1} >
+                    <Box  flexDirection='row' alignItems={'center'}   width={widthPixel(377)}   borderRadius={'3xl'} mt={'1'} >
                             <Stack width={82} height={heightPixel(41)}  justifyContent='center' alignItems={'center'} borderRadius={'3xl'}  ml={2}>
                              {stReq(item.statuse,item.work,item)}
                                  
@@ -651,7 +649,7 @@ return(
                             <Box width={widthPixel(99)}/>:<Stack><CustomButton
                                         buttonColor= {Colors.AminaButtonNew}
                                         title="الغاء الطلب"
-                                        buttonStyle={{width:widthPixel(99) ,height:heightPixel(40) ,borderRadius:35,marginLeft:pixelSizeHorizontal(16)}}
+                                        buttonStyle={{width:widthPixel(99) ,height:Metrics.HEIGHT*0.04211 ,borderRadius:35,marginLeft:pixelSizeHorizontal(16)}}
                                         textStyle={{fontSize: 12,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.bold }}
                                         titleColor={Colors.white}
                                         margnBtn={1}
@@ -680,7 +678,7 @@ return(
                                         //title= {item.statuse==='completed'&& item.work===false?"بداء الخدمة":" تقييم"}
                                         title={OrderStatuse(item)}
                                         buttonStyle={{width:widthPixel(138) ,height:heightPixel(40),borderRadius:40 ,marginLeft:pixelSizeHorizontal(18)}}
-                                        textStyle={{fontSize: fontPixel(15),fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold ,fontWeight:'700'}}
+                                        textStyle={{fontSize: fontPixel(15),fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold ,fontWeight:Platform.OS==='android'?"600":"700"}}
                                         titleColor={Colors.white}
                                         margnBtn={1}
                                         onPress={()=> ConfimSetterData(item)}
@@ -694,6 +692,7 @@ return(
                 keyExtractor={item => item._id} 
                 onRefresh={onRefresh}
                 refreshing={IsFetching}/>
+               
             </Box>}
             
         </Box>
@@ -721,7 +720,7 @@ return(
                                 return(
                                 <TouchableOpacity key={value.id} onPress={()=>preAddReson((value.text).toString(),index) }
                                     style={{backgroundColor:index===resonSelect?Colors.textZahry:Colors.grayButton,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:10}}>
-                                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:index===resonSelect?Colors.white:Colors.blacktxt, }}>{value.text}</Text>
+                                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:Platform.OS==='android'?"600":"700",color:index===resonSelect?Colors.white:Colors.blacktxt, }}>{value.text}</Text>
                                 </TouchableOpacity> 
                                 )
                             })}
@@ -738,20 +737,20 @@ return(
                     <Box>
                         <TouchableOpacity   onPress={()=>addReson()}
                             style={{backgroundColor:Colors.textZahry,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:10}}>
-                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.white, }}>ارسال</Text>
+                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:Platform.OS==='android'?"600":"700",color:Colors.white, }}>ارسال</Text>
                         </TouchableOpacity> 
                         <TouchableOpacity   onPress={()=>afterAddReson()}
                             style={{backgroundColor:Colors.textZahry,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:10}}>
-                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.white, }}>الغاء</Text>
+                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:Platform.OS==='android'?"600":"700",color:Colors.white, }}>الغاء</Text>
                         </TouchableOpacity> 
                     </Box>
                 </Box>:
                 <Box   height={"72"}flexDirection={'column'} alignItems={'center'} justifyContent={'space-around'} mt={'56'}>
                     <Image source={Images.rightbinky} style={{height:100,width:100,marginTop:7}} resizeMode='stretch' />
-                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.textZahry,marginTop:4 }}>تم الغاء طلبك بنجاح</Text>
+                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:Platform.OS==='android'?"600":"700",color:Colors.textZahry,marginTop:4 }}>تم الغاء طلبك بنجاح</Text>
                     <TouchableOpacity   onPress={()=>afterAddReson()}
                             style={{backgroundColor:Colors.textZahry,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:14}}>
-                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.white, }}>عوده</Text>
+                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:Platform.OS==='android'?"600":"700",color:Colors.white, }}>عوده</Text>
                         </TouchableOpacity> 
                 
                 </Box>}
@@ -767,10 +766,10 @@ return(
                         <Text color={Colors.textZahry} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(22)} mt={1}>سبب الالغاء</Text>
                     </Stack>
                     <Stack flexDirection={'column'} alignItems={'center'} padding={'1'} mt={'1'}>
-                        <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(14),fontWeight:'700',color:Colors.blacktxt,marginTop:4 }}>{canselMsg}</Text>
+                        <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(14),fontWeight:Platform.OS==='android'?"600":"700",color:Colors.blacktxt,marginTop:4 }}>{canselMsg}</Text>
                         <TouchableOpacity   onPress={()=>showCanselMsg()}
                             style={{backgroundColor:Colors.textZahry,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:14}}>
-                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(18),fontWeight:'700',color:Colors.white, }}>عوده</Text>
+                            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:Platform.OS==='android'?"600":"700",color:Colors.white, }}>عوده</Text>
                         </TouchableOpacity> 
 
                     </Stack>

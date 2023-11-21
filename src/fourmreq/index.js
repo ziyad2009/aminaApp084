@@ -511,79 +511,61 @@ const openModelWithshowTime=()=>{
 }
 
 return(
-    <ScrollView contentContainerStyle={{backgroundColor:Colors.veryLightGray,flex:1} }>
-        
-        <Box style={{marginTop: Platform.OS==='android'? Metrics.HEIGHT*0.0941: Metrics.HEIGHT*0.1301,backgroundColor:Colors.white}}>
+    <ScrollView contentContainerStyle={{backgroundColor:Colors.veryLightGray,height:Metrics.HEIGHT} }>
+        <Box flex={1} mt={Platform.OS==='android'?'10':'20'} alignItems={'center'} width={"100%"} >
          
-        </Box>
         
-        {/* <Box flexDirection={'row'} alignItems={'center'} height={'141'} width="90%" marginLeft={'5'} marginRight={'5'} backgroundColor={Colors.bannerColor} marginTop={pixelSizeVertical(4)} borderRadius={20}>
-            <Box   flex={2}>
-            <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(24),textAlign:'left',color:"#F5F5F5",marginLeft:pixelSizeHorizontal(23),padding:7} }>أمينة على أطفالك</Text> 
+        <Box alignItems={'center'} justifyContent="center" backgroundColor={'#FFFFFF'} w={'72'}mt={'10'} borderRadius={34} p={'3'} shadow={'9'}>
+            <Box  alignItems={'center'} flexDirection='row' mt={2}>
+                <Stack  flexDirection='row' justifyContent='center' alignItems={'center'}  p={'1'}>
+                    <Image source={Images.babyface} style={{width:widthPixel(17) ,height:heightPixel(18)}} resizeMode='contain'/>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.medium}  fontWeight={'700'} letterSpacing={1.4} color={Colors.titleColor}
+                    fontSize={fontPixel(Platform.OS==='android'?20:18)} ml="1"  textAlign='right'>اختيار الطفل</Text>
+                </Stack>
+                {/* <Stack  alignItems='baseline' flexDirection={'row'}     >
+                    <Image source={Images.chiled} style={{width:widthPixel(17) ,height:heightPixel(17)}} resizeMode='contain'/>
+                    <Text style={{marginLeft:5}}> {childeArray.length}</Text>
+                    <Text  fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} fontSize={fontPixel(12)} mr={1}
+                    >طفل</Text>
+                </Stack> */}
             </Box>
-            <Image source={Images.motherbanner} style={{height:141,flex:1.2,backgroundColor:Colors.transparent,marginRight:pixelSizeHorizontal(22) }} resizeMode='cover'  />
-        </Box> */}
-    
-        {/* <Box backgroundColor={'red.100'}>
-            {babsetersData._id && ResWay && <BabyseterProfile/>}
-        </Box> */}
-    
-        {/* {babsetersData._id && ResWay &&
-            <Box size={'lg'}   w={"100%"} h={"14%"}>
-            <BabyseterProfile/>  </Box>} */}
-  
-    <Box alignItems={'center'} justifyContent="center" backgroundColor={'#FFFFFF'} w={'72'}ml={'12'}mt={'5'} borderRadius={34} p={'3'} shadow={'9'}>
-        <Box  alignItems={'center'} flexDirection='row' mt={2}>
-            <Stack  flexDirection='row' justifyContent='center' alignItems={'center'}  p={'1'}>
-                <Image source={Images.babyface} style={{width:widthPixel(17) ,height:heightPixel(18)}} resizeMode='contain'/>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium}  fontWeight={'700'} letterSpacing={1.4} color={Colors.titleColor}
-                fontSize={fontPixel(18)} ml="1"  textAlign='right'>اختيار الطفل</Text>
-            </Stack>
-            {/* <Stack  alignItems='baseline' flexDirection={'row'}     >
-                <Image source={Images.chiled} style={{width:widthPixel(17) ,height:heightPixel(17)}} resizeMode='contain'/>
-                <Text style={{marginLeft:5}}> {childeArray.length}</Text>
-                <Text  fontFamily={Platform.OS==='android'?Fonts.type.medium: Fonts.type.medium} fontSize={fontPixel(12)} mr={1}
-                >طفل</Text>
-            </Stack> */}
-        </Box>
-        <Box backgroundColor={Colors.transparent} flexDirection={'row'} alignContent={'center'}  >
-                {motherch.map((nme,index)=>{
-                   return(
-                    <Box   flexDirection='column' ml={'1.5'} key={nme._id}>
-                        <Stack alignItems={'center'} justifyContent='center' mt={2} >
-                            <Text  fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold}fontWeight={'bold'} fontSize={fontPixel(14)} 
-                                color={Colors.blacktxt}   textAlign='center'>{nme.name}</Text>
-                        </Stack>
-                        <Stack alignItems={'center'} justifyContent='center'   >
-                                {/* <Text style={styles.leftText}>{nme.diseasses}</Text> */}
-                            <Checkbox value="test"   size={'sm'} borderRadius={50} onChange={()=> addOrRemove(motherch[index]) } accessibilityLabel="This is a dummy checkbox" colorScheme='lightBlue' />
-                        </Stack>
-                        
-                    </Box>
-                   )
-                })}
+            <Box backgroundColor={Colors.transparent} flexDirection={'row'} alignContent={'center'}  >
+                    {motherch.map((nme,index)=>{
+                    return(
+                        <Box flexDirection='column'ml={Platform.OS==='android'?'3':'1.5'}  key={nme._id}>
+                            <Stack alignItems={'center'} justifyContent='center' mt={2} >
+                                <Text  fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==='android'?'600':'700'} fontSize={fontPixel(14)} 
+                                    color={Colors.blacktxt}   textAlign='center'>{nme.name}</Text>
+                            </Stack>
+                            <Stack alignItems={'center'} justifyContent='center'   >
+                                    {/* <Text style={styles.leftText}>{nme.diseasses}</Text> */}
+                                <Checkbox value="test"   size={'sm'} borderRadius={50} onChange={()=> addOrRemove(motherch[index]) } accessibilityLabel="This is a dummy checkbox" colorScheme='lightBlue' />
+                            </Stack>
+                            
+                        </Box>
+                    )
+                    })}
 
-        </Box>
+            </Box>
         
                 
-    </Box> 
-
-    <Box  alignItems={'center'} justifyContent="center"  backgroundColor={'white'} w={'72'} ml={'12'}mt={'10'} borderRadius={34} p={'3'} shadow={'9'}>
+        </Box>
+        
+        <Box  alignItems={'center'} justifyContent="center"  backgroundColor={'white'} w={'72'} mt={'10'} borderRadius={34} p={'3'} shadow={'9'}>
         <Box justifyContent={'center'} alignItems={'center'}flexDirection={'column'}>
             <Box justifyContent={'space-between'} flexDirection='row' >
-                <Stack alignItems={'baseline'} flexDirection='row' justifyContent={'space-around'} ml={2} >
-                    <Image source={images.ccalendrgreen2} style={{width:widthPixel(18),height:heightPixel(18)}}  />
-                                    {/* <EvilIcons name="pencil" size={33} color={Colors.textZahry} }   /> */}
+                <Stack alignItems={'baseline'} flexDirection='row' justifyContent={'space-around'} ml={2}  mb={'2'}>
+                    <Image source={images.grreenCalendrnew} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'  />
                     <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'700'} letterSpacing={1.2} color={Colors.greentext} 
-                                fontSize={fontPixel(18)} ml={2} textAlign='left'> وقت الحضانة</Text>
+                        fontSize={fontPixel(18)} ml={2} textAlign='left'> وقت الحضانة</Text>
                 </Stack>
             </Box>
             <Box flexDirection={'row'} alignItems={'center'} justifyContent='center' >
                     <Stack justifyContent={'center'} alignItems='center'  flexDirection={"row"}    >
                         <Image source={images.clenderblack} style={{width:widthPixel(18),height:heightPixel(18)}} resizeMode='contain'  />
-                        <Text fontFamily={Fonts.type.bold}    fontSize={fontPixel(14)} fontWeight="700" ml={'2'}>{moment(date).format('D MMM')}</Text>
-                        {selectname!="يومي"&& <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={"700"} letterSpacing={1.2} fontSize={fontPixel(16)}  ml="1" >الى</Text>}
-                        {selectname!="يومي" &&<Text fontFamily={Fonts.type.bold}    fontSize={fontPixel(14)} fontWeight="700" ml={'2'}>{moment(date2).format('D MMM')}</Text>}
+                        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}    fontSize={fontPixel(14)} fontWeight={Platform.OS==='android'?"600":"700"} ml={'2'}>{moment(date).format('D MMM')}</Text>
+                        {selectname!="يومي"&& <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={Platform.OS==='android'?"600":"700"} letterSpacing={1.2} fontSize={fontPixel(16)}  ml="1" >الى</Text>}
+                        {selectname!="يومي" &&<Text fontFamily={Fonts.type.bold}    fontSize={fontPixel(14)} fontWeight={Platform.OS==='android'?"600":"700"} ml={'2'}>{moment(date2).format('D MMM')}</Text>}
                     </Stack> 
                 </Box>
                 <Box flexDirection={'row'} alignItems={'center'} justifyContent='center'>
@@ -591,9 +573,9 @@ return(
                         <Image source={images.clock} style={{width:widthPixel(18),height:heightPixel(18),marginRight:Platform.OS==='android?'?2:2}}resizeMode='contain'  />
                     </Stack >
                     <Stack  flexDirection={"row"} width={widthPixel(100)} ml={'1'} alignItems='baseline' justifyContent={'center'}   >
-                        <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={"700"} letterSpacing={1.2} fontSize={fontPixel(16)}  ml="1" >{moment(time).format("hh:mm a")}</Text>
-                        <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={"700"} letterSpacing={1.2} fontSize={fontPixel(16)}  ml="1" >الى</Text>
-                        <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={"700"} letterSpacing={1.2} fontSize={fontPixel(16)}  ml="1" >{moment(time2).format("hh:mm a")}</Text>
+                        <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={Platform.OS==='android'?"600":"700"} letterSpacing={1.2} fontSize={fontPixel(16)}  ml="1" >{moment(time).format("hh:mm a")}</Text>
+                        <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={Platform.OS==='android'?"600":"700"} letterSpacing={1.2} fontSize={fontPixel(16)}  ml="1" >الى</Text>
+                        <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={Platform.OS==='android'?"600":"700"} letterSpacing={1.2} fontSize={fontPixel(16)}  ml="1" >{moment(time2).format("hh:mm a")}</Text>
                     </Stack> 
                 </Box>
                 <Box>
@@ -613,13 +595,13 @@ return(
                     
                     
 
-    </Box>
+        </Box>
                 {/* 00000000 */}
-    <Box  alignItems={'center'} justifyContent="center"  backgroundColor={'white'} w={'72'} ml={'12'}mt={'10'} borderRadius={34} p={'3'} shadow={'9'}>
+        <Box  alignItems={'center'} justifyContent="center"  backgroundColor={'white'} w={'72'} mt={'10'} borderRadius={34} p={'3'} shadow={'9'}>
         <Stack flexDirection={'row'} mt={'1'} p={'1'} justifyContent={'space-around'}>
             <Image source={images.locationgreen}resizeMode='contain' style={{width:widthPixel(14),height:heightPixel(14),marginRight:3}} />
             <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold:Fonts.type.bold}  color={Colors.titleColor}
-                fontSize={fontPixel(18)} fontWeight={'700'} letterSpacing={1.2} >الموقع</Text>
+                fontSize={fontPixel(15)} fontWeight={Platform.OS==='android'?"600":'700'} letterSpacing={1.2} >الموقع</Text>
         </Stack>
         <Stack mt={'1'} flexDirection={'row'}>
             <Image source={images.locationblack} resizeMode='contain' style={{width:widthPixel(14),height:heightPixel(14),marginRight:3}}/>
@@ -632,7 +614,7 @@ return(
          
         </Box>
        
-    <Box flexDirection='column' width={widthPixel(388)} height={heightPixel(100)} justifyContent='space-around' alignItems={'center'} ml={'3'} mt={4}
+        <Box flexDirection='column' width={widthPixel(388)} height={heightPixel(100)} justifyContent='space-around' alignItems={'center'} ml={'3'} mt={4}
             position='absolute' bottom={10} >
         <OutlaintButton
             buttonColor={Colors.grayButton}
@@ -650,9 +632,9 @@ return(
             onPress={() =>ConfirmScreen()}
         />
         
-    </Box>
+        </Box>
     
-    
+        </Box>
                  
     </ScrollView>
 )

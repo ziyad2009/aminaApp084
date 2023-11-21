@@ -68,13 +68,14 @@ const IntroScreen = (props) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
  
  
-  // useEffect(async () => {
-  //   console.log("useEffect 1")
-  // showLOading(true)
-  // NetInfo.fetch().then(state => {
-  //     console.log("Connection type", state.type);
-  //     console.log("Is connected?", state.isConnected);
-  //   })
+  useEffect(async () => {
+    
+  showLOading(true)
+  NetInfo.fetch().then(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+    })
+  })
 
    
    
@@ -112,6 +113,7 @@ const IntroScreen = (props) => {
             //checck if user asign to  welcome screen
             console.log("isSubscribed false to assign to welcome")
             setloding(false)
+            showLOading(false)
              isSubscribed=false
         }else{ 
             //if user asign to screen then compleat steps
@@ -127,7 +129,9 @@ const IntroScreen = (props) => {
                       // goSignScreen()
                     }, 3000)
                 } else if (dirction === false) {
+                  setloding(false)
                     showLOading(false)
+                   
                     console.log("test DIRRCTIN +++ PAGE=", dirction)
                     goSignScreen()
                }
@@ -324,6 +328,7 @@ const goHomScrreen=()=>{
   }
   const RenderItem = ({item}) => {
     return (
+       
       <View
         style={{
           flex: 1,
@@ -344,6 +349,7 @@ const goHomScrreen=()=>{
           {item.text}
         </Text>
       </View>
+      
     );
   };
   const _onDone = () => {
@@ -358,23 +364,19 @@ const goHomScrreen=()=>{
 
   return (
 <>
+<StatusBar barStyle="light-content" backgroundColor={Colors.textZahry} />
  {loading?
-     ( <Box flex={1} alignItems={'center'} backgroundColor={Colors.gray}>
-     <AnimatedLoader
-       visible={visible}
-       overlayColor="rgba(255,255,255,0.75)"
-       source={require("./loading.json")}
-       animationStyle={styles.lottie}
-       speed={1}
-       
-     >
-       <Box alignItems={'center'} justifyContent='center' height={'32'} mt={'4'}>
-         <Image source={Images.introimage} style={{ height: 88, width: 88 }} resizeMode='contain' />
-         <Image source={Images.MainLogo1} style={{ height: 88, width: 88 }} resizeMode='cover' />
-   
-       </Box>
-   
-     </AnimatedLoader>
+     ( <Box  alignItems={'center'} justifyContent={'center'} backgroundColor={Colors.gray}>
+            <AnimatedLoader
+      visible={visible}
+      overlayColor="rgba(255,255,255,0.75)"
+      source={require("./loading.json")}
+      animationStyle={styles.lottie}
+      speed={1}
+      
+    ></AnimatedLoader>
+
+      
      </Box>):(<AppIntroSlider
     ref={ref}
     data={slides}
@@ -384,6 +386,7 @@ const goHomScrreen=()=>{
     renderNextButton={_renderNextButton}
   />)
       }
+      
 </>
    
    

@@ -67,7 +67,7 @@ export const RemoteDataSetExample = memo((props) => {
           placeholder: 'ابحثي عن حاضنة...',
           style: {
             borderRadius:22,
-            color: "rgba(239, 239, 239, 1)",
+            color: Colors.blacktxt,
             paddingRight: 18,
             textAlign:'right'
           }

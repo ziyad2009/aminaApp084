@@ -432,18 +432,18 @@ const handelREQ= async(id)=>{
         {/* <Box alignItems={'center'} justifyContent={'center'}   flexDirection={'row'}>
             <Stack flexDirection={'row'} justifyContent='flex-start'   >
                 <Image source={Images.girl} style={{width:widthPixel(18),height:heightPixel(22)}} resizeMode='contain'/>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)}  ml={3}  > {babseters.settername}</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(18)}  ml={3}  > {babseters.settername}</Text>
             </Stack>   
             <Stack   flex={2} justifyContent='flex-end' flexDirection={'row'}>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}>رقم الطلب</Text>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr} ml={2} >{babseters.orderid}</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr}>رقم الطلب</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr} ml={2} >{babseters.orderid}</Text>
             </Stack>
         </Box> */}
         <Box flexDirection={'row'} alignItems='flex-start' mt={'2'}>
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
                 <Image source={Images.greenbabyface} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
             <Stack>
-            <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}>{babseters.childeaccount}طفل</Text>
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}>{babseters.childeaccount}طفل</Text>
             </Stack>
                 
             </Stack> 
@@ -457,7 +457,7 @@ const handelREQ= async(id)=>{
                     return(
                     <Box key={item._id} flexDirection='row' justifyContent={'space-around'}>
                          {index >=1 && <Text> - </Text>}
-                            <Text  fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}> {item.name} </Text>
+                            <Text  fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}> {item.name} </Text>
                             </Box>
                     )
                 })  }
@@ -472,9 +472,9 @@ const handelREQ= async(id)=>{
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
                 <Image source={Images.greenclander} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
             <Stack flexDirection={'row'}>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={"3"}> {moment(babseters.start).format('LL')}</Text>
-                {babseters.selectname!="يومي"&&<Box flexDirection={'row'} alignItems={'baseline'}><Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr} ml={"3"} > الى </Text>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr} ml={'3'} > {moment(babseters.end).format('LL')}</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={"3"}> {moment(babseters.start).format('LL')}</Text>
+                {babseters.selectname!="يومي"&&<Box flexDirection={'row'} alignItems={'baseline'}><Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(18)} color={Colors.newTextClr} ml={"3"} > الى </Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(18)} color={Colors.newTextClr} ml={'3'} > {moment(babseters.end).format('LL')}</Text>
                     </Box>}
             </Stack>
             </Stack> 
@@ -483,7 +483,7 @@ const handelREQ= async(id)=>{
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
                 <Image source={Images.greenclock} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
             <Stack>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}>{moment(babseters.starttime).format('hh:mm a')} الى{moment(babseters.endtime).format('hh:mm a')}</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(18)} color={Colors.newTextClr}  ml={3}>{moment(babseters.starttime).format('hh:mm a')} الى{moment(babseters.endtime).format('hh:mm a')}</Text>
             </Stack>
             </Stack>
         
@@ -495,22 +495,22 @@ const handelREQ= async(id)=>{
             <Stack flexDirection={'row'} justifyContent='flex-start'  flex={1} >
                 <Image source={Images.calender} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
             <Stack>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={ Colors.newTextClr}  ml={3}t> عدد ايام الحجز {babseters.workday} ايام</Text>
-                {/* <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={ Colors.newTextClr}  ml={3}>{babseters.address}</Text> */}
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={ Colors.newTextClr}  ml={3}t> عدد ايام الحجز {babseters.workday} ايام</Text>
+                {/* <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={ Colors.newTextClr}  ml={3}>{babseters.address}</Text> */}
             </Stack>
              
             </Stack> 
         </Box>
         {/* <Box alignItems={'flex-start'} mt={'2'}>
              {babseters.selectType&&<Stack>
-                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(12)} color={ Colors.red}  ml={3}>الحجز شامل ايام العطل</Text>
+                <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(12)} color={ Colors.red}  ml={3}>الحجز شامل ايام العطل</Text>
             </Stack>  } 
         </Box> */}
         <Box>
             <Stack alignItems={'center'} flexDirection={'row'} >
                     <Image source={Images.greenmoney} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
                 <Stack>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.price} ريال</Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.price} ريال</Text>
                 </Stack>
             </Stack>   
         </Box>
@@ -524,8 +524,8 @@ const handelREQ= async(id)=>{
                 <Stack alignItems={'center'} flexDirection={'row'} >
                     <Image source={Images.greenmonies} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
                     <Stack justifyContent={'space-between'} flexDirection={'row'}>
-                        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>المبلغ</Text>
-                        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.totalprice} ريال</Text>
+                        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>المبلغ</Text>
+                        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.totalprice} ريال</Text>
                     </Stack>
                 </Stack>   
             </Stack> 
@@ -534,8 +534,8 @@ const handelREQ= async(id)=>{
                     <Image source={Images.moneylistgreen} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
                 </Stack>
                 <Stack flexDirection={'row'}>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>اجمالي قيمة الحجز</Text>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{Number(babseters.totalprice/100)*(15) +Number(babseters.totalprice)} ريال </Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>اجمالي قيمة الحجز</Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{Number(babseters.totalprice/100)*(15) +Number(babseters.totalprice)} ريال </Text>
                 </Stack>
             </Stack>
         </Box>
@@ -545,15 +545,15 @@ const handelREQ= async(id)=>{
             {OK?
             <Center>
                 <Box flexDirection={'row'} alignItems='flex-start' mt={'4'}>
-                    <Stack flexDirection={'row'} justifyContent='center' alignItems={'center'} width={widthPixel(382)} height={heightPixel(40)} backgroundColor={Colors.infotextbackground} borderRadius={'lg'} >
+                    <Stack flexDirection={'row'} justifyContent='center' alignItems={'center'} width={'80'} height={'8'} backgroundColor={Colors.infotextbackground} borderRadius={'lg'} >
                           {!orderExp?
-                          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr}  ml={3}>تم ارسال الطلب وفي انتظار قبول الحاضنة</Text>:
-                          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'bold'} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr}  ml={3}>عذرا  تم تجاوز وقت قبول الطلب من الحاضنه</Text>
+                          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr}  ml={3}>تم ارسال الطلب وفي انتظار قبول الحاضنة</Text>:
+                          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr}  ml={3}>عذرا  تم تجاوز وقت قبول الطلب من الحاضنه</Text>
                           }  
                     </Stack> 
                 </Box>
                 <Box flexDirection={'row'} alignItems='flex-start' mt={'4'}>
-                    <Stack flexDirection={'row'} justifyContent='center' alignItems={'center'} width={'96'} height={heightPixel(40)}  >
+                    <Stack   flexDirection={'row'} justifyContent='center' alignItems={'center'} width={'80'}  >
                     {!orderExp? <Text flexWrap={'wrap'} fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(16)} textAlign='center' color={Colors.newTextClr} fontWeight={'700'}  ml={3}> في حال لم يتم الموافقة  خلال ٦ ساعات  سيتم الغاءالطلب </Text>:
                         <Box>
                             <Button variant={'subtle'}  backgroundColor={"#6BB05A"}shadow={'2'} size={'xs'} borderRadius={'lg'} onPress={() =>props.navigation.navigate('Home') }>
@@ -572,7 +572,7 @@ const handelREQ= async(id)=>{
                     timerCallback={timerCallbackFunc}
                     
                     containerStyle={{
-                        height: 56,
+                        height: Metrics.HEIGHT*0.054191,
                         width: Metrics.WIDTH*0.7211,
                         justifyContent: 'center',
                         alignItems: 'center',

@@ -9,6 +9,7 @@ import {Calendar} from 'react-native-calendars';
 import moment from 'moment';
 import styles from './styles'
 import AnimatedLoader from 'react-native-animated-loader';
+import images from '../assets/Themes/Images';
 
 
 let DataHolder;
@@ -24,6 +25,7 @@ const Poitment=(props)=>{
   const[endtDate,setSecndtDate]=useState(moment(new Date).format("YYYY-MM-DD"))
       const[showSecondDay,sethowSecondDay]=useState(false)  
       const [datePicker, setDatePicker] = useState(false);
+      const [datePicker2, setDatePicker2] = useState(false);
       const [dateTime, seTime] = useState(new Date(Date.now()));
       const [dateTime1, seTime1] = useState(new Date(Date.now()))
       const[changTime1,setchangTime1]=useState(false)  
@@ -261,21 +263,48 @@ const Poitment=(props)=>{
           if (Platform.OS === 'ios') {
             return seTime(value), setDatePicker(!datePicker);
           }
-          setDatePicker(!datePicker);
-          seTime(value)
+          console.log("Time- ",value,"and E==",event.type)
+          if(Platform.OS==='android' && event?.type === 'dismissed'){
+                console.log("test time change dissmmes ",event.type)
+                setDatePicker(!datePicker);
+            //      setShowTimebox(false)
+             }else{
+              console.log("test time change Time- ",value)
+              seTime(value)
+              setDatePicker(!datePicker);
+             }
           
-  
+        //   if(Platform.OS==='android'|| event?.type === 'dismissed'){
+        //     console.log("test time change2 dissmmes ",event.type)
+        //      setShowTimebox(false)
+        //  }else if(Platform.OS==='android'|| event?.type === 'set'){
+        //     seTime(value)
+        //      setDatePicker(!datePicker);
+             
+        //      // setShowTimebox(false)
+        //   }
+         
       })
-
-
-    const onDateSelected2 = ((event, value) => {
-      setchangTime2(true)
-        if (Platform.OS === 'ios') {
-            return seTime1(value), setDatePicker(!datePicker);
-        }
-        setDatePicker(!datePicker);
-        seTime1(value)}
-    )
+      
+      const onDateSelected2 = ((event, value) => {
+        setchangTime2(true)
+          if (Platform.OS === 'ios') {
+              return seTime1(value), setDatePicker(!datePicker);
+          }
+          console.log("Time- ",value,"and E==",event.type)
+          if(Platform.OS==='android' && event?.type === 'dismissed'){
+                console.log("test time change dissmmes ",event.type)
+                setDatePicker2(!datePicker2);
+            //      setShowTimebox(false)
+             }else{
+              console.log("test time change Time- ",value)
+              seTime1(value)
+              setDatePicker2(!datePicker2);
+             }
+          
+           
+         
+})
 
     
     const typeOfOrder = () => {
@@ -318,7 +347,7 @@ const Poitment=(props)=>{
           // console.log("test array holder",arrayHolder)
           // console.log("test array DATA holder2",DataHolder)
             setvisible(false)
-          props.navigation.push('Fourm1', {arrayHolder,DataHolder })
+          props.navigation.push('Fourm1', {arrayHolder,DataHolder ,productTitle:props.route.params.data1.name})
         },2000)
       }
       
@@ -328,11 +357,11 @@ const Poitment=(props)=>{
 
   return(
     <SafeAreaView   >
-    <Box height={Metrics.HEIGHT*0.9121} backgroundColor={Colors.AminabackgroundColor}>
+    <Box height={ Platform.OS==='android'?Metrics.HEIGHT*0.9651:Metrics.HEIGHT*0.9121} backgroundColor={Colors.AminabackgroundColor}>
       {showCalender?
     <Box  backgroundColor={Colors.AminabackgroundColor} alignItems={'center'}>
-      <Box alignItems={'center'} mt={'5'}>
-        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} letterSpacing={1.2} color={Colors.titleColor}>اختر نوع الحجز</Text>
+      <Box alignItems={'center'} mt={Platform.OS==='android'?'24':'5'}>
+        <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={Platform.OS==='android'?'bold':"700"} fontSize={'lg'} letterSpacing={1.2} color={Colors.titleColor}>اختر نوع الحجز</Text>
       </Box>
       <Box alignItems={'center'} mt={'3'}>
         <Stack width={Metrics.WIDTH*0.9121} flexDirection={'row'} alignItems={'center'}>
@@ -340,7 +369,7 @@ const Poitment=(props)=>{
             return(
               <Pressable key={item.id} onPress={()=>selectPackege(item.id,item.name)} style={{backgroundColor:selecttext===item.id? Colors.textZahry: Colors.grayButton,width:Metrics.WIDTH*0.25212,height:Metrics.HEIGHT*0.06312,borderRadius:40,alignItems:'center',justifyContent:'center',marginLeft:10}} >
                 <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} letterSpacing={1.2} color={selecttext===item.id? Colors.white: Colors.textZahry}
-                    textAlign={'center'} fontSize={fontPixel(15)}>{item.name}</Text>
+                    textAlign={'center'} fontSize={Platform.OS==='android'?fontPixel(18):fontPixel(16)}>{item.name}</Text>
               </Pressable>
             )
           })}
@@ -349,9 +378,9 @@ const Poitment=(props)=>{
       <Box alignItems={'center'} mt={'10'}>
         <Stack backgroundColor={Colors.grayButton} w={'64'} borderWidth={.1} borderColor={Colors.text} flexDirection={'row'} alignItems={'flex-end'}  p={'2.5'} borderRadius={'xl'} onTouchStart={()=>setShowcalender(!showCalender)}>
           <Image source={Images.blackCalendernew} resizeMode='contain' style={{width:19,height:18,marginRight:10,marginLeft:10}}/>
-          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(15)} color={Colors.black} textAlign={'left'}>{moment(startDate).format('DD MMMM')}</Text>
-          {showSecondDay&&<Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(15)} color={Colors.black} textAlign={'left'}> الى </Text>}
-          {showSecondDay&&<Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(15)} color={Colors.black} textAlign={'left'}>{moment(endtDate).format('DD MMMM')}</Text>}
+          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={Platform.OS==='android'?fontPixel(18):fontPixel(15)} color={Colors.black} textAlign={'left'}>{moment(startDate).format('DD MMMM')}</Text>
+          {showSecondDay&&<Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.bold} fontWeight={'700'} fontSize={Platform.OS==='android'?fontPixel(18):fontPixel(15)} color={Colors.black} textAlign={'left'}> الى </Text>}
+          {showSecondDay&&<Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={Platform.OS==='android'?fontPixel(18):fontPixel(15)} color={Colors.black} textAlign={'left'}>{moment(endtDate).format('DD MMMM')}</Text>}
         </Stack>
       </Box>
 
@@ -370,16 +399,16 @@ const Poitment=(props)=>{
         <Stack   onTouchStart={()=>setShowTimebox(!showTimebox)} backgroundColor={Colors.grayButton} flexDirection={'row'}  w={'64'} borderWidth={.1} borderColor={Colors.black}  alignItems={'flex-end'}  p={'2.5'} borderRadius={'xl'} >
           <Image source={Images.blackOclock} resizeMode='contain' style={{width:19,height:18,marginRight:10,marginLeft:10}}/>
           <Stack flexDirection={'row'}>
-          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(15)} color={Colors.black} >{moment(dateTime).format("hh:mm a")}</Text>
-          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(15)} color={Colors.black}>الى</Text>
-          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(15)} color={Colors.black}>{moment(dateTime1).format("hh:mm a")}</Text>
+          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={Platform.OS==='android'?fontPixel(18):fontPixel(15)} color={Colors.black} >{moment(dateTime).format("hh:mm a")}</Text>
+          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={Platform.OS==='android'?fontPixel(18):fontPixel(15)} color={Colors.black}>الى</Text>
+          <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={Platform.OS==='android'?fontPixel(18):fontPixel(15)} color={Colors.black}>{moment(dateTime1).format("hh:mm a")}</Text>
           </Stack>
         </Stack>
       </Box>
 
         {ready?
-        <Box backgroundColor={'white'} borderRadius={'3xl'} borderColor={'black'} borderWidth={.1} width={'72'}  
-              p={'2.5'}  alignItems={'center'} mt={'48'} shadow={'9'}>
+        <Box backgroundColor={'white'} borderRadius={Platform.OS==='android'?'3xl': '3xl'} borderColor={Platform.OS==='android'?"white":'black'} borderWidth={.1} width={'72'}  
+              p={'2.5'}  alignItems={'center'} mt={Platform.OS==='android'? '32':'48'} shadow={'9'}>
             <Stack>
               <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(18)} color={Colors.titleColor}>تفاصيل الخدمة</Text>
             </Stack>
@@ -473,14 +502,16 @@ const Poitment=(props)=>{
       speed={1}
       
     ></AnimatedLoader>
+     
       <Center>
       <Modal isOpen={showTimebox} onClose={() => setShowTimebox(false)}
           borderColor={Colors.white} backgroundColor={Colors.transparent}
           avoidKeyboard justifyContent="flex-end" bottom="4"
            >
-        <Modal.Content width={Metrics.WIDTH } alignItems={'center'} flexDirection={'column'}  backgroundColor={Colors.transparent}>
+        <Modal.Content width={Metrics.WIDTH } alignItems={'center'} flexDirection={'column'}  backgroundColor={Platform.OS==='ios'? Colors.transparent: Colors.AminabackgroundColor} height={Platform.OS==="android"?'56':Metrics.HEIGHT*0.5981}>
         <Modal.CloseButton/>
         <Modal.Body   width={Metrics.WIDTH}  height={heightPixel(522)}  alignItems={'center'}>
+        {Platform.OS==='ios' ?
         <Box  width={Metrics.WIDTH*0.643} flexDirection={'row'} backgroundColor={"rgba(255, 255, 255, 1)"} borderRadius={'2xl'} borderWidth={.2} borderColor={'black'}>
           <Stack width={'20'}   justifyContent={'center'} alignItems={'center'} padding={'1'}>
             <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} letterSpacing={1.3}fontWeight={'700'} fontSize={fontPixel(20)} color={"#F27F92"} mr={'1'} ml={'1'}>الوقت</Text>
@@ -491,7 +522,7 @@ const Poitment=(props)=>{
               <DateTimePicker
                 value={dateTime}
                 mode={'time'}
-                display={Platform.OS === 'ios' ? 'compact' : 'default'}
+                display={Platform.OS === 'ios' ? 'compact' : 'clock'}
                 is24Hour={false}
                 dateFormat={"day month year"}
                 onChange={onDateSelected}
@@ -505,7 +536,7 @@ const Poitment=(props)=>{
               <DateTimePicker
                 value={dateTime1}
                 mode={'time'}
-                display={Platform.OS === 'ios' ? 'compact' : 'default'}
+                display={Platform.OS === 'ios' ? 'compact' : 'clock'}
                 is24Hour={false}
                 dateFormat={"day month year"}
                 onChange={onDateSelected2}
@@ -515,7 +546,57 @@ const Poitment=(props)=>{
               />
             </Stack>
           </Box>
-        </Box>
+        </Box>:
+        <Box width={Metrics.WIDTH*0.923} flexDirection={'column'} backgroundColor={Colors.transparent} justifyContent={'space-around'}  alignItems={'flex-start'}   height={'48'} >
+          <Stack alignItems={'center'} justifyContent={'space-between'} p={'2'} width={'72'} flexDirection={'row'}>
+           <Image source={images.clockred} style={{height:33,width:33,marginLeft:2 }} resizeMode='contain' />
+           <Text fontFamily={Platform.OS==='android'? Fonts.type.bold:Fonts.type.bold} fontWeight={"700"} letterSpacing={1.2} fontSize={fontPixel(22)} color={Colors.textZahry} alignSelf={'center'}>اختاري وقت موعد الحجز</Text>
+           
+          </Stack>
+          <Stack  alignItems={'center'} justifyContent={'center'} ml={'3'}>
+              {datePicker?
+              <DateTimePicker
+                  value={dateTime}
+                  mode={'time'}
+                  display={Platform.OS === 'ios' ? 'compact' : 'default'}
+                  is24Hour={false}
+                  dateFormat={"day month year"}
+                  onChange={onDateSelected}
+                  style={styles.datePicker}
+              />:<Stack alignItems={'center'} justifyContent={"space-between"} flexDirection={'row'}>
+                  <Feather name='arrow-up' color={Colors.loginBlue} size={25} style={{margin:5}} />
+                  <TouchableOpacity style={{width:Metrics.WIDTH*0.3432,height:Metrics.HEIGHT*0.05231,backgroundColor:Colors.textZahry,borderRadius:33,alignContent:'center',alignItems:'center',flexDirection:'row',padding:1}}
+                      onPress={()=>setDatePicker(!datePicker)}>
+                        
+                      <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(22)} color={"#232323"}   ml={'3'}>من</Text>
+                      <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(22)} color={"#232323"}   ml={'3'}>
+                      {moment(dateTime).format("hh:mm a")}</Text>
+                      </TouchableOpacity>
+                </Stack>}
+
+          </Stack>
+          <Stack  alignItems={'center'} justifyContent={'center'} ml={'3'} mt={'7'}>
+              {datePicker2?
+              <DateTimePicker
+                  value={dateTime1}
+                  mode={'time'}
+                  display={Platform.OS === 'ios' ? 'compact' : 'default'}
+                  is24Hour={false}
+                  dateFormat={"day month year"}
+                  onChange={onDateSelected2}
+                  style={styles.datePicker}
+              />:<Stack alignItems={'center'} justifyContent={"space-between"} flexDirection={'row'}>
+                   <Feather name='arrow-down' color={Colors.loginBlue}size={25} style={{margin:5}}/>
+                   <TouchableOpacity style={{width:Metrics.WIDTH*0.3432,height:Metrics.HEIGHT*0.05231,backgroundColor:Colors.textZahry,borderRadius:33,alignContent:'center',alignItems:'center',flexDirection:'row',padding:1}}
+                      onPress={()=>setDatePicker2(!datePicker2)}>
+                      <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(22)} color={"#232323"}  ml={'3'}>الى</Text>
+                      <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold} fontWeight={'700'} fontSize={fontPixel(22)} color={"#232323"}  ml={'3'}>
+                      {moment(dateTime1).format("hh:mm a")}</Text>
+                      </TouchableOpacity>
+                </Stack>}
+
+          </Stack>
+        </Box>}
         </Modal.Body>
         </Modal.Content>
         

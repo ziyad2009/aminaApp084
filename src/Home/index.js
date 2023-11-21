@@ -24,6 +24,7 @@ import moment from 'moment/moment';
 import {SliderBox} from './components/SliderBox';
 import FastImage from 'react-native-fast-image';
 import Disprofile from '../services/utils/disprofile';
+
 page = 0
 //sound setting 
 Sound.setCategory('Playback');
@@ -85,86 +86,6 @@ var onInstallConversionDataCanceller = appsFlyer.onInstallConversionData(
   );
 
 
- 
-
-  const workday_count=( start,end,workWithWeekend)=> {
-    let calcDone=false
-    var Start = moment(start);
-    var End = moment(end);
-
-    const timedate =moment("2023-10-06").format("YYYY-MM-DD")
-    var timeStart=moment(`${timedate} 08:50:35`) 
-    var timeToEnd= moment(`${timedate} 14:50:35`) 
-   
-   if(Start.isSame(End)){
-    console.log("is samme day")
-     return;
-   }
-   
-  const totalDay=moment.duration(End.diff(Start)).asDays()
-  const totaTime=moment.duration(timeToEnd.diff(timeStart)).asHours()
-  const searchLimit = totalDay;
-  let businessDay=0
-  let weekend=0
-  let dateTodayStr=moment(Start).format('dddd')
-  
-  for (let index = 0; index < searchLimit+1; index++) {
-    businessDay+=1
-    console.log("ttt====>OK",businessDay)
-    console.log("ttt====>OK",dateTodayStr)
-     
-    if(dateTodayStr==='السبت'||dateTodayStr==='الجمعة'){
-        console.log("Is holday ^^ ",dateTodayStr)
-       //add counter to weekend
-        weekend+=1
-      }  
-      //increase counter day
-       dateTodayStr=moment(Start).add(businessDay,'day').format('dddd')
-       if(searchLimit===index){
-        calcDone=true
-        console.log("Is loop done ^^ ")
-       }
-    }
-    if(calcDone){
-      const workdayWithoutweekend=businessDay-weekend
-      const workday=businessDay
-      const totalTimework=totaTime
-      const price=15
-      const typeWork=workWithWeekend
-      if (typeWork){
-        console.log("مجموع ايام العمل", workday ,
-                "السعر النهائي لليوم الواحد ",price*totalTimework,
-                "السعر لكامل الايام   ",workday*(price*totalTimework)
-                ,"تبد الخدمة ",Start.format('LLL')
-                ,"service End  to ",End.format("LLL"))
-        }else{
-          console.log(" مجموع ايام العمل مع ايام العطل", workdayWithoutweekend ,
-                "السعر النهائي لليوم الواحد ",price*totalTimework,
-                "السعر لكامل الايام   ",workdayWithoutweekend*(price*totalTimework)
-                ,"تبد الخدمة ",Start.format('LLL')
-                ,"تنتهي الخدمة ",End.format("LLL"))
-        }
-      
-  
-    }
-   
- 
-  } // 
-
-  const testdays=()=>{
-      var ftest = {date:'2023-09-01',start:1,end:7};
-  var ltest = {date:'2023-09-10',start:2,end:8};
-  var f = 'YYYY-MM-DD';
-  for(var z=ftest.start; z<=ftest.end; ++z) {
-    var start = moment(ftest.date + z);
-    for(var y=ltest.start; y<=ltest.end; ++y) {
-      var end = moment(ltest.date + y);
-      var wd = workday_count(start,end);
-      console.log('from: '+start.format(f),'to: '+end.format(f),'is '+wd+' workday(s)');
-    }
-}
-  }
-
 const Home = (props) => {
   const [services, setservices] = useState({})
   const [loading, setloding] = useState(false)
@@ -181,7 +102,7 @@ const Home = (props) => {
 
   const [result, setresult] = useState([])
   const [selectedItem, setSelectedItem] = useState(null);
-
+  const {getnotfctionstatuse,getnotfctionstring,getnotfeeStause} = useContext(UserContext);
   let buildNumber = DeviceInfo.getBuildNumber();
   const appName = DeviceInfo.getApplicationName();
   const app_version = DeviceInfo.getVersion()
@@ -261,10 +182,7 @@ const Home = (props) => {
 
 
   useEffect(async () => {
-    const StartTimeService=moment("2023-10-06").format("YYYY-MM-DD")
-    const EndTimeService=moment("2023-10-13").format("YYYY-MM-DD")
-    const workWithWeekend=true
-    workday_count(StartTimeService,EndTimeService,workWithWeekend)
+  
     const user = await setItem.getItem('BS:User');
     const token = await setItem.getItem('BS:Token');
 
@@ -304,18 +222,19 @@ const Home = (props) => {
 
     var fcmToken = await setItem.getItem("@FCMTOKEN")
     var newToken = fcmToken
+    getnotfctionstring(newToken)
+    await api.patch(`mother/${motherId}`, { playerid: newToken }).then((res) => {
+      //  console.log("test Update player ID++ for mother profile ", res.data)
+      }).catch((err) => {
+        console.log("ERORR Upate profile +رخفهبشذفهخر", err)
+      })
+
 
     if (fcmToken = !null) {
       api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
       //console.log("test new token from Mothers", newToken)
       appsFlyer.updateServerUninstallToken(newToken,(success)=>{
         console.log("token firbase update inappsFlyer ",success)
-      })
-
-      await api.patch(`mother/${motherId}`, { playerid: newToken }).then((res) => {
-      //  console.log("test Update player ID++ for mother profile ", res.data)
-      }).catch((err) => {
-        console.log("ERORR Upate profile +رخفهبشذفهخر", err)
       })
     }
 
@@ -744,7 +663,7 @@ const directoStor=()=>{
                        اختاري طلبك
                       </Text>
       </Box>
- 
+      
      <Box backgroundColor={Colors.transparent} flexDirection={'row'} mt={'5'} ml={Metrics.WIDTH*0.17600}   width={Metrics.WIDTH * 0.62852} 
                    display={'flex'} height={Metrics.HEIGHT * 0.152994} justifyContent={'space-around'} borderTopLeftRadius={'2xl'} borderTopRightRadius={'2xl'}  >
         {services.length > 1 &&

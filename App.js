@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 import 'react-native-gesture-handler';
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useContext} from 'react';
 import { Platform, NativeModules, Alert, LogBox ,AppState} from 'react-native'
 import RNRestart from "react-native-restart";
 import SplashScreen from 'react-native-splash-screen';
@@ -32,12 +32,12 @@ import Mapscreen  from './src/map';
 import Navigation from './src/routes/AuthRouter';
 import {I18nManager} from 'react-native'
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
-
+import { UserContext } from './src/services/UserContext';
 import OneSignal from 'react-native-onesignal';
 import {checkNotifications,openSettings,requestNotifications,check, PERMISSIONS, RESULTS,request} from 'react-native-permissions';
 import notifee, { EventType ,AuthorizationStatus} from '@notifee/react-native';
 import  {requestUserPermission,notifacttionlistener, notifeeConfige} from  './src/services/utils/notifactionservices'
-
+import messaging from '@react-native-firebase/messaging'
 //import CodePush from "react-native-code-push"; 
 
 const appVersion='33'
@@ -67,10 +67,11 @@ const appVersion='33'
 // OneSignal.addTrigger("current_app_version", appVersion);
 
 
-const App =() => {
+const App =(props) => {
   
   const [showRealApp,setshowRealApp]=useState(false)
   const [publishableKey, setPublishableKey] = useState('');
+   
   const config = {
     dependencies: {
     // For Expo projects (Bare or managed workflow)
@@ -101,7 +102,7 @@ const App =() => {
           requestUserPermissionNotfee()
           askAdspermisionIOs()
         
-          
+           
         //   notifee.onForegroundEvent(({ type, detail }) => {
         //     //console.log("starr 00000000000000",type,"aand =",detail)
         //     if (type === EventType.APP_BLOCKED) {
@@ -121,22 +122,39 @@ const App =() => {
           
      }, []);
 
+     useEffect(() => {
+      messaging()
+          .getDidOpenSettingsForNotification()
+          .then(async didOpenSettingsForNotification => {
+              if (didOpenSettingsForNotification) {
+                console.log("start go tonotifcation ")
+                props.navigation.navigate('Notifactionscreen')
+              }
+          })
+}, [])
+
+
+ 
+
 
     async function requestUserPermissionNotfee() {
           const settings = await notifee.requestPermission();
          if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-            //console.log('Permission settings:  is alow', settings);
+            console.log('notifee ==> Permission settings:  is alow', settings);
+           // getnotfctionstatuse(true)
             await notifee.requestPermission({
               sound: true,
               announcement: true,
               inAppNotificationSettings: true,
               criticalAlert:true,
-             criticalVolume: 0.9,
+              criticalVolume: 0.9,
              
               // ... other permission settings
             });
+            
           } else {
-            console.log('User declined permissions');
+            console.log('notifee ===> User declined permissions');
+            
             askPermsionNotfaction()
             await notifee.requestPermission({
               sound: true,
@@ -178,8 +196,10 @@ const App =() => {
               });
             
         }
-        const askPermsionNotfaction=()=>{
-          console.log("++++++++++++++++")
+
+      
+      const askPermsionNotfaction=()=>{
+         
           if(Platform.OS==='android'){
             check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
             .then((result) => {
@@ -189,7 +209,7 @@ const App =() => {
                   break;
                 case RESULTS.DENIED:
                   console.log('The permission has not been requested / is denied but requestable');
-                 Alert.alert("notifaction denid")
+                  Alert.alert("تم رفض تفعيل التنبيهات في المستقبل")
                   break;
                 case RESULTS.LIMITED:
                   console.log('The permission is limited: some actions are possible');
@@ -206,6 +226,7 @@ const App =() => {
               console.log('Erorr in notifscttions',error);
             });
           }
+          
           checkNotifications().then(({status, settings})=>{
             if(status==='blocked'){
               requestNotifications(['alert', 'sound']).then(({status, settings})=>{

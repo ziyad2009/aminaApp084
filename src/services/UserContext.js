@@ -13,7 +13,10 @@ import deviceInfoModule from 'react-native-device-info';
 
 export const UserContext =React.createContext({})
 
-  const SOKITIO = socketio(URL_ws_chat);
+  
+
+
+const SOKITIO = socketio(URL_ws_chat);
  // const SOKITIOSetter = socketio(URL_ws);
   const SOKITIOSetter = SocketIOClient(URL_ws, {
     jsonp: false,
@@ -34,6 +37,9 @@ export const UserContext =React.createContext({})
     const[notifaction,setnotifaction]=useState(0)
     const [DeviceID,setDeviceId]=useState(0)
     const[chatroom,setchatroom]=useState('')
+    const[notifactionStatuse,setnotifactionStatuse]=useState(null)
+    const[notifactionstring,setnotifactionstring]=useState('')
+    const[notifeeStatuse,setnotifeeStatuse]=useState(null)
       useEffect(() => {
          async function tryGetUser(){ 
         //    await setItem.removeItem('BS:User');
@@ -80,13 +86,11 @@ export const UserContext =React.createContext({})
                 setdirction(true)
                // sethome(true);
             } catch(err){
-                
-                 
-                    setUser(false)
-                    setLoading(false)
-                    setRegUser(false)
-                    setdirction(false)
-                    console.log("Erorr  from backendd",err);
+                setUser(false)
+                setLoading(false)
+                setRegUser(false)
+                setdirction(false)
+                console.log("Erorr  from backendd",err);
                  
             }
         };
@@ -261,6 +265,16 @@ export const UserContext =React.createContext({})
         seterrmsg(msg)
        }
 
+       const getnotfeeStause=(val)=>{
+        setnotifeeStatuse(val)
+       }
+       const getnotfctionstatuse=(val)=>{
+        setnotifactionStatuse(val)
+       }
+       const getnotfctionstring=(val)=>{
+        setnotifactionstring(val)
+       }
+
         return(
         <UserContext.Provider value={
          {loading,
@@ -276,14 +290,20 @@ export const UserContext =React.createContext({})
             DeviceID,
             chatroom,
             dirction,
+            notifactionStatuse,
+            notifactionstring,
+            notifeeStatuse,
          loginbyphone,
          loginbycoded,
          sethome,
          ErorrMessage,
          setnotifaction,
-         Getchatoom
+         Getchatoom,
+         getnotfctionstatuse,
+         getnotfctionstring,
+         getnotfeeStause
         
-
+         
          
         }
         }>

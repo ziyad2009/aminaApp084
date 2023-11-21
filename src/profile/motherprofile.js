@@ -278,7 +278,7 @@ const Motherprofilw=(props)=>{
     
         const keyboardVerticalOffset = Platform.OS === 'ios' ? 1 : 0
     return(
-    <SafeAreaView  >
+    <SafeAreaView >
         <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
                  keyboardVerticalOffset={keyboardVerticalOffset} enabled  >
      
@@ -325,7 +325,7 @@ const Motherprofilw=(props)=>{
                                     </Stack>
                                 </Box>
 
-                                <Box width={widthPixel(343)} height={'20'} flexDirection={'column'} alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS === 'android' ? 5 : 4} marginBottom={Platform.OS === 'android' ? 2 : 2} >
+                                <Box width={widthPixel(343)} height={'20'} flexDirection={'column'} alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS === 'android' ? 5 : 4} marginBottom={Platform.OS === 'android' ? 2 : 2} mt={'3'} >
                                     <Stack>
                                         <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.base} fontWeight='400' ml={'2'} mt="2">رقم الهوية</Text>
                                     </Stack>
@@ -335,7 +335,7 @@ const Motherprofilw=(props)=>{
                                     </Stack>
                                 </Box>
 
-                                <Box width={widthPixel(343)} height={'20'} flexDirection={'column'} alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS === 'android' ? 5 : 4} marginBottom={Platform.OS === 'android' ? 2 : 2} >
+                                <Box width={widthPixel(343)} height={'20'} flexDirection={'column'} alignItems='baseline' justifyContent={'center'} marginLeft={Platform.OS === 'android' ? 5 : 4} marginBottom={Platform.OS === 'android' ? 2 : 2} mt={'3'} >
                                     <Stack>
                                         <Text alignItems='flex-start' fontSize={18} fontFamily={Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.base} fontWeight='400' ml={'2'} mt="2">البريد الالكتروني</Text>
                                     </Stack>
@@ -348,9 +348,9 @@ const Motherprofilw=(props)=>{
         </Box>
         <Box alignItems={'flex-start'}  flexDirection={'column'} width={widthPixel(343)}   mt={'3'} ml={'3'}>
             <Stack >
-                <Text fontSize={18} fontFamily={Platform.OS === 'android' ? Fonts.type.base : Fonts.type.base}   color={'black'}>الموقع</Text>
+                <Text fontSize={18} fontFamily={Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.base}  fontWeight={Platform.OS==="android"?"400":"400"}  color={'black'}>الموقع</Text>
             </Stack>
-             <Stack backgroundColor={"rgba(243, 243, 243, 1)"} flexDirection={'row'} mt={'2'} width={'64'}  >
+             <Stack backgroundColor={"rgba(243, 243, 243, 1)"} flexDirection={'row'} mt={'2'} width={'72'}  >
                 <Text numberOfLines={1}   color={'black'} flexWrap={'wrap'}  padding={'2'}>{locationmother}</Text>
                      
                     <TouchableOpacity style={{backgroundColor:Colors.blacktxt ,width:Metrics.WIDTH*0.1822,borderRadius:22,alignItems:'center',justifyContent:'center'}}
@@ -361,7 +361,7 @@ const Motherprofilw=(props)=>{
         </Box>
         <Box  width={widthPixel(343)} flexDirection={'row'}   mt={2} ml={'2'} mr={2}  backgroundColor={Colors.AminabackgroundColor} >
                 
-                <Box    ml={'1'}  backgroundColor={"rgba(243, 243, 243, 1)"} justifyContent={'space-around'} borderRadius={'lg'} mt={'2'}>
+                <Box    ml={'1'}  backgroundColor={"rgba(243, 243, 243, 1)"} justifyContent={'space-around'} borderRadius={'lg'} mt={'2'} width={'72'} >
                     {chieldList.length>=1? <HStack   >
                     
                     {chieldList.map((chld)=>{    
@@ -371,7 +371,7 @@ const Motherprofilw=(props)=>{
                                     return <Box  key={chld._id}   w={'auto'} flexDirection={'row'} borderColor={Colors.ricePaper} alignItems={'center'} borderWidth='.2' borderRadius={10}  mt={3}  h={Metrics.HEIGHT*0.0424} ml={2} mr={2}>
                                            <TouchableOpacity  key={chld._id} {...triggerProps} style={{flexDirection:'row' ,width:'auto',marginRight:2,marginLeft:2}} >
                                                 <Stack flexDirection={'row'}>
-                                                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={fontPixel(15)} color={Colors.newTextClr} alignItems={'stretch'}> {chld.name} </Text>
+                                                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={fontPixel(15)} color={Colors.newTextClr}  > {chld.name} </Text>
                                                     {/* <Text fontSize={fontPixel(12)} color={Colors.newTextClr}  > {chld.age} -سنوات</Text> */}
                                                     {/* <Text  style={{fontSize:10,color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} >- {chld.diseasses}</Text> */}
                                                 </Stack>
@@ -415,7 +415,7 @@ const Motherprofilw=(props)=>{
             <Text style={{color:Colors.error,fontSize:20}}>{msg}</Text>  
         </View> }
         
-        <Box  alignItems={'center'} mt={'16'}>
+        <Box  alignItems={'center'} mt={'12'}>
             <TouchableOpacity onPress={()=>updatemotherdata(motherData.mother._id) } style={{backgroundColor:"rgba(243, 243, 243, 1)", width:Metrics.WIDTH*0.7362,height:Metrics.HEIGHT*0.0583, alignItems:'center',justifyContent:'center',borderRadius:22}}>
                 <Text fontSize={18} fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold}fontWeight={'700'}  color={Colors.AminaButtonNew}>تحديث البيانات</Text>
             </TouchableOpacity>
@@ -423,11 +423,11 @@ const Motherprofilw=(props)=>{
         
         <Center >
 
-            <Modal isOpen={ShowModal} backgroundColor={Colors.AminabackgroundColor} onClose={() => setShowModal(false)} mr={'3'}>
-            <Modal.Content width={Metrics.WIDTH }  h={Metrics.HEIGHT*0.952}>
-            <Modal.CloseButton padding={1} />
+            <Modal isOpen={ShowModal} backgroundColor={Colors.transparent} onClose={() => setShowModal(false)} >
+            <Modal.Content width={Metrics.WIDTH } height={Metrics.HEIGHT }>
+             
             <Modal.Header backgroundColor={Colors.AminaPinkButton}  alignItems={'center'}>
-            <Heading fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base}   color={'white'}>بيانات طفلك</Heading>
+            <Text fontFamily={Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold}  fontWeight={Platform.OS==='android'?"600":"700"} color={'white'} fontSize={22}>بيانات طفلك</Text>
             </Modal.Header> 
             <Modal.Body alignItems={'center'} >
  

@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
       height: Metrics.HEIGHT *0.6332  ,
       borderBottomLeftRadius:88,
       borderBottomRightRadius:88,
-      borderColor:Colors.black,
+      //borderRightColor:Colors.black,
+     // borderLeftColor:Colors.black,
       borderWidth:1,
       backgroundColor:Colors.red
      // marginTop: Metrics.HEIGHT*0.0912,

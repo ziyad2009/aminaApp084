@@ -1,5 +1,4 @@
-import React,{useState,useEffect} from 'react';
-import { Button, } from 'react-native'
+import React,{useState,useEffect,useContext} from 'react';
 import messaging from '@react-native-firebase/messaging';
 import setItem from '../storage'
 import { Alert, Platform } from 'react-native';
@@ -8,7 +7,13 @@ import {Colors,Images} from '../../assets/Themes/'
  
 
 export async function requestUserPermission() {
-  const authStatus = await messaging().requestPermission();
+ 
+  const authStatus = await messaging().requestPermission(
+    {
+      sound:true,
+      announcement:true
+    }
+  );
   const enabled =
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -16,15 +21,30 @@ export async function requestUserPermission() {
   if (enabled) {
     console.log('Authorization status:', authStatus);
     getfromToken()
+    
   }
-}
+
+  if (authStatus === messaging.AuthorizationStatus.AUTHORIZED) {
+    console.log('User has notification permissions enabled.',authStatus);
+  } else if (authStatus === messaging.AuthorizationStatus.PROVISIONAL) {
+    console.log('User has provisional notification permissions.',authStatus);
+  } else {
+    console.log('User has notification permissions disabled',authStatus);
+  }
+  // -1 = messaging.AuthorizationStatus.NOT_DETERMINED: Permission has not yet been requested for your application.
+  // 0 = messaging.AuthorizationStatus.DENIED: The user has denied notification permissions.
+  // 1 = messaging.AuthorizationStatus.AUTHORIZED: The user has accept the permission & it is enabled.
+  // 2 = messaging.AuthorizationStatus.PROVISIONAL: Provisional authorization has been granted.
+  // 3 = messaging.AuthorizationStatus.EPHEMERAL: The app is authorized to create notifications for a limited amount of time. Used for app clips.
+
+} 
 
 const getfromToken=async()=>{
   try {
     const fcmToken = await messaging().getToken()
     await setItem.setItem("@FCMTOKEN",fcmToken)
     console.log("fcm token:", fcmToken)
-     
+      
   } catch (error) {
     console.log("error in creating token")
 }
@@ -56,6 +76,7 @@ export const notifeeConfige=async()=>{
   await notifee.requestPermission()
   
 }
+
 function onMessageReceived(message) {
   notifee.displayNotification(JSON.parse(message.data.notifee));
 }

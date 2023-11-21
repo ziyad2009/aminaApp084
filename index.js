@@ -9,7 +9,7 @@ import messaging from '@react-native-firebase/messaging';
 import notifee,{ EventType } from '@notifee/react-native';
 
 notifee.onBackgroundEvent(async ({type, detail}) => {
-  console.log('type is ++', EventType[type], detail);
+  console.log('type is ++ from notifee', EventType[type], detail);
   if (type === EventType.ACTION_PRESS && detail.pressAction?.id === 'default') {
       await notifee.cancelNotification(detail.notification?.id)
   } else if (detail.pressAction?.id === "dismiss") {

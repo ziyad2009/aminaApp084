@@ -275,11 +275,11 @@ const Mapscreen = ({ route ,navigation}) => {
     
           <Center >
 
-            <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} backgroundColor={Colors.transparent}  >
+            <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} backgroundColor={Colors.transparent}   >
               <Modal.Content width={Metrics.WIDTH*0.9372 } backgroundColor={Colors.transparent} >
-              <Modal.Body alignItems={'center'} justifyContent='center' >
+              <Modal.Body alignItems={'center'} justifyContent='center'  >
                  
-                <Box alignItems={'center'}  w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg'>
+                <Box alignItems={'center'}  w={Metrics.WIDTH*0.834} ml='3' mr='4' mt={5} rounded='lg' >
                 <CustomButton
                   buttonColor={Colors.AminaButtonNew}
                   title="تحديد"

@@ -11,8 +11,10 @@ import { sendNotifcation } from '../services/fucttions';
 import DeviceInfo from 'react-native-device-info';
 import { UserContext } from '../services/UserContext';
 import WebView from 'react-native-webview';
+import uuid from 'react-native-uuid'
 import { timeConversion } from 'geolib';
-let strURL=''
+import { color } from 'react-native-reanimated';
+let strURL='www.google.com'
 let REFUSER=''
 let TIMERCOUNT
 const TelerPage = (props) => {
@@ -102,65 +104,65 @@ const telrModalClose = () => {
 
 
 
-  const showTelrPaymentPage = () => {
+  // const showTelrPaymentPage = () => {
 
-    if (billing_name_first == null || billing_name_first == "") {
-      Alert.alert("أمينة","الرجاء تحديث الاسم الاول");
-      return
-    } else if (billing_name_last == null || billing_name_last == "") {
-      Alert.alert("أمينة","الرجاء تحديث الاسم الاخيدد");
-      return
-    } else if (tran_amount == null || tran_amount == "") {
-      Alert.alert("أمينة","المبلغ غير مسجل");
-      return
-    }
+  //   if (billing_name_first == null || billing_name_first == "") {
+  //     Alert.alert("أمينة","الرجاء تحديث الاسم الاول");
+  //     return
+  //   } else if (billing_name_last == null || billing_name_last == "") {
+  //     Alert.alert("أمينة","الرجاء تحديث الاسم الاخيدد");
+  //     return
+  //   } else if (tran_amount == null || tran_amount == "") {
+  //     Alert.alert("أمينة","المبلغ غير مسجل");
+  //     return
+  //   }
 
-    var paymentRequest = {
-      framed:"1",//open card frame pass 1, and for webview pass 0
-      sdk_env: "prod",//prod//dev
-      something_went_wrong_message: "Something went wrong",//  this message for suppose someitng is happen wrong with payment then you can config this one.
-      store_id: "27456-ameena app",
-      key: "rPBH5-wLBp#g4fkq",
-      device_type: Platform.OS === 'android' ?  "Android":"iOS",
-      device_id: "36C0EC49-AA2F-47DC-A4D7-D9927A739F99",
-      app_name: "Aminaapp",//enter app name
-      app_version: "46.0",//app version
-      app_user: "123456",//app user
-      app_id: "102863o777",//app user id
-      tran_test: "0", // 1=test, 0=production
-      tran_type: "sale",//sale
-      tran_class: "paypage",
-      tran_cartid: `${Math.floor(Math.random() * 100) + 2}`,//enter cart id it shoud be unique for every transaction //1234567890
-      tran_description: "paymetn from aminah app ",// enter tran description
-      tran_currency: "SAR",
-      tran_amount: tran_amount,
-      tran_language: "en",
-      tran_firstref: "",
-      billing_name_title: "Ms",
-      billing_name_first: billing_name_first,
-      billing_name_last: billing_name_last,
-      billing_address_line1: "omer bin otba",
-      billing_address_city: "Riyad",
-      billing_address_region: "Saudi Arabia",
-      billing_address_country: "SA",
-      billing_custref: "001",
-      billing_email: email,
-      billing_phone: phone,
-      repeat_amount: "",
-      repeat_interval: "1",
-      repeat_period: "",
-      repeat_term: "",
-      repeat_final: "",
-      repeat_start: "",
-      card_number:"5241972971957301",
-      expiry_date_m :Number("04") ,
-      expiry_date_y :2025,
-      cvv:248
-    }
+  //   var paymentRequest = {
+  //     framed:"1",//open card frame pass 1, and for webview pass 0
+  //     sdk_env: "prod",//prod//dev
+  //     something_went_wrong_message: "Something went wrong",//  this message for suppose someitng is happen wrong with payment then you can config this one.
+  //     store_id: "27456-ameena app",
+  //     key: "rPBH5-wLBp#g4fkq",
+  //     device_type: Platform.OS === 'android' ?  "Android":"iOS",
+  //     device_id: "36C0EC49-AA2F-47DC-A4D7-D9927A739F99",
+  //     app_name: "Aminaapp",//enter app name
+  //     app_version: "46.0",//app version
+  //     app_user: "123456",//app user
+  //     app_id: "102863o777",//app user id
+  //     tran_test: "0", // 1=test, 0=production
+  //     tran_type: "sale",//sale
+  //     tran_class: "paypage",
+  //     tran_cartid: `${Math.floor(Math.random() * 100) + 2}`,//enter cart id it shoud be unique for every transaction //1234567890
+  //     tran_description: "paymetn from aminah app ",// enter tran description
+  //     tran_currency: "SAR",
+  //     tran_amount: tran_amount,
+  //     tran_language: "en",
+  //     tran_firstref: "",
+  //     billing_name_title: "Ms",
+  //     billing_name_first: billing_name_first,
+  //     billing_name_last: billing_name_last,
+  //     billing_address_line1: "omer bin otba",
+  //     billing_address_city: "Riyad",
+  //     billing_address_region: "Saudi Arabia",
+  //     billing_address_country: "SA",
+  //     billing_custref: "001",
+  //     billing_email: email,
+  //     billing_phone: phone,
+  //     repeat_amount: "",
+  //     repeat_interval: "1",
+  //     repeat_period: "",
+  //     repeat_term: "",
+  //     repeat_final: "",
+  //     repeat_start: "",
+  //     card_number:"5241972971957301",
+  //     expiry_date_m :Number("04") ,
+  //     expiry_date_y :2025,
+  //     cvv:248
+  //   }
 
-    setPaymentRequest(paymentRequest)
-    setTelrModalVisible(true)
-  }
+  //   setPaymentRequest(paymentRequest)
+  //   setTelrModalVisible(true)
+  // }
 
   const timerPayment=()=>{
     TIMERCOUNT = setInterval(() => { // <-- set tick ref current value
@@ -177,7 +179,7 @@ const telrModalClose = () => {
         api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
         const response= await api.post("/sendpayment",{
           language:"ar",
-          cartID:`${Math.floor(Math.random() * 100) + 2}`,
+          cartID:uuid.v4(),
           tran_amount:tran_amount,
           userId:motherId,
           email:email,
@@ -387,11 +389,24 @@ const wetingloadPage=()=>{
     setloadpage(false)
   }, 4000);
 }
+
+const displaySpinner=()=> {
+  return (
+    <Box>
+      {/* Your spinner code goes here. 
+        This one commes from react-native-material-kit library */}
+     <Box alignItems={'center'} alignContent={'center'} flex={1} backgroundColor={Colors.AminabackgroundColor} h={Metrics.HEIGHT} w={Metrics.WIDTH}>
+       <ActivityIndicator size={'large'} color={Colors.red}  />
+     </Box>
+    </Box>
+  );
+}
   return (
     <SafeAreaView style={styles.backgroundStyle}>
       {/* <TelrSdk backButtonText={"Back"} buttonBackStyle={styles.buttonBackStyle} buttonBackColor={styles.buttonBackColor} backButtonTextStyle={styles.backButtonTextStyle} paymentRequest={paymentRequest} telrModalVisible={telrModalVisible} telrModalClose={telrModalClose} didFailWithError={didFailWithError} didPaymentSuccess={didPaymentSuccess} /> */}
       {!loading ? <View style={styles.centeredView}>
-      {pass === "processed" && <Box w={"90%"} height={Metrics.HEIGHT*0.332}  backgroundColor={Colors.AminabackgroundColor} borderRadius={40} borderColor={'black'} borderWidth={.2} mt={'12'} shadow={'8'} ml={'4'}>
+      {pass === "processed" && 
+        <Box width={'96'} height={Metrics.HEIGHT*0.512}  backgroundColor={Colors.AminabackgroundColor} borderRadius={'3xl'} borderColor={'black'} borderWidth={.2} mt={'16'} shadow={Platform.OS==="android"?"0":'8'}   >
           <Stack alignItems={'center'} justifyContent='center'  backgroundColor={Colors.transparent} >
             <Image source={Images.MainLogo1} style={{width:widthPixel(200),height:heightPixel(100), borderRadius:16}} resizeMode='contain' />
           </Stack>
@@ -419,11 +434,14 @@ const wetingloadPage=()=>{
           </Box>
 
           <Box width={"100%"} alignItems='center' justifyContent={'center'} mt={'24'}>
-            <Pressable
+            {/* <Pressable
             style={[styles.buttonPay, styles.buttonPayment]}
             onPress={() => makePaymment()}>
             <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(16),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.white }} >اكمل عملية الدفع</Text>
-            </Pressable>
+            </Pressable> */}
+            <TouchableOpacity onPress={()=> makePaymment()} style={{width:Metrics.WIDTH*0.8717,height:Metrics.HEIGHT*0.068412,borderRadius:33,borderColor:Colors.gray,backgroundColor:Colors.textZahry,alignItems:'center',justifyContent:'center'}} >
+            <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(16),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.white }} >اكمل عملية الدفع</Text>
+            </TouchableOpacity>
           </Box>
 
         </Box>
@@ -431,6 +449,7 @@ const wetingloadPage=()=>{
        
         
         }
+        
         {pass === "success" &&
           <Box flexDirection={'column'} alignItems='center' marginTop={6} w={"100%"}>
             <Box width={"100%"} alignItems='center' justifyContent={'center'} mb={8}>
@@ -498,16 +517,17 @@ const wetingloadPage=()=>{
             
             <Modal isOpen={showModal}   onClose={() => setshowModal(!showModal)}  
                 backgroundColor={Colors.transparent}  borderColor={"#a3a2a2"} opacity={1} 
-                  justifyContent="flex-end" bottom="2"
+                  justifyContent="flex-end" bottom="2" width={Metrics.WIDTH}
                  >
                    
-                <Modal.Content backgroundColor={'amber.100'}  width={Metrics.WIDTH}  height={Metrics.HEIGHT*0.4833}  >
+                <Modal.Content backgroundColor={'amber.700'}  width={Metrics.WIDTH}  height={Metrics.HEIGHT*0.4833}  >
                     <WebView
                     onLoad={()=>wetingloadPage()}
                     onLoadEnd={() => { setloadpage(false) }}
                     onShouldStartLoadWithRequest={event => {
                         return true;
                     }}
+                    
                      onNavigationStateChange={(navState) => {
                       //your code goes here     
                       console.log("tets event",navState)  
@@ -529,6 +549,7 @@ const wetingloadPage=()=>{
                       source={{
                         uri:strURL
                       }} />
+                      
                        {loadpage && (
                         <Box alignItems={'center'} alignContent={'center'} flex={1} backgroundColor={Colors.AminabackgroundColor} h={Metrics.HEIGHT} w={Metrics.WIDTH}>
                           <ActivityIndicator size={'large'} color={Colors.red}  />
@@ -555,7 +576,8 @@ const wetingloadPage=()=>{
 const styles = StyleSheet.create({
   backgroundStyle: {
     backgroundColor:Colors.AminabackgroundColor,
-    flex: 1
+    flex: 1,
+    alignItems:'center'
   },
   centeredView: {
     flex: 1,

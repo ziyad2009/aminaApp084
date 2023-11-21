@@ -639,7 +639,7 @@ return(
   },
   map2: {
     ...StyleSheet. absoluteFillObject,
-    height: Metrics.HEIGHT*0.5342,
+    height: Metrics.HEIGHT*0.5742,
     width: Metrics.WIDTH,
     
   },
