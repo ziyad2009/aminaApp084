@@ -130,7 +130,7 @@ const  BottomScreen=(props)=> {
              
             </Actionsheet.Item>
             <Actionsheet.Item alignItems={'baseline'} 
-            startIcon={<Image source={Images.infoico} style={{width:18 ,height:18} } />} >
+            startIcon={<Image source={Images.policy} style={{width:18 ,height:18} } />} >
               <Stack  justifyContent='center' flexDirection={'row'}>
               
               <Text color={Colors.AminaButtonNew} textAlign='left'  fontFamily={Platform.OS=='android'?Fonts.type.regular:Fonts.type.regular}

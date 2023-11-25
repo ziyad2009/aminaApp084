@@ -159,8 +159,8 @@ async function onDisplayNotification(DATA) {
 }
 
 
-export const notifacttionlistener=async()=>{
-  
+export const notifacttionlistener=async(props)=>{
+  console.log(' FCM message Bacground ! teest', props);
   const unsubscribe = messaging().onMessage(async remoteMessage => {
     console.log('A new FCM message arrived!', remoteMessage);
     onDisplayNotification(remoteMessage)
@@ -170,8 +170,8 @@ export const notifacttionlistener=async()=>{
     console.log(
         'Notification caused app to open from background state:',
         remoteMessage,
-    );
-
+    ); 
+   // props.navigation.navigate("Notifactionscreen",remoteMessage.data.type);
       // if (!!remoteMessage?.data && remoteMessage?.data?.redirect_to == "ProductDetail") {
       //     setTimeout(() => {
       //         NavigationService.navigate("ProductDetail", { data: remoteMessage?.data })

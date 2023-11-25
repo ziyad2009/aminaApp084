@@ -24,6 +24,7 @@ import moment from 'moment/moment';
 import {SliderBox} from './components/SliderBox';
 import FastImage from 'react-native-fast-image';
 import Disprofile from '../services/utils/disprofile';
+import notifee, { EventType ,AuthorizationStatus} from '@notifee/react-native';
 
 page = 0
 //sound setting 
@@ -162,6 +163,23 @@ const Home = (props) => {
       }
     });
   }
+
+
+useEffect(() => {
+  return notifee.onForegroundEvent(({ type, detail }) => {
+    switch (type) {
+      case EventType.DISMISSED:
+        console.log('User dismissed notification home', detail.notification);
+        break;
+      case EventType.PRESS:
+        console.log('User pressed notification Home', detail.notification);
+         
+        props.navigation.navigate('Notifactionscreen', detail.notification)
+        break;
+    }
+  });
+}, []);
+
       
   useEffect(() => {
     return () => {
@@ -609,8 +627,9 @@ const directoStor=()=>{
     // 'https://res.cloudinary.com/di6ghy1su/image/upload/v1697850567/amina/intro3_cozmlp.png',
     'https://res.cloudinary.com/di6ghy1su/image/upload/v1697850875/amina/AdobeStock_73114024_dnoeqq.jpg',
     'https://res.cloudinary.com/di6ghy1su/image/upload/v1697850958/amina/vdnnosi423ava7s6rdte.jpg',
-    'https://images.unsplash.com/photo-1446059004666-8148312ba98b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1540544660406-6a69dacb2804?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1431&q=80',
+    'https://res.cloudinary.com/djzx0zqms/image/upload/v1700915125/slideScreeen/mother1_nlmukj.jpg',
+    'https://res.cloudinary.com/djzx0zqms/image/upload/v1700915125/slideScreeen/mother2_wi7fre.jpg',
+    'https://res.cloudinary.com/djzx0zqms/image/upload/v1700915125/slideScreeen/mother3_ian968.jpg',
     require('../assets/images/motherbanner.png')
   ]
 

@@ -16,7 +16,8 @@ import { getDistance ,convertDistance} from 'geolib';
 import { useCallback } from 'react';
 import Disprofile from '../services/utils/disprofile';
 let pageNumber=0
-let limitNumber=3
+let limitNumber=5
+let SKIPVAL=0
 const Babysetesrs=(props)=>{
  
 const[babseters,setbabyseters]=useState([])
@@ -46,7 +47,7 @@ useEffect( async ()=>{
 //})
  
   // setterData()
-  setterApisrch(limitNumber)
+  setterApisrch(10,0)
 
    const location= await setItem.getItem('BS:Location') 
    const  existLocation=JSON.parse(location)
@@ -135,7 +136,7 @@ const getDate=async()=>{
    
  
 
-  const setterApisrch=async(limitval)=>{
+  const setterApisrch=async(limitval,skipval)=>{
     setLoading(true)
     const {mainservice,serviestype}=JSON.parse(props.route.params.setterdata)
     
@@ -145,8 +146,9 @@ const getDate=async()=>{
     const  existLocation=JSON.parse(location)
     const motherDtat=JSON.parse(user)
     
-    const skip=0
+    const skip=skipval < 1?0:skipval
     console.log("tets limt", "mainservice =<",mainservice,"  -" ,serviestype)
+    console.log("tets limt", limitval,"  - =" ,skipval)
      
       api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
       const response=await  api.post(`${URL}/setterlocation?limit=${limitval}&skip=${skip}`,{
@@ -154,7 +156,7 @@ const getDate=async()=>{
         "mainservice":mainservice,
         "service":serviestype?serviestype:"",
     }).then((res)=>{
-      console.log("tets limt",res.data)
+     
       return  res.data
        
     }).finally(()=>{ setLoading(false)}
@@ -211,10 +213,11 @@ const getDate=async()=>{
    const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     limitNumber = limitNumber + 5;
+    SKIPVAL=SKIPVAL+1
     console.log("test fresh limit",limitNumber)
     setTimeout(() => {
-      setterApisrch(limitNumber).then((item)=>{
-        console.log("test onRefresh",item)
+      setterApisrch(limitNumber,SKIPVAL).then((item)=>{
+       // console.log("test onRefresh",item)
         setRefreshing(false);
       })
      
@@ -232,21 +235,12 @@ const getDate=async()=>{
    
   };
   const ListFooterComponent = () => (
-    <Text
-      style={{
-        fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        padding: 5,
-      }}
-    >
-      Loading...
-    </Text>
+    <Button variant={'ghost'} colorScheme={'danger'}><Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={'md'} >اظهار المزيد..</Text></Button>
   );
   const renderItem = ({item}) => {
     return(
-      <Box alignItems={'center'}>
-       <Disprofile  data={item} width={Metrics.WIDTH*0.79273}  height={Metrics.HEIGHT*0.8321} movScreen={()=> movToProfileScreen(item) }/>
+      <Box alignItems={'center'} >
+       <Disprofile  data={item} width={Metrics.WIDTH*0.82273}  height={Metrics.HEIGHT*0.1321} movScreen={()=> movToProfileScreen(item) }/>
       </Box>
     )
     
@@ -310,23 +304,26 @@ const keyExtractor_k=useCallback((item)=>`${item._id}`)
 return(
 <Box backgroundColor={Colors.AminabackgroundColor}  mt={Platform.OS==='android'?66:94} flex={1}>
         
-      {loading?<Box>
-        <Spinner size={'lg'} color={Colors.bloodOrange}/>
-
+      {loading?
+      <Box>
+        <Spinner size={'lg'} />
       </Box>:
-      <FlatList data={babseters} 
-        renderItem={renderItem}
-        keyExtractor={keyExtractor_k }
-        ListEmptyComponent={<Box><Heading>Sory no data present!</Heading></Box>}
-        contentContainerStyle={{ height: Metrics.HEIGHT*0.8721,backgroundColor:Colors.transparent }}
-        refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        // onEndReachedThreshold={0.5}
-        // onEndReached={()=>fetchMore()}
-        maxToRenderPerBatch={5}
-        ListFooterComponent={()=>loading &&<ListFooterComponent/>}
-      //onEndReached={({distanceFromEnd})=> console.log("this is ",distanceFromEnd)}
-      />}
+      <Box  >
+        <FlatList data={babseters} 
+            renderItem={renderItem}
+            keyExtractor={keyExtractor_k }
+            ListEmptyComponent={<Box><Heading>Sory no data present!</Heading></Box>}
+            //contentContainerStyle={{ height: Metrics.HEIGHT,backgroundColor:Colors.transparent,marginBottom:100 }}
+            refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            // onEndReachedThreshold={0.5}
+            // onEndReached={()=>fetchMore()}
+            maxToRenderPerBatch={5}
+           // ListFooterComponent={()=> <ListFooterComponent/>}
+          //onEndReached={({distanceFromEnd})=> console.log("this is ",distanceFromEnd)}
+         />
+      </Box>}
+      
         
       
     </Box>

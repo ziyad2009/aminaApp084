@@ -1,6 +1,6 @@
 import React,{useState,useRef, useEffect} from 'react';
  import { Image ,View,TouchableOpacity, Platform} from 'react-native';
-import {Center,Box,Text, Heading,VStack,Icon, HStack,Pressable,Avatar,ScrollView,Spacer,Spinner, Button, Stack} from 'native-base';
+import {Center,Box,Text, Heading,VStack,Icon, HStack,Pressable,Avatar,ScrollView,Spacer,Spinner, Button, Stack, FlatList} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
  import Ionicons  from 'react-native-vector-icons/Ionicons'
 import{Metrics,Colors,Images, Fonts,heightPixel,widthPixel, fontPixel} from '../assets/Themes/'
@@ -56,53 +56,56 @@ const getNotifaction= async()=>{
 
       
   }
+  const ITEM= ({ Notifactions })=>{
+   return(
+  <TouchableOpacity key={Notifactions._id} style={{marginTop:3,marginBottom:2,width:Metrics.WIDTH*0.890,backgroundColor:"rgba(243, 243, 243, 1)",
+    flexDirection:'column',borderWidth:.4,borderColor:Colors.lightGray,borderRadius:22,padding:4,
+     marginTop:6,marginBottom:16,height:Metrics.HEIGHT*0.099421}}  >
+    <Box flexDirection={'column'}   justifyContent={'space-around'} >
+      <Stack flexDirection={'row'} justifyContent={'space-between'}  padding={'1'}>
+        <Text fontSize={fontPixel(20)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base} fontWeight='bold' color={Colors.textZahry} >{Notifactions.title}</Text>
+        <Text fontSize={fontPixel(20)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base} fontWeight='bold' color={Colors.newTextClr} ml={'3'} >{moment(Notifactions.createdAt).format('HH:MM a')}</Text>
+      </Stack>
+      <Spacer/>
+      <Stack flexDirection={'row'} justifyContent={'space-between'}  padding={'1'}>
+        <Text fontSize={fontPixel(18)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>{Notifactions.content}</Text>
+        <Text fontSize={fontPixel(12)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>رقم الطلب#{Notifactions.orderid}</Text>
+      </Stack>
+    </Box>
+  </TouchableOpacity>
+   )
+   
+  }
   
 
    
 
     return (
-     <ScrollView >
+      
       <Box alignItems={'center'} backgroundColor={Colors.AminabackgroundColor}  height={Metrics.HEIGHT*0.8863}  mt={Platform.OS==='android'?20:88} flex='1'    >
       {!loading?
         <Spinner mt={Platform.OS==='android'?40:88} size={'lg'} color={Colors.TexTPink} />
         :
-        <Stack mt={2} w="90%" alignItems={'center'} >
+        <Box mt={2} w="90%"  alignItems={'center'} >
                 
-                {notifactions.map((item,index)=>{
-                  return(
-                    <TouchableOpacity key={item._id} style={{marginTop:3,marginBottom:2,width:Metrics.WIDTH*0.890,backgroundColor:"rgba(243, 243, 243, 1)",
-                      flexDirection:'column',borderWidth:.4,borderColor:Colors.lightGray,borderRadius:22,padding:4,
-                       marginTop:6,marginBottom:16,height:Metrics.HEIGHT*0.099421}}  >
-                      <Box flexDirection={'column'}   justifyContent={'space-around'} >
-                        <Stack flexDirection={'row'} justifyContent={'space-between'}  padding={'1'}>
-                          <Text fontSize={fontPixel(20)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base} fontWeight='bold' color={Colors.textZahry} >{item.title}</Text>
-                          <Text fontSize={fontPixel(20)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base} fontWeight='bold' color={Colors.newTextClr} ml={'3'} >{moment(item.createdAt).format('HH:MM a')}</Text>
-                        </Stack>
-                        <Spacer/>
-                        <Stack flexDirection={'row'} justifyContent={'space-between'}  padding={'1'}>
-                          <Text fontSize={fontPixel(18)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>{item.content}</Text>
-                          <Text fontSize={fontPixel(12)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>رقم الطلب#{item.orderid}</Text>
-                        </Stack>
-                         
-                       
+                 
+                   <FlatList
                    
-                        
-                  </Box>
-                              
-                  
-                  </TouchableOpacity>
+                   data={notifactions} 
+                   keyExtractor={(item, index) => item + index}
+                   renderItem={({ item }) => <ITEM Notifactions={item} />}
+                   scrollEnabled
+                   />
                
-                  )
-                } 
-          )}
-          </Stack> 
+                 
+          
+          </Box> 
          }
           
       
           
       
-    </Box>
-    </ScrollView>
+    </Box>   
       
     )
 

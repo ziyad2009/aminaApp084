@@ -38,6 +38,8 @@ import {checkNotifications,openSettings,requestNotifications,check, PERMISSIONS,
 import notifee, { EventType ,AuthorizationStatus} from '@notifee/react-native';
 import  {requestUserPermission,notifacttionlistener, notifeeConfige} from  './src/services/utils/notifactionservices'
 import messaging from '@react-native-firebase/messaging'
+
+import navigate from './src/routes/AuthRouter'
 //import CodePush from "react-native-code-push"; 
 
 const appVersion='33'
@@ -96,10 +98,12 @@ const App =(props) => {
     // }, []);
      
     useEffect(async() => {
+      SplashScreen.hide();
           requestUserPermission()
-          notifacttionlistener()
-          SplashScreen.hide();
+          notifacttionlistener(props)
+         
           requestUserPermissionNotfee()
+          //ask permsion for appflyer
           askAdspermisionIOs()
         
            
@@ -127,12 +131,11 @@ const App =(props) => {
           .getDidOpenSettingsForNotification()
           .then(async didOpenSettingsForNotification => {
               if (didOpenSettingsForNotification) {
-                console.log("start go tonotifcation ")
+                console.log("start go tonotifcation app js")
                 props.navigation.navigate('Notifactionscreen')
               }
           })
 }, [])
-
 
  
 

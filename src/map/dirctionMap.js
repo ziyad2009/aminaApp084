@@ -60,7 +60,7 @@ const GOOGLE_MAPS_APIKEY = "AIzaSyBtKLEuD_50bKofX67ZV2hfLWvjPaY3aac";
       const [originData,setoriginData]=useState()
       const [startServiceStatus,setstartServiceStatus]=useState(false)
       const [Activeservice,setActiveservice]=useState(false)
-
+  const[opentap,setopentap]=useState(true)
       
       const mapRef = useRef(null);
       const watchId = useRef(null)
@@ -399,6 +399,8 @@ const makeOrderAcctive=async(ID)=>{
 return(
   <SafeAreaView>
     <View style={styles.container}>
+
+       
     {!loadingcords?
       <MapView
                 style={styles.map2}
@@ -480,7 +482,7 @@ return(
             <Box> <Spinner size={'lg'} color={Colors.black} marginTop={Metrics.HEIGHT*0.07173} alignItems='center' />
             </Box>}
 
-            <Actionsheet isOpen={true} onClose={onClose}>
+            <Actionsheet isOpen={opentap} onClose={onClose}>
             {Activeservice?
               <Actionsheet.Content>
                 <Box alignItems={'center'} flexDirection={'column'}>

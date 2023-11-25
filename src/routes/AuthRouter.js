@@ -9,6 +9,10 @@ import { createDrawerNavigator,
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+
+import { createNavigationContainerRef } from '@react-navigation/native';
+
+
 import  {UserContext} from '../services/UserContext';
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -854,28 +858,15 @@ const StackNav = () => {
   }
 
 
-
-  ////
-
-// function HomeScreen() {
-//     return (
-//       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//         <Text>Home Screen</Text>
-//       </View>
-//     );
-//   }
+  export const navigationRef = createNavigationContainerRef()
   
- 
+  export function navigate(name, params) {
+    if (navigationRef.isReady()) {
+      navigationRef.navigate(name, params);
+    }
+  }
   
-//   function AppScreen() {
-//     return (
-      
-//         <Stack.Navigator>
-//           <Stack.Screen name="Home" component={HomeScreen} />
-//         </Stack.Navigator>
-     
-//     );
-//   }
+  // add other navigation functions that you need and export them
 
 const Navigation = () => {
   

@@ -4,7 +4,7 @@ import { Image, View, TouchableOpacity, TextInput,Text, Platform, Alert, StyleSh
 
 import TelrSdk from 'rn-telr-sdk';
 import { Metrics, Colors, Fonts,fontPixel,Images, widthPixel, heightPixel } from '../assets/Themes/';
-import { Stack, Box, HStack, VStack, Spinner, Button ,Modal,Center} from 'native-base';
+import { Stack, Box, HStack, VStack, Spinner, Button ,Modal,Center,Actionsheet,useDisclose} from 'native-base';
 import setItem from '../services/storage/index'
 import api from '../services/api';
 import { sendNotifcation } from '../services/fucttions';
@@ -41,6 +41,11 @@ const TelerPage = (props) => {
   const [extrapayment, seteextrapayment] = useState(false)
   const {DeviceID} = useContext(UserContext);
   const tik=useRef()
+  const {
+      isOpen,
+      onOpen,
+      onClose
+    } = useDisclose();
 
 const telrModalClose = () => {
     setTelrModalVisible(false)
@@ -188,7 +193,7 @@ const telrModalClose = () => {
           phone:phone
         }).then((res)=>{
             return res.data
-        }).catch((err)=>{
+        }).finally(()=> onOpen() ).catch((err)=>{
             console.log("Erorr",err)
             
         })
@@ -199,7 +204,8 @@ const telrModalClose = () => {
             REFUSER=ref
             timerPayment()
           //setstrURl(uri)
-          setshowModal(true)
+           setshowModal(true)
+          
 
           //props.navigation.navigate('WebPagePayment',response.order)
         }
@@ -384,9 +390,11 @@ const telrModalClose = () => {
   }
 
 const wetingloadPage=()=>{
+  console.log("start wetingloadPage  ====?")
   setloadpage(true)
   setTimeout(() => {
     setloadpage(false)
+    console.log("End wetingloadPage  ?====?")
   }, 4000);
 }
 
@@ -442,6 +450,7 @@ const displaySpinner=()=> {
             <TouchableOpacity onPress={()=> makePaymment()} style={{width:Metrics.WIDTH*0.8717,height:Metrics.HEIGHT*0.068412,borderRadius:33,borderColor:Colors.gray,backgroundColor:Colors.textZahry,alignItems:'center',justifyContent:'center'}} >
             <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold,fontSize:fontPixel(16),fontWeight:'700',padding:2,textAlign:'center',marginTop:2,color:Colors.white }} >اكمل عملية الدفع</Text>
             </TouchableOpacity>
+            
           </Box>
 
         </Box>
@@ -513,15 +522,69 @@ const displaySpinner=()=> {
 
           </Box>}
 
-          <Center>
+        
             
-            <Modal isOpen={showModal}   onClose={() => setshowModal(!showModal)}  
-                backgroundColor={Colors.transparent}  borderColor={"#a3a2a2"} opacity={1} 
-                  justifyContent="flex-end" bottom="2" width={Metrics.WIDTH}
-                 >
+            <Modal isOpen={showModal}   alignItems={undefined} justifyContent={undefined} onClose={() => setshowModal(!showModal) }  
+                backgroundColor={Colors.AminabackgroundColor}  borderColor={"#a3a2a2"} opacity={1} 
+                   width={Metrics.WIDTH} marginBottom={'0'} marginTop={"auto"} height={'72'}
+                
+                >
+                  <Modal.CloseButton />
+                  
+                   {loadpage && (
+                     <Modal.Header>
+                        <Box alignItems={'center'} alignContent={'center'} flex={1} backgroundColor={Colors.transparent} h={Metrics.HEIGHT} w={Metrics.WIDTH}>
+                          <ActivityIndicator size={'large'} color={Colors.textZahry} style={{marginTop:3}}  />
+                        </Box>
+                        </Modal.Header>
+                       
+                       )}
                    
-                <Modal.Content backgroundColor={'amber.700'}  width={Metrics.WIDTH}  height={Metrics.HEIGHT*0.4833}  >
+                <Modal.Body width={Metrics.WIDTH}   marginTop={"auto"} marginBottom={'0'}  >
                     <WebView
+                    onLoad={()=>wetingloadPage()}
+                    //onLoadEnd={() => { setloadpage(false) }}
+                    onShouldStartLoadWithRequest={event => {
+                        return true;
+                    }}
+                    style={{height: Metrics.HEIGHT,width:Metrics.WIDTH,backgroundColor:Colors.transparent}}
+                     onNavigationStateChange={(navState) => {
+                      //your code goes here     
+                      console.log("tets event",navState)  
+                      if (navState.url.includes("cancelled/?Txnorder=TESTing_153677468")) {
+                        console.log("check before call cansel")
+                       
+                      } else if (navState.url.includes("https://www.merchantdomain.com/successful/?Txnorder=TESTing_153677468")) {
+                        console.log("check before call succss")
+                        setloadpage(false)
+                      } else if (navState.url.includes("https://secure.telr.com/gateway/details.html")) {
+                        wetingloadPage()
+                    
+                       } else if (navState.url.includes("https://secure.telr.com/gateway/process_framed.html?o=DE2A01B9830458AFEE36A7863B8A3BC1E09BC76FC18033B055E37DE50BA9A818")) {
+                        console.log("check before call Loadding to auths")
+                        wetingloadPage()
+                       }
+                   }} 
+                      
+                      source={{
+                        uri:strURL
+                      }} />
+                      
+                      
+                </Modal.Body>
+            </Modal>
+       
+         
+
+         {/* <Actionsheet isOpen={isOpen} onClose={onClose} height={'64'}>
+         <View style={{  flex:1, lignItems: 'flex-end' }}>
+            <WebView
+              style={{
+                width: Metrics.WIDTH,
+                height: 100,
+              }}
+              startInLoadingState={true}
+              scalesPageToFit={true}
                     onLoad={()=>wetingloadPage()}
                     onLoadEnd={() => { setloadpage(false) }}
                     onShouldStartLoadWithRequest={event => {
@@ -549,16 +612,19 @@ const displaySpinner=()=> {
                       source={{
                         uri:strURL
                       }} />
-                      
+                     
+
                        {loadpage && (
                         <Box alignItems={'center'} alignContent={'center'} flex={1} backgroundColor={Colors.AminabackgroundColor} h={Metrics.HEIGHT} w={Metrics.WIDTH}>
                           <ActivityIndicator size={'large'} color={Colors.red}  />
                         </Box>
                        
                        )}
-                </Modal.Content>
-            </Modal>
-        </Center>
+               </View>
+            
+            </Actionsheet>  */}
+
+
          
 
       </View> : <Box marginTop={100}>

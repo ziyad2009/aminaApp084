@@ -562,6 +562,7 @@ const Poitment=(props)=>{
                   is24Hour={false}
                   dateFormat={"day month year"}
                   onChange={onDateSelected}
+                  minuteInterval={30}
                   style={styles.datePicker}
               />:<Stack alignItems={'center'} justifyContent={"space-between"} flexDirection={'row'}>
                   <Feather name='arrow-up' color={Colors.loginBlue} size={25} style={{margin:5}} />
@@ -584,6 +585,7 @@ const Poitment=(props)=>{
                   is24Hour={false}
                   dateFormat={"day month year"}
                   onChange={onDateSelected2}
+                  minuteInterval={30}
                   style={styles.datePicker}
               />:<Stack alignItems={'center'} justifyContent={"space-between"} flexDirection={'row'}>
                    <Feather name='arrow-down' color={Colors.loginBlue}size={25} style={{margin:5}}/>
