@@ -1,7 +1,6 @@
 import React, { useState ,useEffect,useRef,useContext} from 'react';
 import PhoneInput from "react-native-phone-number-input";
 import styles from "./styles";
- 
 import { Images,Colors ,ApplicationStyles, Metrics, Fonts, fontPixel, pixelSizeVertical} from "../assets/Themes/";
 import { View ,Image,TouchableOpacity,Platform,Linking,Alert} from 'react-native';
 import images from '../assets/Themes/Images';
@@ -12,33 +11,26 @@ import { Spinner, Stack ,Button,Text,Modal,FormControl,Input,Box,Center} from 'n
 import api2 from '../services/api'; 
 import DeviceInfo from 'react-native-device-info';
 import notifee, { AndroidImportance } from '@notifee/react-native';
-import Toast from 'react-native-toast-message';
 import setItem from '../services/storage'
-
+import {Appinformation} from '../services/utils/appinfo';
+ 
 const Singin=(props)=>{
     
-    const [auth,setauth]=useState(true)
+     
     const [value, setValue] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
     const phoneInput = useRef (phoneInput);
-    const[confirm,setConfirm]=useState(null);
-    const[code,setcode]=useState("");
     const [valid, setValid] = useState(false);
     const [loadform,setloadform]=useState(false) 
     const [showMessage, setShowMessage] = useState(false);
     const[phoneNo,setphoneNo]=useState("")
     const[erorrmesage,seterorrmesage]=useState(false)
     const {loading,loginbyphone,user,statuscode,regUser,home} = useContext(UserContext);
-    
-    const [placement, setPlacement] = useState(undefined);
-    const [open, setOpen] = useState(false);
     const [result,setresult]=useState([])
     const[ShowModal,setShowModal]=useState(false)
-    let buildNumber = DeviceInfo.getBuildNumber();
-  const appName=DeviceInfo.getApplicationName();
-  const app_version=DeviceInfo.getVersion()
-  const app_type=Platform.OS==='android'?"android":"ios"
-    
+
+    const app_version=DeviceInfo.getVersion()
+  
   useEffect(async () => {
 
     if (!valid) {
@@ -48,24 +40,10 @@ const Singin=(props)=>{
       console.log("number is valid")
       seterorrmesage(false)
     }
-
-    console.log("builed no is", buildNumber)
-    console.log("Version is", app_version)
-    console.log("app name is", appName)
-    console.log("appp type", app_type)
-
-    await api2.get(`/codepush/${app_type}`).then((res) => {
-      console.log("tetst app info", res.data)
-      setresult(res.data)
-
-    }).catch((err) => {
-      console.log("Errorr from get app info", err)
-    })
+ 
 
   }, [])
 
-
-     
      useEffect(async()=>{
      // GoScreen()
      console.log("Start Go screen frromLOGINScreen",regUser)
@@ -75,52 +53,21 @@ const Singin=(props)=>{
      }
       
      },[home,regUser])
-      
- useEffect( ()=>{
-      updaterVersioApp()
-},[result])
-       
-const updaterVersioApp=( )=>{
-  console.log("Start Test Array",result.appid)
-  console.log("Start Test Array",buildNumber)
-  if(result.appid <= buildNumber){
-    handeAppUpddate(result  )
- }
-}
+   
 
-const handeAppUpddate=(data)=>{
-  console.log("taaa login",data.appid)
-  if(data.appid!=buildNumber){
-     console.log('update app please')
-  //  Alert.alert(
-  //   "تطبيق أمينة",
-  //   "الرجاء تحديث التطبيق من  المتجر للاسففادة من المزايا الجديده",
-  //   [
-       
-  //     { text: "الاستمرار", onPress: ()=> directoStor() }
-  //   ],
-  //   { cancelable: false }
-  // );
-    setShowModal(true)
+
  
-  }
-}
-
   useEffect(  () => {
     const unsubscribe = props.navigation.addListener('focus',async () => {
       console.log("test foucs mode")
-      updaterVersioApp()
+      Appinformation(props) 
+      //updaterVersioApp()
     }); 
 
     return unsubscribe;
   }, []);
 
-
-const openModal = placement => {
-  setOpen(true);
-  setPlacement(placement);
-};
-
+  
 const directoStor=()=>{
   if(Platform.OS==='android')
     Linking.openURL("market://details?id=com.amenid084")
@@ -213,8 +160,8 @@ const directoStor=()=>{
         <Image source={images.aminamainlogo} resizeMode='contain'
             style={ styles.mainlogo} />
          
-        <Stack mt={'12'} alignItems={'center'} justifyContent={'center'}>
-          <Text fontFamily={Fonts.type.medium} fontSize={fontPixel(12)} color={"#214F5E"}>Version:{app_version}</Text>
+        <Stack mt={'5'}  height={'10'} alignItems={'center'} justifyContent={'center'}>
+          
         </Stack>
         
         <View style={styles.inputFieldSec} >
@@ -276,25 +223,7 @@ const directoStor=()=>{
           </View>
                
         </View>
-        <Center>
-          <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} borderColor={Colors.transparent} borderWidth='1'  justifyContent={'space-around'} alignItems={'center'}>
-            <Modal.Content width={Metrics.WIDTH}  backgroundColor={Colors.AminabackgroundColor} >
-              <Modal.Body alignItems={'center'} justifyContent={'space-around'}>
-                <Image source={Images.aminaLogoEmpty} style={{width:77,height:77 ,position:'relative',left:1,top:1 }} resizeMode='contain'  />
-                 <Box mt={'1'} mb={'2'}>
-                    <Text fontFamily={Fonts.type.bold} flexWrap={'wrap'} fontWeight={"600"} fontSize={fontPixel(18)} alignSelf={'flex-start'}  color={Colors.newTextClr} letterSpacing={1.3}>الرجاء تحديث التطبيق من المتجر </Text>
-                 </Box>
-                 <Stack width={Metrics.WIDTH*0.99321} alignItems={'center'} justifyContent={'center'}       >
-                      <TouchableOpacity  style={{width:Metrics.WIDTH*0.5433,height:Metrics.HEIGHT*0.05123,borderRadius:10,alignItems:'center', justifyContent:"center",marginBottom:3,marginTop:3,backgroundColor:Colors.textZahry}} onPress={()=> directoStor()}>
-                        <Text fontFamily={Platform.OS==='android'? Fonts.type.base:Fonts.type.medium}  fontWeight={600} fontSize={fontPixel(15)} shadow={'4'} alignSelf={'center'}  letterSpacing={1} color={Colors.white}>موافق</Text></TouchableOpacity>
-                    </Stack>
-              </Modal.Body>
-                  
-
-            </Modal.Content>
-          </Modal>
-        </Center>
-
+    
         
          
 

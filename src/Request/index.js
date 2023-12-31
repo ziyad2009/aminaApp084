@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState ,useEffect,useRef,useContext} from 'react';
 import {View,TouchableOpacity,FlatList,Image, Alert,TextInput, Platform,Linking} from 'react-native'
 import {Box, Button,Heading,Spinner,HStack,Spacer,VStack,Text,Modal, Stack,Center,TextArea} from 'native-base';
 import styles from './styles';
@@ -15,8 +15,9 @@ import OutlaintButton from '../services/buttons/buttonsOutlain';
 import { sendNotifcation } from '../services/fucttions';
 import CanselForm from './canselform';
 import ResonForm from './resonform';
- 
-   
+import  { UserContext } from '../services/UserContext'
+    
+
 
 const Request=(props)=>{
     const[select,setselect]=useState(0)
@@ -51,6 +52,9 @@ const Request=(props)=>{
     const[changeScreen,setchangeScreen]=useState(false)
     const [temDdata,setTempdata]=useState(null)
     const [textStatud,settextStatud]=useState('')
+    const {SOKITIOSetter } = useContext(UserContext);
+    const socket = useRef(null);
+    socket.current = SOKITIOSetter;
 
     const Item = ({title,i}) => { 
     return( 
@@ -67,22 +71,31 @@ const Request=(props)=>{
         );
     }
    
-
-
-    // <TouchableOpacity style={{flexDirection:'column'  , marginLeft:1,marginTop:2,width:widthPixel(77) ,height:heightPixel(50)} } 
-    //          key={title} onPress={()=>handleSelection(i,title)}> 
-    //          <Stack alignItems={'center'} borderRadius={15}  justifyContent='center' backgroundColor={i===select?Colors.AminaPinkButton:Colors.white} height={'12'} width={Metrics.WIDTH*0.2532} > 
-    //                 <Text fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium}
-    //                 fontSize={18}   color={i===select?Colors.white:Colors.newTextClr}>{title.status}</Text>
-    //         </Stack>
-    //             {/* <View style={{alignItems:'center',paddingBottom:1,borderBottomColor:i===select?"#000000":null,borderBottomWidth:i===select?2:null}}>
-    //             </View> */}
-    //          </TouchableOpacity>
-
+const GettOrderRuntime=()=>{
+    console.log("start Getorder from soket")
+    
+    const user = {
+        "username": "966543437660", "expirtime": 99000,room:`aminaorders${966543437660}`
+    }
+    socket.current.on("message", (messageData) => {
+      console.log("Data from Room  ",messageData)
+    })
+    socket.current.on("sendMessage", (messageData) => {
+    console.log("Message from Room  ",messageData)})
+    socket.current.emit("sendMessage","this from app")
+    // socket.current.emit("motherorders",user)
+    socket.current.on("uriserv", (response) => {
+        console.log("start send Evettn====++ ",response)
+        onRefresh()
+    })
+    // socket.current.on("seconds", (response) => {
+    //     console.log("start ping every seconde ",response)
+        
+    // })
+    }
 
    const handleSelection = (id,title) => {
-    
-        console.log( "ingretions catogries",title)
+    console.log( "++ingretions catogries++",title)
         setselect(id)
         setserviestype(title)
       switch (title.id,title.status){
@@ -129,10 +142,15 @@ const Request=(props)=>{
     },[IsFetching])
 
     useEffect(()=>{
-        console.log("Firdt load catogries -Have change?")
+        console.log("Firdt response  Load catogries ?")
         const intialData={id:1,status:"النشطة"}
         handleSelection(select,intialData)
-        console.log(" load ALL ORDERS++++++ By filter-Data==",intialData)
+         
+    },[])  
+
+    useEffect(()=>{
+        console.log("goooo")
+        GettOrderRuntime()
     },[])  
 
     useEffect(  () => {
@@ -141,6 +159,7 @@ const Request=(props)=>{
             console.log("start refresh data on FOCUS mode",select,"---",serviestype)
             handleSelection(intialData.id,intialData)
             setselect(0)
+            //GettOrderRuntime()
         }); 
     
         return unsubscribe;
@@ -700,7 +719,7 @@ return(
       </Box> 
 
     <Center>
-        <Modal isOpen={ShowModal} onClose={() => setShowModal(!ShowModal)} borderColor={Colors.AminaButtonNew} borderWidth='1' backgroundColor={'white'} height={Metrics.HEIGHT*0.8213} mt={'24'}  borderTopRadius={44} justifyContent={"center"}>
+        <Modal isOpen={ShowModal} onClose={() => setShowModal(!ShowModal)} borderColor={Colors.text} borderWidth='1' backgroundColor={'white'} height={Metrics.HEIGHT*0.8213} mt={'24'}  borderTopRadius={44} justifyContent={"center"}>
             <Modal.Content width={Metrics.WIDTH*0.9372 }  height={Metrics.HEIGHT*0.6813} >
             <Modal.Body  alignItems={'center'}   >
                 {/* {changeScreen? <CanselForm hidemodal={(val)=> canselformout(val) }/>:<ResonForm done={true} addReson={(value)=>addReson(value) } hidemodal={(val)=> canselformout(val) } />} */}
@@ -719,8 +738,8 @@ return(
                             {resonData.map((value,index)=>{
                                 return(
                                 <TouchableOpacity key={value.id} onPress={()=>preAddReson((value.text).toString(),index) }
-                                    style={{backgroundColor:index===resonSelect?Colors.textZahry:Colors.grayButton,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.053211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:10}}>
-                                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:Platform.OS==='android'?"600":"700",color:index===resonSelect?Colors.white:Colors.blacktxt, }}>{value.text}</Text>
+                                    style={{backgroundColor:index===resonSelect?Colors.textZahry:Colors.grayButton,width:Metrics.WIDTH*0.7112,height:Metrics.HEIGHT*0.061211,borderRadius:22,borderWidth:.2,borderColor:Colors.text,alignItems:'center',justifyContent:'center',marginTop:10}}>
+                                    <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.bold:Fonts.type.bold,fontSize:fontPixel(18),fontWeight:Platform.OS==='android'?"600":"700",color:index===resonSelect?Colors.white:Colors.blacktxt,alignSelf:'center' }}>{value.text}</Text>
                                 </TouchableOpacity> 
                                 )
                             })}
@@ -759,7 +778,7 @@ return(
         </Modal>
     </Center>
     {showiCanselMsg&&<Center>
-        <Modal isOpen={ShowModal2} onClose={() => setShowModal2(!ShowModal)} borderColor={Colors.text} borderWidth='1' backgroundColor={Colors.transparent}    borderTopRadius={44} justifyContent={"center"}>
+        <Modal isOpen={ShowModal2} onClose={() => setShowModal2(!ShowModal2)} borderColor={Colors.text} borderWidth='1' backgroundColor={Colors.transparent}    borderTopRadius={44} justifyContent={"center"}>
             <Modal.Content width={Metrics.WIDTH*0.9372 }  height={Metrics.HEIGHT*0.2813} backgroundColor={Colors.transparent} >
                 <Box alignItems={'center'} flexDirection='column' backgroundColor={'white'} padding={'2'} borderRadius={'lg'}>
                     <Stack alignItems={'center'}  >

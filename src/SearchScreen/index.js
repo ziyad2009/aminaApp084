@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Platform, View, Image, BackHandler, Easing,TouchableOpacity } from "react-native";
-import { Box, Stack,Spacer,Text ,VStack,Divider,Heading,Input,Icon, HStack, Button, Spinner} from "native-base";
+import { Box, Stack,Spacer,Text ,VStack,Divider,Heading,Input,Icon, HStack, Button, Spinner, ScrollView} from "native-base";
 import { Metrics, Colors, Images, Fonts,pixelSizeHorizontal,pixelSizeVertical,widthPixel,heightPixel,fontPixel} from "../assets/Themes/";
 import { SearchBar } from "react-native-elements";
 import styles from "./style";
@@ -88,6 +88,7 @@ const setterData= async(name)=>{
  
     return (
       <View style={styles.mainView}>
+        <ScrollView>
         <Box  >
           {!loading?
             <Box>
@@ -106,7 +107,7 @@ const setterData= async(name)=>{
           .type.regular}  fontSize={fontPixel(18)} textAlign='left'  color={Colors.newTextClr} mr='3' mt={3} mb='3' >تنائج عملية البحث</Text>
             {dummydata.map((item, index) => {
               return (
-                  <Box key={index} borderColor={"#FFFFFF"} marginLeft={pixelSizeHorizontal(15)} marginTop={21} paddingBottom={2} flexDirection={'row'}
+                  <Box key={index} borderColor={"#FFFFFF"} marginLeft={'4'} marginTop={21} paddingBottom={2} flexDirection={'row'}
                     width={widthPixel(388)} height={heightPixel(129)} backgroundColor={"#FFFFFF"}   >
                     <Box>
                       <Image source={{ uri: `${URL}/users/${item.owner}/avatar` }} resizeMode='contain' style={{
@@ -115,21 +116,21 @@ const setterData= async(name)=>{
                       }} />
                     </Box>
 
-                    <Box flexDirection={'column'} width={Metrics.WIDTH * 0.560} ml={pixelSizeHorizontal(20)} backgroundColor={Colors.transparent} marginTop={3} >
+                    <Box flexDirection={'column'} width={Metrics.WIDTH * 0.560} ml={'2'} backgroundColor={Colors.transparent} marginTop={3} >
                       <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
                         <Stack flexDirection={'row'} justifyContent='space-around' >
-                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(16), color: Colors.newTextClr }}>{item.name}</Text>
-                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(18), color: "#FB5353", marginLeft: pixelSizeHorizontal(4) }} >{item.mainservice}</Text>
+                          <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr} >{item.name}</Text>
+                          <Text  fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(18)} color={"#FB5353"} marginLeft={pixelSizeHorizontal(4)} >{item.mainservice}</Text>
                         </Stack>
                         <Image source={Images.save} style={{ width: widthPixel(15), height: heightPixel(15) }} resizeMode='contain' />
                       </Box>
                       <Box flexDirection={'row'} justifyContent="space-between">
                         <Stack flexDirection={'row'} >
-                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{item.hourstotal}</Text>
-                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr, marginLeft: pixelSizeHorizontal(2) }}>ساعة عمل</Text>
+                          <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr} >{item.hourstotal}</Text>
+                          <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr}  >ساعة عمل</Text>
                         </Stack>
                         <Stack position={'relative'} bottom={1} >
-                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(10), color: Colors.rmadytext, marginLeft: pixelSizeHorizontal(2) }}>حفظ  </Text>
+                          <Text fontFamily={Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium} fontSize={fontPixel(10)} color={Colors.rmadytext} marginLeft={pixelSizeHorizontal(2)} >حفظ  </Text>
                         </Stack>
 
                       </Box>
@@ -139,14 +140,14 @@ const setterData= async(name)=>{
                           <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{item.price} ر.س/ساعة</Text>
                         </Stack>
                         <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.yellowstack} flexDirection='row'>
-                          <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{item.rate}</Text>
+                          <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr} >{item.rate}</Text>
                           <Image source={Images.starticon} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
 
                         </Stack>
 
                         <TouchableOpacity onPress={() => props.navigation.navigate('Shrtcutprofile', { data1: item, settertTitle: item.name })}>
                           <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack} flexDirection='row' >
-                            <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>احجزي الان</Text>
+                            <Text ontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(10)} color={Colors.newTextClr} >احجزي الان</Text>
                           </Stack>
                         </TouchableOpacity>
 
@@ -183,7 +184,7 @@ const setterData= async(name)=>{
         }
        
           
-           
+       </ScrollView> 
       </View>
     );
 }

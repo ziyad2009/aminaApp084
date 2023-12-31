@@ -18,6 +18,9 @@ export async function requestUserPermission() {
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
+  if (!messaging().isDeviceRegisteredForRemoteMessages) {
+      await messaging().registerDeviceForRemoteMessages()
+    }
   if (enabled) {
     console.log('Authorization status:', authStatus);
     getfromToken()
@@ -41,12 +44,16 @@ export async function requestUserPermission() {
 
 const getfromToken=async()=>{
   try {
+
     const fcmToken = await messaging().getToken()
-    await setItem.setItem("@FCMTOKEN",fcmToken)
-    console.log("fcm token:", fcmToken)
+    if(!fcmToken || fcmToken===null){
+       await setItem.setItem("@FCMTOKEN",fcmToken)
+      console.log("fcm token:from notifaction service --- ", fcmToken)
+    }
+   
       
   } catch (error) {
-    console.log("error in creating token")
+    console.log("error in creating token ++++ +++++ ++",error)
 }
 
 // let fcmToken= await setItem.getItem("@FCMTOKEN")

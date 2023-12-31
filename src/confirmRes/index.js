@@ -35,11 +35,7 @@ const ConfirmRes=(props)=>{
     const [newData,setNewData]=useState([])
     const[messageExpirationTimeMS,setmessageExpirationTimeMS]=useState(0)
     const[timeWating,setTimeWating]=useState(5000)
-    const socket = io(URL_ws,{
-    transports: ["websocket"],
-    jsonp: false
-   })
-    
+        
  
    const[timeservicce,settimservice]=useState(0)
    const[orderExp,setorderExp]=useState(false)
@@ -176,18 +172,7 @@ const handelREQ= async(id)=>{
     const disconnect=()=> {
         canselorderbymother()
     }
-
-
-    const GetAccsept=()=>{
-        console.log("start  lissting ");
-        socket.emit('connection')
-        socket.on("orders", (data) => {
-         console.log("setter ddata",data);
-         })
-        //  socket.on("acceptedorder", (data) => {
-        //     console.log("setter ddata",data);
-        //     })
-}
+ 
     
    const confirmRequest=async()=>{
     const appname="تطبيق أمينة"
@@ -388,10 +373,12 @@ const handelREQ= async(id)=>{
     const address=babseters.address
     const finalAddress=address.replace("saudi Arabia","")
   }
+
+  
   const timeAccsspetOrder= async()=>{
     const EndServ= await setItem.getItem("@SERVICETIME")
     const extratime1=   moment(EndServ).add(6,'hours')
-    
+    console.log("test addd time to Storage",extratime1)
     if (EndServ ===null){
         console.log("value of endServ null")
         setorderExp(true)
@@ -420,6 +407,7 @@ const handelREQ= async(id)=>{
      
      //console.log("222--old", EndServ)
      settimservice( parseInt(diiff2))
+     console.log("222--old", parseInt(diiff2) )
     
   }
   
@@ -510,7 +498,7 @@ const handelREQ= async(id)=>{
             <Stack alignItems={'center'} flexDirection={'row'} >
                     <Image source={Images.greenmoney} style={{width:widthPixel(22),height:heightPixel(22)}} resizeMode='contain'/>
                 <Stack>
-                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}>{babseters.price} ريال</Text>
+                    <Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontWeight={Platform.OS==="android"?"600":"700"} fontSize={fontPixel(16)} color={Colors.newTextClr}  ml={3}> سعر الساعة {babseters.price} ريال</Text>
                 </Stack>
             </Stack>   
         </Box>

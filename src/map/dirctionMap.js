@@ -19,7 +19,7 @@ import openMap from 'react-native-open-maps';
 import { set } from 'lodash';
 import CountdownTimer from '../workscreen/CountdownTimer';
 import images from '../assets/Themes/Images';
- 
+import { sendNotifcation } from '../services/fucttions';
 const GOOGLE_MAPS_APIKEY = "AIzaSyBtKLEuD_50bKofX67ZV2hfLWvjPaY3aac";
 
 
@@ -369,12 +369,15 @@ const GotoOpenMap = async (cords, label='نقطة الوصول') => {
 
 const startService=()=>{
   setstartServiceStatus(true)
+  console.log("start serv 2")
+  increasHours(babysetter)
   
 }
 const preActivetedService=(id)=>{
   setActiveservice(true)
   //order now is start 
   makeOrderAcctive(id)
+  console.log("start serv 1",babysetter.active)
 }
 
 const ActivetedService=()=>{
@@ -389,13 +392,79 @@ const makeOrderAcctive=async(ID)=>{
       orderId:ID,
       opt:true
     }).then((res)=>{
-      console.log("response for acive ordder",res.data)
+      console.log("response for acivedt Order",res.data)
     
     }).catch((err)=>console.log('erorr:',err)
     )
 }
 
+const EndService=(id)=>{
 
+  Alert.alert('amina', "سوف يتم انهاء الخدمة وبامكانك تقييم اللخدمة من صفحة طلباتي نتمنا ان تحوز الخدمة على رضاكم", [
+    {
+    text: 'عودة',
+    onPress: () =>  props.navigation.goBack(),
+    style: 'cancel',
+    },
+    {text: 'انهاء الخدمة', onPress: () => serviceCompleate(id)},
+]);
+
+}
+const serviceCompleate= async(id)=>{ 
+            
+  console.log("order id",id)
+  const user = await setItem.getItem('BS:User');
+  const token = await setItem.getItem('BS:Token');
+  const motherData=JSON.parse(user)
+  const motherID=motherData._id
+  api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+      await api.post(`${URL}/ordercomplete/${id}`)
+      .then((res)=>{
+        console.log("finesh order change to complete",res)
+        //increasHours(res.data.order)
+         sendNotif()
+        setItem.removeItem('@SERVICETIME')
+      })
+        .finally(()=>setTimeout(() => {
+          //props.navigation.navigate('FinleScreeen',{data1:babysetter})
+          props.navigation.goBack()
+        },2000)
+        ).catch((err)=>console.log('erorr: Service complet',err))
+
+        
+  }
+
+  const sendNotif= ()=>{
+    
+    const data={
+        receiver:babysetter.settterowner,
+        content:"لقد تم  انهاد فترة الحضانه من قبل الام",
+        title:"تنبيه طلب ",
+        orderid:babysetter.orderid,
+        playerid:babysetter.setterplayerid
+    }
+    sendNotifcation(data)
+    //props.navigation.navigate('FinleScreeen',{data1:babysetter})
+   }
+
+   const increasHours= async(order)=>{
+    //add extra hours to babysetter  to profile
+    if(!babysetter.active){
+      const token = await setItem.getItem('BS:Token');
+      api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
+       await api.patch(`${URL}/incrementsetterhoursr`,
+        {
+          id:order._id,
+          setterID:order.settterowner
+        }).then((res)=>{
+           console.log("order Data",res.data)
+        }).catch((err)=>console.log('erorr: increase hours',err))
+        }else{
+          console.log("canot increase hours+++++")
+        }
+    
+
+   }
 return(
   <SafeAreaView>
     <View style={styles.container}>
@@ -507,7 +576,8 @@ return(
 
             <Actionsheet.Content >
             <Box flexDirection='row' justifyContent='space-between' mb={'3'} >
-              <Box flexDirection={'row'}   width={widthPixel(320)} >
+            
+              <Box flexDirection={'row'}    width={widthPixel(310)} >
                 <Image  source={{uri:`${URL}/users/${babysetter.settterowner}/avatar`}}
                   style={{width:80 ,height:80,marginRight:2,borderRadius:44}} />
                 <Stack flexDirection={'column'} marginLeft={'3'}>
@@ -521,7 +591,12 @@ return(
                   </Stack>
                 </Stack>
               </Box>
+              <Stack  width={'16'} height={'16'}  >
+                <Button size={'xs'}  borderRadius={'3xl'} bg={Colors.greentext} onPress={()=>EndService(babysetter._id)}
+                  ><Text fontFamily={Platform.OS==='android'?Fonts.type.bold: Fonts.type.bold} fontSize={fontPixel(12) } textAlign={'center'} color={'white'} fontWeight={Platform.OS==="android"?"600":"700"} >انهاء الخدمة </Text></Button>
+                </Stack>
             </Box>
+            
               <Box alignItems={'baseline'} flexDirection={'column'}>
                 <Stack flexDirection={'row'}justifyContent={'space-between'}  w={widthPixel(355)} ml={'3'}>
                   <Text>{moment(babysetter.starttime).format("hh:mm a")}</Text>
@@ -573,7 +648,7 @@ return(
                         />
                       </Box>:
                       <Box alignItems={'center'} justifyContent={'space-around'}>
-                        <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr} ml={3} > الوقت المقدر لوصول الحاضنة بناد على موقعها</Text>
+                        <Text fontFamily={Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular} fontSize={fontPixel(16)} color={Colors.newTextClr} ml={3} > تفاصيل الخدمة المقدمة   </Text>
                         <Text color={Colors.newTextClr} fontFamily={Platform.OS==='android'?Fonts.type.medium:Fonts.type.medium} fontSize={fontPixel(14)} mt={4}>مسافة الطريق{Distance} km  و الوقت المتوقع للوصول {Time} دقيقه</Text>
                         <Stack width={'96'}>
                           <CustomButton

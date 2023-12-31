@@ -6,7 +6,7 @@ import socketio  from "socket.io-client";
 import SocketIOClient from "socket.io-client";
 import { URL_ws, URL_ws_chat } from './links';
 import DeviceInfo from 'react-native-device-info';
-import deviceInfoModule from 'react-native-device-info';
+import messaging from '@react-native-firebase/messaging';
 
 //export const SocketContext = React.createContext();
 
@@ -21,7 +21,22 @@ const SOKITIO = socketio(URL_ws_chat);
   const SOKITIOSetter = SocketIOClient(URL_ws, {
     jsonp: false,
   });
-   
+    
+  const userphone="966543437660"
+    const user = {
+        "username": userphone, "expirtime": 99000,room:`aminaorders${userphone}`
+    }
+    console.log("ROOMM",user)
+    SOKITIOSetter.emit("join",user)
+      
+    SOKITIOSetter.emit("motherorders",user)
+    SOKITIOSetter.on("message", (messageData) => {
+        console.log("Data from Room  ",messageData)
+      })
+    SOKITIOSetter.on("uriserv", (response) => {
+        console.log("start send Evettn====++ ",response)
+    })
+
    
  const  UserProvider= ({children})=> {
       const [user, setUser] = useState(null);
@@ -46,6 +61,8 @@ const SOKITIO = socketio(URL_ws_chat);
         //    await setItem.removeItem('BS:Token');
         //    await setItem.removeItem('BS:Location');
         //    await setItem.removeItem('on:like');
+        //   await setItem.removeItem(' @FCMTOKEN');
+       
           
             const user = await setItem.getItem('BS:User');
             const token = await setItem.getItem('BS:Token');
@@ -84,6 +101,7 @@ const SOKITIO = socketio(URL_ws_chat);
                 setLoading(false);
                 setverify(true)
                 setdirction(true)
+                getfromToken()
                // sethome(true);
             } catch(err){
                 setUser(false)
@@ -98,6 +116,16 @@ const SOKITIO = socketio(URL_ws_chat);
         tryGetUser();
     }, [])
 
+    const getfromToken=async()=>{
+        try {
+          const fcmToken = await messaging().getToken()
+          await setItem.setItem("@FCMTOKEN",fcmToken)
+          console.log("fcm token: fromm context==", fcmToken)
+            
+        } catch (error) {
+          console.log("error in creating token ++++ +++++ ++",error)
+      }
+    }
     const diviceID= async()=>{
         const DevId= await DeviceInfo.getUniqueId()
         return DevId

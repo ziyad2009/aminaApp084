@@ -12,7 +12,7 @@ inputFieldSec: {
   },
   mainlogo:{
     
-    marginTop:Metrics.HEIGHT*0.1062,
+    marginTop:Metrics.HEIGHT*0.16062,
     marginBottom:2,
     borderColor:"black",
     borderWidth:0,

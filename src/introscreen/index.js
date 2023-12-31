@@ -7,7 +7,7 @@ import {
   , StyleSheet, Animated, View, Platform, Alert, Linking,Text
 } from 'react-native';
 import  {UserContext} from '../services/UserContext';
-import NetInfo from "@react-native-community/netinfo";
+
 import {
   Colors, fontPixel, Fonts, Images, Metrics, widthPixel
 } from '../assets/Themes/';
@@ -71,10 +71,7 @@ const IntroScreen = (props) => {
   useEffect(async () => {
     
   showLOading(true)
-  NetInfo.fetch().then(state => {
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
-    })
+  
   })
 
    

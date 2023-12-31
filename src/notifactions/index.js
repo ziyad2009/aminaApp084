@@ -13,8 +13,8 @@ const  Notifactionscreen =(props)=>{
   const[loading,setLoding]=useState(false)
   const[notifactions,setnotifactions]=useState([])
   const [oncliks,setoncliks]=useState(0)
-
- 
+  const [active,setactive]=useState(false )
+ const[select,setselect]=useState(null)
  
  useEffect(async()=>{
  
@@ -56,11 +56,25 @@ const getNotifaction= async()=>{
 
       
   }
+
+
+  const activeNotifaction=(indx)=>{
+    setselect(indx)
+  }
   const ITEM= ({ Notifactions })=>{
    return(
-  <TouchableOpacity key={Notifactions._id} style={{marginTop:3,marginBottom:2,width:Metrics.WIDTH*0.890,backgroundColor:"rgba(243, 243, 243, 1)",
-    flexDirection:'column',borderWidth:.4,borderColor:Colors.lightGray,borderRadius:22,padding:4,
+    
+  <TouchableOpacity key={Notifactions._id} onPress={()=>activeNotifaction(Notifactions._id)}
+           style={{marginTop:3,marginBottom:2,width:Metrics.WIDTH*0.890,backgroundColor:"rgba(243, 243, 243, 1)",
+    flexDirection:'column',borderWidth:select===Notifactions._id?1:.4,borderColor:select===Notifactions._id?Colors.textZahry:Colors.lightGray ,borderRadius:22,padding:4,
      marginTop:6,marginBottom:16,height:Metrics.HEIGHT*0.099421}}  >
+    {select===Notifactions._id ?
+    <Stack flexDirection={'column'} alignItems={'center'}>
+        <Text fontSize={fontPixel(22)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}color={Colors.greys} fontWeight={Platform.OS==='android'?'600':'700'} >رقم الطلب#{Notifactions.orderid}</Text>
+        <Button  size={'xs'} borderRadius={'lg'} bgColor={Colors.textZahry} onPress={()=>handelNotifcation(Notifactions._id)}>
+          <Text alignSelf={'center'} color={Colors.white}>ازالة من القائمة</Text></Button>
+    </Stack>
+      :
     <Box flexDirection={'column'}   justifyContent={'space-around'} >
       <Stack flexDirection={'row'} justifyContent={'space-between'}  padding={'1'}>
         <Text fontSize={fontPixel(20)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base} fontWeight='bold' color={Colors.textZahry} >{Notifactions.title}</Text>
@@ -71,7 +85,8 @@ const getNotifaction= async()=>{
         <Text fontSize={fontPixel(18)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>{Notifactions.content}</Text>
         <Text fontSize={fontPixel(12)} fontFamily={Platform.OS==="android"?Fonts.type.aminafonts: Fonts.type.base}>رقم الطلب#{Notifactions.orderid}</Text>
       </Stack>
-    </Box>
+      
+    </Box>}
   </TouchableOpacity>
    )
    

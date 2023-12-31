@@ -218,7 +218,7 @@ return(
           </Box>
 
           <Box flexDirection={'row'} justifyContent="space-between" mt={'2'} >
-            <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={"#6BAF59"} padding={"1"}>
+            <Stack width={'16'} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={"#6BAF59"} padding={"1"}>
                   <Text fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} fontSize={fontPixel(12)} color={Colors.white}>{babseters.price} ر.س/ساعة</Text>
             </Stack>
             <Stack width={'12'} height={36} alignItems='center' justifyContent={'space-around'} borderRadius={'lg'} backgroundColor={"#FFB01E"} flexDirection='row' padding={'1'}>

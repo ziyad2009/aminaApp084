@@ -11,16 +11,12 @@ import setItem from '../services/storage'
 import { URL_ws, URL } from '../services/links';
 import io from "socket.io-client";
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import Sound from 'react-native-sound';
 import OneSignal from 'react-native-onesignal';
 import { getDistance, convertDistance } from 'geolib';
-import api2 from '../services/api';
 import DeviceInfo from 'react-native-device-info';
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import {RemoteDataSetExample} from './autocompleate'
 import appsFlyer from 'react-native-appsflyer';
-import moment from 'moment/moment';
 import {SliderBox} from './components/SliderBox';
 import FastImage from 'react-native-fast-image';
 import Disprofile from '../services/utils/disprofile';
@@ -92,7 +88,6 @@ const Home = (props) => {
   const [loading, setloding] = useState(false)
   const [loading2, setloding2] = useState(false)
   const [babseters, setbabseters] = useState([])
-  const [change, setchange] = useState(false)
   const [itemnumber, setitemnumber] = useState(0)
   const [lemitsetters, setlimetsetter] = useState(10)
   const { setnotifaction, SOKITIOSetter } = useContext(UserContext);
@@ -100,15 +95,8 @@ const Home = (props) => {
   const [newSetter, setneswSetter] = useState(false)
   const [isFetching, setIsFetching] = useState(false);
   const [search, setsearch] = useState('')
-
-  const [result, setresult] = useState([])
   const [selectedItem, setSelectedItem] = useState(null);
   const {getnotfctionstatuse,getnotfctionstring,getnotfeeStause} = useContext(UserContext);
-  let buildNumber = DeviceInfo.getBuildNumber();
-  const appName = DeviceInfo.getApplicationName();
-  const app_version = DeviceInfo.getVersion()
-  const app_type = Platform.OS === 'android' ? "android" : "ios"
-  const[ShowModal,setShowModal]=useState(false)
   const socket = useRef(null);
   socket.current = SOKITIOSetter;
 
@@ -222,6 +210,7 @@ useEffect(() => {
     //start  receve notifacttion from server 
     socket.current.on("newnotifaction", (response) => {
       //console.log("start read  Notifctions ",response)
+      notifee.setBadgeCount(response).then(() => console.log('Badge count set!'));
       setnotifaction(response)
       //palysound()
     })
@@ -244,7 +233,7 @@ useEffect(() => {
     await api.patch(`mother/${motherId}`, { playerid: newToken }).then((res) => {
       //  console.log("test Update player ID++ for mother profile ", res.data)
       }).catch((err) => {
-        console.log("ERORR Upate profile +رخفهبشذفهخر", err)
+        console.log("ERORR Upate profile +++", err)
       })
 
 
@@ -261,18 +250,7 @@ useEffect(() => {
 
 //check version of App
 useEffect(async () => {
- 
-  console.log("builed no is", buildNumber)
-  console.log("Version is", app_version)
-  console.log("app name is", appName)
-  console.log("appp type", app_type)
-
-  await api2.get(`/codepush/${app_type}`).then((res) => {
-    console.log("tetst app info", res.data)
-    setresult(res.data)
-    }).catch((err) => {
-    console.log("Errorr from get app info", err)
-  })
+  
      sendEventToappsFlyer()
 
 }, [])
@@ -346,43 +324,10 @@ useEffect(async () => {
     });
     return unsubscribe;
   }, []);
-
-useEffect( ()=>{
-    updaterVersioApp()
-
-  },[result])
-     
-const updaterVersioApp=( )=>{
-console.log("Start Test Array",result.appid)
-console.log("Start Test Array",buildNumber)
-if(result.appid <= buildNumber){
-  handeAppUpddate(result  )
-}
-}
-
-const handeAppUpddate=(data)=>{
-console.log("taaa Home",data.appid)
-if(data.appid!=buildNumber){
-   console.log('update app please')
- //setShowModal(true)
-}
-}
+ 
+ 
 
 
-const directoStor=()=>{
-  if(Platform.OS==='android')
-    Linking.openURL("market://details?id=com.amenid084")
-    else{
-      const link='itms-apps://apps.apple.com/us/app/تطبيق-أمينة/id1642193505'
-      Linking.canOpenURL(link).then(
-        (supported) => {
-          supported && Linking.openURL(link);
-        },
-        (err) => console.log("Erorr open link",err)
-      );
-      
-    }
-  }
 
   const getallservice = async () => {
     //start load catogries from backend
@@ -519,14 +464,23 @@ const directoStor=()=>{
     props.navigation.navigate('Shrtcutprofile', { data1: setterdata, settertTitle: settername })
   }
 
-  const movToProfileScreen2 = (servData) => {
-    //Main block reservion 
-    const  OrderData={
-      mainservice:servData.maineservice,
-      serviestype: servData.maineservice==="حضانة منزلية"?"حاضنة":"حاضنة",
-      order:servData.order
+  const movToProfileScreen2 = async(servData) => {
+    const location = await setItem.getItem('BS:Location')
+    let existLocation = JSON.parse(location)
+    if (existLocation === null) {
+      return Alert.alert("تطبيق امينة","الرجاد تحديث عنوانك من صفحة البرفايل")
+    }else{
+        //Main block reservion 
+        const  OrderData={
+          mainservice:servData.maineservice,
+          serviestype: servData.maineservice==="حضانة منزلية"?"حاضنة":"حاضنة",
+          order:servData.order
+        }
+        
+        props.navigation.navigate('Babysetesrs',{ setterdata: JSON.stringify(OrderData) })
+
     }
-    props.navigation.navigate('Babysetesrs',{ setterdata: JSON.stringify(OrderData) })
+
   }
 
   const Item = ({ setterdata }) => (
@@ -536,75 +490,7 @@ const directoStor=()=>{
      
    
     )
-
-  // const Item = ({ setterdata }) => (
-
-  //   <TouchableOpacity onPress={() => movToProfileScreen(setterdata, setterdata.name)}
-  //     style={{
-  //       alignItems: 'center', justifyContent: 'center', borderColor: setterdata.accompany ? Colors.bloodOrange : Colors.veryLightGray, borderBottomWidth: 1,
-  //       height: Metrics.HEIGHT * 0.163, width: Metrics.WIDTH * 0.8211, marginLeft: 30
-  //     }}>
-  //     <Box onTouchStart={() => console.log("UUUU", setterdata.owner)} borderColor={"#FFFFFF"} borderWidth={1} borderRadius='lg' marginLeft={'4'} flexDirection={'row'}
-  //       width={Platform.OS === 'android' ? widthPixel(300) : widthPixel(360)} height={heightPixel(129)} backgroundColor={'#FFFFFF'}   >
-  //       <Box mt='3'>
-  //         <Image source={{ uri: `${URL}/users/${setterdata.owner}/avatar` }} resizeMode='contain' style={{
-  //           height: heightPixel(77), width: widthPixel(77),
-  //           marginTop: 18, marginRight: 3, borderRadius: 10
-  //         }} />
-  //       </Box>
-  //       <Box onflexDirection={'column'} width={Metrics.WIDTH * 0.550} ml={'2'} p={'1.5'} backgroundColor={"#FFFFFF"} marginTop={'3'} justifyContent='space-around' >
-  //         <Box flexDirection={'row'} justifyContent='space-between' alignItems={'baseline'} >
-  //           <Stack flexDirection={'row'} justifyContent='space-around' alignItems={'baseline'}>
-  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(16), color: Colors.newTextClr }}>{setterdata.displayname}</Text>
-  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(12), color: "#FB5353", marginLeft: pixelSizeHorizontal(4) }} >{setterdata.mainservice}</Text>
-  //           </Stack>
-  //           <Image source={Images.save} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
-  //         </Box>
-  //         <Box flexDirection={'row'} justifyContent="space-between" alignItems={'baseline'}  >
-  //           <Stack flexDirection={'row'} justifyContent={'space-between'} >
-  //             <Stack flexDirection={'row'} justifyContent={'space-between'} ml={'2'}>
-  //               <Image source={Images.locationblack} resizeMode='contain' style={{ height: 18, width: 18 }} />
-  //               <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(10), color: Colors.newTextClr, marginLeft: 2 }} >{setterdata.district}</Text>
-  //             </Stack>
-  //             <Stack ml={'4'} space={3}>
-  //               {setterdata.accompany ?
-  //                 <Image source={Images.accompany} resizeMode='contain' style={{ height: 20, width: 20, marginLeft: 10, padding: 1 }} /> : <Spacer />}
-  //             </Stack>
-  //           </Stack>
-  //           <Stack position={'relative'} bottom={1} >
-  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.medium : Fonts.type.medium, fontSize: fontPixel(10), color: Colors.rmadytext, marginLeft: pixelSizeHorizontal(2) }}>حفظ  </Text>
-  //           </Stack>
-
-  //         </Box>
-
-  //         <Box flexDirection={'row'} justifyContent="space-between" mt={1} >
-  //           <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack}>
-  //             {/* <Text style={{fontFamily:Platform.OS==='android'?Fonts.type.regular:Fonts.type.regular,fontSize:fontPixel(10),color:Colors.newTextClr }}>{setterdata.price} ر.س/ساعة</Text> */}
-  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{setterdata.price} ر.س/ساعة</Text>
-  //           </Stack>
-  //           <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.whites} flexDirection='row'>
-  //             <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>{setterdata.rate}</Text>
-  //             <Image source={Images.starticon} style={{ width: widthPixel(20), height: heightPixel(20) }} resizeMode='contain' />
-
-  //           </Stack>
-
-  //           <TouchableOpacity onPress={() => movToProfileScreen(setterdata, setterdata.name)} style={{ borderColor: Colors.white, borderWidth: 1 }}>
-  //             <Stack width={60} height={36} alignItems='center' justifyContent={'center'} borderRadius={8} backgroundColor={Colors.pinkystack} flexDirection='row' >
-  //               <Text style={{ fontFamily: Platform.OS === 'android' ? Fonts.type.regular : Fonts.type.regular, fontSize: fontPixel(10), color: Colors.newTextClr }}>احجزي الان</Text>
-  //             </Stack>
-  //           </TouchableOpacity>
-  //         </Box>
-  //       </Box>
-
-
-
-  //     </Box>
-
-  //   </TouchableOpacity>
-  // );
-
-
-  //direct to main service data
+ 
   
   const palysound = () => {
     ding.setVolume(1)
@@ -638,14 +524,13 @@ const directoStor=()=>{
       <StatusBar barStyle="light-content" backgroundColor={Colors.AminaButtonNew} />
        
       <Box mb={'1'} mt={'1'} alignItems={'center'}>
-        
          <RemoteDataSetExample props={props}/>
       </Box>
       
       <SliderBox
           ImageComponent={FastImage}
           images={slideImages}
-          sliderBoxHeight={200}
+          sliderBoxHeight={160}
           onCurrentImagePressed={index =>
             console.warn(`image ${index} pressed`)
           }
@@ -677,13 +562,13 @@ const directoStor=()=>{
           ImageComponentStyle={{borderRadius: 15, width: '88%', marginTop: 5}}
           imageLoadingColor="#2196F3"
         />
-      <Box alignItems={'center'} alignContent={'center'} mt={'5'}>
+      <Box alignItems={'center'} alignContent={'center'} mt={'2'}>
       <Text style={{ fontSize: fontPixel(22), fontFamily: Fonts.type.bold, color: Colors.AminaButtonNew  }}>
-                       اختاري طلبك
-                      </Text>
+         اختاري طلبك
+      </Text>
       </Box>
       
-     <Box backgroundColor={Colors.transparent} flexDirection={'row'} mt={'5'} ml={Metrics.WIDTH*0.17600}   width={Metrics.WIDTH * 0.62852} 
+     <Box backgroundColor={Colors.transparent} flexDirection={'row'} mt={'3'} ml={Metrics.WIDTH*0.17600}   width={Metrics.WIDTH * 0.62852} 
                    display={'flex'} height={Metrics.HEIGHT * 0.152994} justifyContent={'space-around'} borderTopLeftRadius={'2xl'} borderTopRightRadius={'2xl'}  >
         {services.length > 1 &&
           services.map((serv, index) => {
@@ -759,28 +644,7 @@ const directoStor=()=>{
 
         </Stack>
       }
-        <Center>
-          <Modal isOpen={ShowModal} onClose={() => setShowModal(false)} borderColor={Colors.        AminaButtonNew} borderWidth='1'  justifyContent={'space-around'} alignItems={'center'}>
-            <Modal.Content width={Metrics.WIDTH} height={Metrics.HEIGHT*0.3111} backgroundColor={Colors.AminabackgroundColor} >
-              <Modal.Body alignItems={'center'} justifyContent='center' mt={'2'} mb={'1'}  >
-                <Image source={Images.aminaLogoEmpty} style={{width:100,height:50 }} resizeMode='contain'  />
-                 <Box p={'1'}  alignItems={'center'} justifyContent={"center"}>
-                    <Text style={{fontFamily:Platform.OS==='android'? Fonts.type.regular:Fonts.type.bold,flexWrap:'wrap',fontWeight:Platform.OS==="android"?"normal":"400", fontSize:fontPixel(24), alignSelf:'center', color:Colors.newTextClr , letterSpacing:1.5 }} >الرجاء تحديث التطبيق من المتجر للاستفادة من المزايا الجديده</Text>
-                 </Box>
-              </Modal.Body>
-                  <Modal.Footer alignItems={'center'} justifyContent={'center'}  backgroundColor={Colors.AminabackgroundColor} borderColor={"white"}>
-                  <Stack  width={ Metrics.WIDTH*0.99321} alignItems={'center'} justifyContent={'center'}       >
-                    <TouchableOpacity  style={{width:Metrics.WIDTH*0.5433,height:Metrics.HEIGHT*0.05123,
-                      shadowOpacity:.4,shadowColor:Colors.lightGray,borderRadius:10,alignItems:'center', justifyContent:"center",backgroundColor:Colors.textZahry}} onPress={()=> directoStor()}>
-                      <Text style={{ fontFamily:Platform.OS==='android'? Fonts.type.base:Fonts.type.medium,fontWeight:'600',fontSize:fontPixel(15), alignSelf:'center',color:Colors.white}}  >موافق</Text></TouchableOpacity>
-                    </Stack>
-                  </Modal.Footer>
-              
-
-            </Modal.Content>
-          </Modal>
-        </Center>
-
+       
     </View>
 
 

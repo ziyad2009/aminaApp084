@@ -97,7 +97,7 @@ const Profile=(props)=>{
             console.log("test Location first time ")
             if (!location){
                 setlocation('عنوان المنزل')
-              console.log("no location")
+                console.log("no location")
 
             }else{
               const  existLocation=JSON.parse(location)
@@ -180,7 +180,7 @@ const Profile=(props)=>{
         const token = await setItem.getItem('BS:Token');            
         const location= await setItem.getItem('BS:Location') 
         const  existLocation=JSON.parse(location)
-         console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
+        // console.log("test location3 ",existLocation.lat,"$$",existLocation.lon)
         if(existLocation===null){
                return   Alert.alert("تنبيه", "الرجاء تفعيل خدمة الموقع واتحديد عنوانك من مربع العنوان ")
         }
@@ -325,7 +325,7 @@ const removeChiiled=async(val,name)=>{
     }
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 1 : 0
 return(
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor:Colors.AminabackgroundColor}}>
     <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
              keyboardVerticalOffset={keyboardVerticalOffset} enabled  >
     

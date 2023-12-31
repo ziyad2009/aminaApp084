@@ -37,6 +37,7 @@ const Motherprofilw=(props)=>{
     const [loding ,setLoding]=useState(false)
     const [msgerorr,setmsgerorr]=useState(false)
     const [msg,setmsge]=useState(false)
+    const[selectItem,setselectItem]=useState(10)
     const{sethome,ErorrMessage,errmsg}=useContext(UserContext)
     let alllrets=true
     const [position, setPosition] = useState("auto");
@@ -196,7 +197,18 @@ const Motherprofilw=(props)=>{
             setgender(null)
             setSelectdies(null)
         }
+        const preRemovveChiled=(val,name)=>{
+            Alert.alert('amina', "في حالة الموافقه سوف يتم ازالة الطفل من القائمة",[
+                {
+                text: 'Cancel',
+                onPress: () =>  console.log("delet chiled canseld"),
+                style: 'cancel',
+                },
+                {text: 'OK', onPress: () => removeChiiled(val,name)},
+            ]);
+        }
         const removeChiiled=async(val,name)=>{
+            
             console.log("name  ",name,"",val)
             const token = await setItem.getItem('BS:Token');            
             api.defaults.headers.Authorization =(`Bearer ${JSON.parse(token)}`);
@@ -346,55 +358,63 @@ const Motherprofilw=(props)=>{
                                 </Box>
                             </Box>
         </Box>
-        <Box alignItems={'flex-start'}  flexDirection={'column'} width={widthPixel(343)}   mt={'3'} ml={'3'}>
+        <Box alignItems={'flex-start'}  flexDirection={'column'} width={'96'}   mt={'3'} ml={'3'}>
             <Stack >
                 <Text fontSize={18} fontFamily={Platform.OS === 'android' ? Fonts.type.aminafonts : Fonts.type.base}  fontWeight={Platform.OS==="android"?"400":"400"}  color={'black'}>الموقع</Text>
             </Stack>
-             <Stack backgroundColor={"rgba(243, 243, 243, 1)"} flexDirection={'row'} mt={'2'} width={'72'}  >
+             <Stack backgroundColor={"rgba(243, 243, 243, 1)"} flexDirection={'row'} mt={'2'} width={Platform.OS==="android"?'64':'72'}  >
                 <Text numberOfLines={1}   color={'black'} flexWrap={'wrap'}  padding={'2'}>{locationmother}</Text>
-                     
-                    <TouchableOpacity style={{backgroundColor:Colors.blacktxt ,width:Metrics.WIDTH*0.1822,borderRadius:22,alignItems:'center',justifyContent:'center'}}
-                            onPress={()=>props.navigation.push("Mapscreen")}>
-                            <Text fontSize={18} fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} color={"white"}>تغيير</Text>
-                     </TouchableOpacity>
+                <TouchableOpacity style={{backgroundColor:Colors.blacktxt ,width:Metrics.WIDTH*0.1822,borderRadius:22,alignItems:'center',justifyContent:'center'}}
+                    onPress={()=>props.navigation.push("Mapscreen")}>
+                    <Text fontSize={18} fontFamily={Platform.OS === 'android' ? Fonts.type.bold : Fonts.type.bold} color={"white"}>تغيير</Text>
+                </TouchableOpacity>
             </Stack>
         </Box>
-        <Box  width={widthPixel(343)} flexDirection={'row'}   mt={2} ml={'2'} mr={2}  backgroundColor={Colors.AminabackgroundColor} >
+        <Box  width={'96'} flexDirection={'row'}   mt={2} ml={'2'} mr={2}  backgroundColor={Colors.AminabackgroundColor} >
                 
-                <Box    ml={'1'}  backgroundColor={"rgba(243, 243, 243, 1)"} justifyContent={'space-around'} borderRadius={'lg'} mt={'2'} width={'72'} >
+                <Box    ml={'1'}  backgroundColor={"rgba(243, 243, 243, 1)"} justifyContent={'center'} borderRadius={'lg'} mt={'2'} width={Platform.OS==="android"?'64':'72'} >
                     {chieldList.length>=1? <HStack   >
                     
-                    {chieldList.map((chld)=>{    
+                    {chieldList.map((chld,index)=>{    
                         return(
-                            <Box backgroundColor={Colors.transparent} marginX={'1'} >
-                                <Popover trigger={triggerProps => {
-                                    return <Box  key={chld._id}   w={'auto'} flexDirection={'row'} borderColor={Colors.ricePaper} alignItems={'center'} borderWidth='.2' borderRadius={10}  mt={3}  h={Metrics.HEIGHT*0.0424} ml={2} mr={2}>
-                                           <TouchableOpacity  key={chld._id} {...triggerProps} style={{flexDirection:'row' ,width:'auto',marginRight:2,marginLeft:2}} >
-                                                <Stack flexDirection={'row'}>
-                                                    <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={fontPixel(15)} color={Colors.newTextClr}  > {chld.name} </Text>
-                                                    {/* <Text fontSize={fontPixel(12)} color={Colors.newTextClr}  > {chld.age} -سنوات</Text> */}
-                                                    {/* <Text  style={{fontSize:10,color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} >- {chld.diseasses}</Text> */}
-                                                </Stack>
-                                            </TouchableOpacity>
-                                            </Box> 
-                                    }}>
-                                    <Popover.Content accessibilityLabel="Delete Customerd" w='24'>
-                                    <Popover.Arrow />
-                                    <Popover.CloseButton />
-                                    <Popover.Header fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} >ازالة من القائمة</Popover.Header>
-                                    
-                                    <Popover.Footer justifyContent='center'>
-                                        <Button.Group space={1} alignItems={'center'}>
-                                                <Stack flexDirection={'row'} alignItems={'center'}>
-                                                    <EvilIcons name={"trash"} size={33} color={Colors.textZahry} onPress={()=>removeChiiled(chld.id,chld.name)}  style={{marginTop:1}}/>
-                                                    {/* <EvilIcons name={"pencil"} size={30} color={Colors.bloodOrange} onPress={()=>updateChiled(chld)}  style={{marginTop:1}}/> */}
-                                                </Stack>
-                                        </Button.Group>
-                                    </Popover.Footer>
-                                    </Popover.Content>
-                                </Popover>
-                                 
+                            <Box  key={chld._id} backgroundColor={Colors.transparent} marginX={'1'} padding={'2'} >
+                                <TouchableOpacity  key={chld._id}  style={{flexDirection:'row' ,width:'auto',marginRight:2,marginLeft:2,padding:2}} onLongPress={()=>setselectItem(index)} >
+                                    {selectItem===index&&<EvilIcons name='close' size={22} color={Colors.textZahry}   onPress={()=>preRemovveChiled(chld.id,chld.name)} />}
+                                     <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={fontPixel(15)} color={Colors.newTextClr}  > {chld.name} </Text>
+                                     {/* <Text fontSize={fontPixel(12)} color={Colors.newTextClr}  > {chld.age} -سنوات</Text> */}
+                                     {/* <Text  style={{fontSize:10,color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} >- {chld.diseasses}</Text> */}
+                                  
+                             </TouchableOpacity>
                             </Box>
+                            // <Box backgroundColor={Colors.transparent} marginX={'1'} >
+                            //     <Popover trigger={triggerProps => {
+                            //         return <Box  key={chld._id}   w={'auto'} flexDirection={'row'} borderColor={Colors.ricePaper} alignItems={'center'} borderWidth='.2' borderRadius={10}  mt={3}  h={Metrics.HEIGHT*0.0424} ml={2} mr={2}>
+                            //                <TouchableOpacity  key={chld._id} {...triggerProps} style={{flexDirection:'row' ,width:'auto',marginRight:2,marginLeft:2}} >
+                            //                     <Stack flexDirection={'row'}>
+                            //                         <Text fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} fontSize={fontPixel(15)} color={Colors.newTextClr}  > {chld.name} </Text>
+                            //                         {/* <Text fontSize={fontPixel(12)} color={Colors.newTextClr}  > {chld.age} -سنوات</Text> */}
+                            //                         {/* <Text  style={{fontSize:10,color:Colors.blacktxt,fontFamily:Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base ,marginLeft:4}} >- {chld.diseasses}</Text> */}
+                            //                     </Stack>
+                            //                 </TouchableOpacity>
+                            //                 </Box> 
+                            //         }}>
+                            //         <Popover.Content accessibilityLabel="Delete Customerd" w='24'>
+                            //         <Popover.Arrow />
+                            //         <Popover.CloseButton />
+                            //         <Popover.Header fontSize={18} fontFamily={Platform.OS==='android'?Fonts.type.aminafonts:Fonts.type.base} >ازالة من القائمة</Popover.Header>
+                                    
+                            //         <Popover.Footer justifyContent='center'>
+                            //             <Button.Group space={1} alignItems={'center'}>
+                            //                     <Stack flexDirection={'row'} alignItems={'center'}>
+                            //                         <EvilIcons name={"trash"} size={33} color={Colors.textZahry} onPress={()=>removeChiiled(chld.id,chld.name)}  style={{marginTop:1}}/>
+                            //                         {/* <EvilIcons name={"pencil"} size={30} color={Colors.bloodOrange} onPress={()=>updateChiled(chld)}  style={{marginTop:1}}/> */}
+                            //                     </Stack>
+                            //             </Button.Group>
+                            //         </Popover.Footer>
+                            //         </Popover.Content>
+                            //     </Popover>
+                                 
+                            // </Box>
                             
                             
                             )

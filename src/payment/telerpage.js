@@ -4,7 +4,7 @@ import { Image, View, TouchableOpacity, TextInput,Text, Platform, Alert, StyleSh
 
 import TelrSdk from 'rn-telr-sdk';
 import { Metrics, Colors, Fonts,fontPixel,Images, widthPixel, heightPixel } from '../assets/Themes/';
-import { Stack, Box, HStack, VStack, Spinner, Button ,Modal,Center,Actionsheet,useDisclose} from 'native-base';
+import { Stack, Box, HStack, VStack, Spinner, Button ,Modal,Center,Actionsheet,useDisclose, KeyboardAvoidingView} from 'native-base';
 import setItem from '../services/storage/index'
 import api from '../services/api';
 import { sendNotifcation } from '../services/fucttions';
@@ -397,6 +397,10 @@ const wetingloadPage=()=>{
     console.log("End wetingloadPage  ?====?")
   }, 4000);
 }
+const CloseModal=async()=>{
+   setshowModal(!showModal)
+ await props.navigation.popToTop()
+}
 
 const displaySpinner=()=> {
   return (
@@ -409,8 +413,13 @@ const displaySpinner=()=> {
     </Box>
   );
 }
+const keyboardVerticalOffset = Platform.OS === 'ios' ? 1 : 0
   return (
     <SafeAreaView style={styles.backgroundStyle}>
+        <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+                 keyboardVerticalOffset={keyboardVerticalOffset} enabled  >
+     
+      
       {/* <TelrSdk backButtonText={"Back"} buttonBackStyle={styles.buttonBackStyle} buttonBackColor={styles.buttonBackColor} backButtonTextStyle={styles.backButtonTextStyle} paymentRequest={paymentRequest} telrModalVisible={telrModalVisible} telrModalClose={telrModalClose} didFailWithError={didFailWithError} didPaymentSuccess={didPaymentSuccess} /> */}
       {!loading ? <View style={styles.centeredView}>
       {pass === "processed" && 
@@ -522,32 +531,23 @@ const displaySpinner=()=> {
 
           </Box>}
 
-        
-            
-            <Modal isOpen={showModal}   alignItems={undefined} justifyContent={undefined} onClose={() => setshowModal(!showModal) }  
-                backgroundColor={Colors.AminabackgroundColor}  borderColor={"#a3a2a2"} opacity={1} 
-                   width={Metrics.WIDTH} marginBottom={'0'} marginTop={"auto"} height={'72'}
+          <Modal isOpen={showModal}  backgroundColor={Colors.AminabackgroundColor}  >
                 
-                >
-                  <Modal.CloseButton />
-                  
-                   {loadpage && (
-                     <Modal.Header>
-                        <Box alignItems={'center'} alignContent={'center'} flex={1} backgroundColor={Colors.transparent} h={Metrics.HEIGHT} w={Metrics.WIDTH}>
-                          <ActivityIndicator size={'large'} color={Colors.textZahry} style={{marginTop:3}}  />
-                        </Box>
-                        </Modal.Header>
-                       
-                       )}
-                   
-                <Modal.Body width={Metrics.WIDTH}   marginTop={"auto"} marginBottom={'0'}  >
-                    <WebView
+                 
+              <Modal.Content width={Metrics.WIDTH} height={Metrics.HEIGHT} backgroundColor={Colors.AminabackgroundColor} >
+              <Modal.CloseButton   onPress={() => CloseModal()} mt={'3'}   fontWeight={'bold'} />
+              <Stack alignItems={'center'} justifyContent='center'  backgroundColor={Colors.transparent} >
+                <Image source={Images.MainLogo1} style={{width:widthPixel(200),height:heightPixel(100), borderRadius:16}} resizeMode='contain' />
+              </Stack>
+              <WebView
                     onLoad={()=>wetingloadPage()}
                     //onLoadEnd={() => { setloadpage(false) }}
                     onShouldStartLoadWithRequest={event => {
+                      console.log("test Event",event.loading)
+                      setloadpage(event.loading)
                         return true;
                     }}
-                    style={{height: Metrics.HEIGHT,width:Metrics.WIDTH,backgroundColor:Colors.transparent}}
+                    style={{flex:1,height: Metrics.HEIGHT*0.363,width:Metrics.WIDTH,borderBottomColor:Colors.AminabackgroundColor }}
                      onNavigationStateChange={(navState) => {
                       //your code goes here     
                       console.log("tets event",navState)  
@@ -568,10 +568,14 @@ const displaySpinner=()=> {
                       
                       source={{
                         uri:strURL
-                      }} />
+                }} />
+              {/* <Modal.Body width={'full'} height={Metrics.HEIGHT} marginLeft={'0'} marginRight={'0'}  backgroundColor={'red.200'}>
+                
                       
-                      
-                </Modal.Body>
+                      </Modal.Body> */}
+                </Modal.Content>
+                {loadpage&&<Spinner size={'lg'} color={Colors.greentext}/>}
+                 
             </Modal>
        
          
@@ -630,8 +634,8 @@ const displaySpinner=()=> {
       </View> : <Box marginTop={100}>
         <Spinner size={'lg'} color={Colors.AminaButtonNew} /></Box>}
 
-
-
+       
+          </KeyboardAvoidingView>
  
     </SafeAreaView>
 
